@@ -1,0 +1,206 @@
+{
+  "tile_coord": [
+    1,
+    3
+  ],
+  "world_bounds": {
+    "min_x": 500.0,
+    "max_x": 1000.0,
+    "min_z": 1500.0,
+    "max_z": 2000.0
+  },
+  "world_center": [
+    750.0,
+    0.0,
+    1750.0
+  ],
+  "roads": [
+    {
+      "osm_id": 48219420,
+      "name": "Madam Cama Road",
+      "highway": "primary",
+      "width": 16.0,
+      "lanes": 4,
+      "oneway": false,
+      "bridge": false,
+      "tunnel": false,
+      "points": [
+        [
+          -31.976,
+          0.0,
+          1738.025
+        ],
+        [
+          484.947,
+          0.0,
+          1689.029
+        ],
+        [
+          852.329,
+          0.0,
+          1804.271
+        ],
+        [
+          1060.323,
+          0.0,
+          2028.278
+        ]
+      ],
+      "length_m": 1210.0
+    },
+    {
+      "osm_id": 48219425,
+      "name": "Mahatma Gandhi Road",
+      "highway": "primary",
+      "width": 16.0,
+      "lanes": 4,
+      "oneway": true,
+      "bridge": false,
+      "tunnel": false,
+      "points": [
+        [
+          1060.323,
+          0.0,
+          2028.278
+        ],
+        [
+          908.406,
+          0.0,
+          1528.144
+        ],
+        [
+          860.489,
+          0.0,
+          1140.012
+        ],
+        [
+          1024.634,
+          0.0,
+          643.758
+        ],
+        [
+          1292.759,
+          0.0,
+          259.506
+        ]
+      ],
+      "length_m": 1905.0
+    }
+  ],
+  "buildings": [
+    {
+      "osm_id": 1029499,
+      "name": "Bombay High Court (Gothic Revival)",
+      "building_type": "courthouse",
+      "height": 38.0,
+      "levels": 4,
+      "is_height_estimated": false,
+      "center": [
+        735.14,
+        0.0,
+        1565.88
+      ],
+      "polygon": [
+        [
+          676.899,
+          0.0,
+          1503.154
+        ],
+        [
+          824.395,
+          0.0,
+          1504.966
+        ],
+        [
+          822.49,
+          0.0,
+          1659.96
+        ],
+        [
+          674.994,
+          0.0,
+          1658.148
+        ],
+        [
+          676.899,
+          0.0,
+          1503.154
+        ]
+      ]
+    },
+    {
+      "osm_id": 1029500,
+      "name": "Rajabai Clock Tower & University of Mumbai Library",
+      "building_type": "civic",
+      "height": 85.0,
+      "levels": 10,
+      "is_height_estimated": false,
+      "center": [
+        674.08,
+        0.0,
+        1560.7
+      ],
+      "polygon": [
+        [
+          645.021,
+          0.0,
+          1524.907
+        ],
+        [
+          718.769,
+          0.0,
+          1525.814
+        ],
+        [
+          717.68,
+          0.0,
+          1614.382
+        ],
+        [
+          643.932,
+          0.0,
+          1613.475
+        ],
+        [
+          645.021,
+          0.0,
+          1524.907
+        ]
+      ]
+    }
+  ],
+  "environment": [
+    {
+      "osm_id": 5011010,
+      "name": "Oval Maidan",
+      "type": "park",
+      "polygon": [
+        [
+          543.072,
+          0.0,
+          1246.836
+        ],
+        [
+          753.777,
+          0.0,
+          1249.427
+        ],
+        [
+          746.293,
+          0.0,
+          1858.332
+        ],
+        [
+          535.582,
+          0.0,
+          1855.742
+        ],
+        [
+          543.072,
+          0.0,
+          1246.836
+        ]
+      ]
+    }
+  ]
+}

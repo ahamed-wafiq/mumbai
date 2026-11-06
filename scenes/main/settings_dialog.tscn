@@ -1,0 +1,153 @@
+[gd_scene load_steps=5 format=3 uid="uid://csettingsdlg01"]
+
+[ext_resource type="Script" path="res://scripts/ui/settings_dialog.gd" id="1_settings"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_Backdrop"]
+bg_color = Color(0.04, 0.05, 0.07, 0.8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_Card"]
+bg_color = Color(0.09, 0.1, 0.13, 0.98)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.42, 0, 0.5)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 28.0
+content_margin_top = 24.0
+content_margin_right = 28.0
+content_margin_bottom = 24.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_Btn"]
+bg_color = Color(0.15, 0.17, 0.22, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.28, 0.32, 0.4, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+
+[node name="SettingsDialog" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_settings")
+
+[node name="Backdrop" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBox_Backdrop")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(400, 380)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_Card")
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Card"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="CenterContainer/Card/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.42, 0, 1)
+theme_override_font_sizes/font_size = 22
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/Card/VBox"]
+layout_mode = 2
+
+[node name="VolumeRow" type="HBoxContainer" parent="CenterContainer/Card/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/Card/VBox/VolumeRow"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Master Audio:"
+
+[node name="VolumeSlider" type="HSlider" parent="CenterContainer/Card/VBox/VolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="QualityRow" type="HBoxContainer" parent="CenterContainer/Card/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/Card/VBox/QualityRow"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Graphics:"
+
+[node name="QualityOption" type="OptionButton" parent="CenterContainer/Card/VBox/QualityRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ControlsBox" type="VBoxContainer" parent="CenterContainer/Card/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Header" type="Label" parent="CenterContainer/Card/VBox/ControlsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.5, 0.1, 1)
+theme_override_font_sizes/font_size = 14
+text = "Keybindings Reference"
+
+[node name="C1" type="Label" parent="CenterContainer/Card/VBox/ControlsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.82, 1)
+theme_override_font_sizes/font_size = 12
+text = "• W / Up Arrow: Accelerate"
+
+[node name="C2" type="Label" parent="CenterContainer/Card/VBox/ControlsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.82, 1)
+theme_override_font_sizes/font_size = 12
+text = "• S / Down Arrow: Brake / Reverse"
+
+[node name="C3" type="Label" parent="CenterContainer/Card/VBox/ControlsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.82, 1)
+theme_override_font_sizes/font_size = 12
+text = "• A/D or Left/Right: Steer"
+
+[node name="C4" type="Label" parent="CenterContainer/Card/VBox/ControlsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.82, 1)
+theme_override_font_sizes/font_size = 12
+text = "• Space: Handbrake  |  C: Toggle Camera  |  R: Reset"
+
+[node name="Spacer" type="Control" parent="CenterContainer/Card/VBox"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="CloseBtn" type="Button" parent="CenterContainer/Card/VBox"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBox_Btn")
+text = "Back / Save"
+

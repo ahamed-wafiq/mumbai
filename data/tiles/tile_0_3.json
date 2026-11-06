@@ -1,0 +1,175 @@
+{
+  "tile_coord": [
+    0,
+    3
+  ],
+  "world_bounds": {
+    "min_x": 0.0,
+    "max_x": 500.0,
+    "min_z": 1500.0,
+    "max_z": 2000.0
+  },
+  "world_center": [
+    250.0,
+    0.0,
+    1750.0
+  ],
+  "roads": [
+    {
+      "osm_id": 48219420,
+      "name": "Madam Cama Road",
+      "highway": "primary",
+      "width": 16.0,
+      "lanes": 4,
+      "oneway": false,
+      "bridge": false,
+      "tunnel": false,
+      "points": [
+        [
+          -31.976,
+          0.0,
+          1738.025
+        ],
+        [
+          484.947,
+          0.0,
+          1689.029
+        ],
+        [
+          852.329,
+          0.0,
+          1804.271
+        ],
+        [
+          1060.323,
+          0.0,
+          2028.278
+        ]
+      ],
+      "length_m": 1210.0
+    }
+  ],
+  "buildings": [
+    {
+      "osm_id": 1029481,
+      "name": "Air India Building",
+      "building_type": "commercial",
+      "height": 78.0,
+      "levels": 23,
+      "is_height_estimated": false,
+      "center": [
+        93.0,
+        0.0,
+        1686.42
+      ],
+      "polygon": [
+        [
+          63.936,
+          0.0,
+          1650.626
+        ],
+        [
+          137.685,
+          0.0,
+          1651.535
+        ],
+        [
+          136.593,
+          0.0,
+          1740.103
+        ],
+        [
+          62.844,
+          0.0,
+          1739.194
+        ],
+        [
+          63.936,
+          0.0,
+          1650.626
+        ]
+      ]
+    },
+    {
+      "osm_id": 1029482,
+      "name": "The Oberoi / Trident Hotel Nariman Point",
+      "building_type": "hotel",
+      "height": 117.0,
+      "levels": 35,
+      "is_height_estimated": false,
+      "center": [
+        50.67,
+        0.0,
+        1871.92
+      ],
+      "polygon": [
+        [
+          9.075,
+          0.0,
+          1827.113
+        ],
+        [
+          114.431,
+          0.0,
+          1828.412
+        ],
+        [
+          113.067,
+          0.0,
+          1939.122
+        ],
+        [
+          7.71,
+          0.0,
+          1937.824
+        ],
+        [
+          9.075,
+          0.0,
+          1827.113
+        ]
+      ]
+    },
+    {
+      "osm_id": 1029483,
+      "name": "Express Towers",
+      "building_type": "commercial",
+      "height": 105.0,
+      "levels": 25,
+      "is_height_estimated": false,
+      "center": [
+        179.72,
+        0.0,
+        1831.43
+      ],
+      "polygon": [
+        [
+          146.447,
+          0.0,
+          1795.588
+        ],
+        [
+          230.731,
+          0.0,
+          1796.626
+        ],
+        [
+          229.641,
+          0.0,
+          1885.194
+        ],
+        [
+          145.356,
+          0.0,
+          1884.156
+        ],
+        [
+          146.447,
+          0.0,
+          1795.588
+        ]
+      ]
+    }
+  ],
+  "environment": []
+}

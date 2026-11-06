@@ -1,0 +1,59 @@
+{
+  "tile_coord": [
+    20,
+    -40
+  ],
+  "world_bounds": {
+    "min_x": 10000.0,
+    "max_x": 10500.0,
+    "min_z": -20000.0,
+    "max_z": -19500.0
+  },
+  "world_center": [
+    10250.0,
+    0.0,
+    -19750.0
+  ],
+  "roads": [
+    {
+      "osm_id": 98112030,
+      "name": "Jogeshwari-Vikhroli Link Road (JVLR)",
+      "highway": "primary",
+      "width": 16.0,
+      "lanes": 6,
+      "oneway": false,
+      "bridge": false,
+      "tunnel": false,
+      "points": [
+        [
+          3937.982,
+          0.0,
+          -22240.971
+        ],
+        [
+          6243.325,
+          0.0,
+          -21437.757
+        ],
+        [
+          8863.182,
+          0.0,
+          -20520.358
+        ],
+        [
+          10434.941,
+          0.0,
+          -19947.97
+        ],
+        [
+          11500.31,
+          0.0,
+          -21042.543
+        ]
+      ],
+      "length_m": 8417.3
+    }
+  ],
+  "buildings": [],
+  "environment": []
+}

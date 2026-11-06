@@ -1,0 +1,77 @@
+{
+  "type": "FeatureCollection",
+  "name": "mumbai_marine_drive_sample_buildings",
+  "crs": {
+    "type": "name",
+    "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029481,
+        "name": "Air India Building",
+        "building": "commercial",
+        "building:levels": 23,
+        "height": 78.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [72.8242, 18.9288],
+            [72.8246, 18.9288],
+            [72.8246, 18.9282],
+            [72.8242, 18.9282],
+            [72.8242, 18.9288]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029482,
+        "name": "Art Deco Heritage Seafront Tower A",
+        "building": "apartments",
+        "building:levels": 6,
+        "height": 22.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [72.8240, 18.9340],
+            [72.8244, 18.9340],
+            [72.8244, 18.9335],
+            [72.8240, 18.9335],
+            [72.8240, 18.9340]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029483,
+        "name": "Art Deco Heritage Seafront Tower B",
+        "building": "apartments",
+        "building:levels": 7,
+        "height": 25.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [72.8240, 18.9355],
+            [72.8244, 18.9355],
+            [72.8244, 18.9350],
+            [72.8240, 18.9350],
+            [72.8240, 18.9355]
+          ]
+        ]
+      }
+    }
+  ]
+}
+

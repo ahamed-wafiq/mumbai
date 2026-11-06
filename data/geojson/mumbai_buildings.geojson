@@ -1,0 +1,786 @@
+{
+  "type": "FeatureCollection",
+  "name": "mumbai_real_buildings",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029481,
+        "name": "Air India Building",
+        "building": "commercial",
+        "height": 78.0,
+        "building:levels": 23,
+        "is_height_estimated": false,
+        "amenity": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.824,
+              18.9288
+            ],
+            [
+              72.8247,
+              18.9288
+            ],
+            [
+              72.8247,
+              18.928
+            ],
+            [
+              72.824,
+              18.928
+            ],
+            [
+              72.824,
+              18.9288
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029482,
+        "name": "The Oberoi / Trident Hotel Nariman Point",
+        "building": "hotel",
+        "height": 117.0,
+        "building:levels": 35,
+        "is_height_estimated": false,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8235,
+              18.9272
+            ],
+            [
+              72.8245,
+              18.9272
+            ],
+            [
+              72.8245,
+              18.9262
+            ],
+            [
+              72.8235,
+              18.9262
+            ],
+            [
+              72.8235,
+              18.9272
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029483,
+        "name": "Express Towers",
+        "building": "commercial",
+        "height": 105.0,
+        "building:levels": 25,
+        "is_height_estimated": false,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8248,
+              18.9275
+            ],
+            [
+              72.8256,
+              18.9275
+            ],
+            [
+              72.8256,
+              18.9267
+            ],
+            [
+              72.8248,
+              18.9267
+            ],
+            [
+              72.8248,
+              18.9275
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029484,
+        "name": "National Centre for the Performing Arts (NCPA)",
+        "building": "theatre",
+        "height": 26.0,
+        "building:levels": 4,
+        "is_height_estimated": false,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8222,
+              18.9255
+            ],
+            [
+              72.8236,
+              18.9255
+            ],
+            [
+              72.8236,
+              18.9242
+            ],
+            [
+              72.8222,
+              18.9242
+            ],
+            [
+              72.8222,
+              18.9255
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029485,
+        "name": "Brabourne Stadium (Cricket Club of India)",
+        "building": "stadium",
+        "height": 28.0,
+        "building:levels": 5,
+        "is_height_estimated": true,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8252,
+              18.9375
+            ],
+            [
+              72.8275,
+              18.9375
+            ],
+            [
+              72.8275,
+              18.9355
+            ],
+            [
+              72.8252,
+              18.9355
+            ],
+            [
+              72.8252,
+              18.9375
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029486,
+        "name": "Wankhede Stadium (BCCI Headquarters)",
+        "building": "stadium",
+        "height": 38.0,
+        "building:levels": 6,
+        "is_height_estimated": true,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8245,
+              18.9398
+            ],
+            [
+              72.8272,
+              18.9398
+            ],
+            [
+              72.8272,
+              18.9378
+            ],
+            [
+              72.8245,
+              18.9378
+            ],
+            [
+              72.8245,
+              18.9398
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029487,
+        "name": "Art Deco Heritage Apartment Block - Soona Mahal",
+        "building": "apartments",
+        "height": 22.0,
+        "building:levels": 6,
+        "is_height_estimated": true,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.824,
+              18.9325
+            ],
+            [
+              72.8246,
+              18.9325
+            ],
+            [
+              72.8246,
+              18.9318
+            ],
+            [
+              72.824,
+              18.9318
+            ],
+            [
+              72.824,
+              18.9325
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029488,
+        "name": "Art Deco Heritage Apartment Block - Zaver Mahal",
+        "building": "apartments",
+        "height": 24.0,
+        "building:levels": 7,
+        "is_height_estimated": true,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.824,
+              18.9335
+            ],
+            [
+              72.8247,
+              18.9335
+            ],
+            [
+              72.8247,
+              18.9328
+            ],
+            [
+              72.824,
+              18.9328
+            ],
+            [
+              72.824,
+              18.9335
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029489,
+        "name": "Art Deco Heritage Apartment Block - Keval Mahal",
+        "building": "apartments",
+        "height": 22.0,
+        "building:levels": 6,
+        "is_height_estimated": true,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.824,
+              18.9348
+            ],
+            [
+              72.8246,
+              18.9348
+            ],
+            [
+              72.8246,
+              18.934
+            ],
+            [
+              72.824,
+              18.934
+            ],
+            [
+              72.824,
+              18.9348
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029490,
+        "name": "InterContinental Marine Drive",
+        "building": "hotel",
+        "height": 34.0,
+        "building:levels": 10,
+        "is_height_estimated": false,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8238,
+              18.936
+            ],
+            [
+              72.8246,
+              18.936
+            ],
+            [
+              72.8246,
+              18.9352
+            ],
+            [
+              72.8238,
+              18.9352
+            ],
+            [
+              72.8238,
+              18.936
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029491,
+        "name": "Wilson College (Heritage Neo-Gothic)",
+        "building": "college",
+        "height": 25.0,
+        "building:levels": 4,
+        "is_height_estimated": true,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8155,
+              18.9555
+            ],
+            [
+              72.8175,
+              18.9555
+            ],
+            [
+              72.8175,
+              18.954
+            ],
+            [
+              72.8155,
+              18.954
+            ],
+            [
+              72.8155,
+              18.9555
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029495,
+        "name": "Gateway of India",
+        "building": "monument",
+        "height": 26.0,
+        "building:levels": 3,
+        "is_height_estimated": false,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8344,
+              18.9223
+            ],
+            [
+              72.8351,
+              18.9223
+            ],
+            [
+              72.8351,
+              18.9216
+            ],
+            [
+              72.8344,
+              18.9216
+            ],
+            [
+              72.8344,
+              18.9223
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029496,
+        "name": "The Taj Mahal Palace & Tower Hotel",
+        "building": "hotel",
+        "height": 72.0,
+        "building:levels": 22,
+        "is_height_estimated": false,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8328,
+              18.9222
+            ],
+            [
+              72.834,
+              18.9222
+            ],
+            [
+              72.834,
+              18.921
+            ],
+            [
+              72.8328,
+              18.921
+            ],
+            [
+              72.8328,
+              18.9222
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029497,
+        "name": "Chhatrapati Shivaji Maharaj Terminus (CSMT - UNESCO Heritage)",
+        "building": "train_station",
+        "height": 45.0,
+        "building:levels": 5,
+        "is_height_estimated": false,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8345,
+              18.9412
+            ],
+            [
+              72.8365,
+              18.9412
+            ],
+            [
+              72.8365,
+              18.9392
+            ],
+            [
+              72.8345,
+              18.9392
+            ],
+            [
+              72.8345,
+              18.9412
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029498,
+        "name": "Municipal Corporation of Greater Mumbai Headquarters (BMC HQ)",
+        "building": "civic",
+        "height": 42.0,
+        "building:levels": 5,
+        "is_height_estimated": false,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8335,
+              18.9418
+            ],
+            [
+              72.8345,
+              18.9418
+            ],
+            [
+              72.8345,
+              18.9408
+            ],
+            [
+              72.8335,
+              18.9408
+            ],
+            [
+              72.8335,
+              18.9418
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029499,
+        "name": "Bombay High Court (Gothic Revival)",
+        "building": "courthouse",
+        "height": 38.0,
+        "building:levels": 4,
+        "is_height_estimated": false,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8298,
+              18.9302
+            ],
+            [
+              72.8312,
+              18.9302
+            ],
+            [
+              72.8312,
+              18.9288
+            ],
+            [
+              72.8298,
+              18.9288
+            ],
+            [
+              72.8298,
+              18.9302
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029500,
+        "name": "Rajabai Clock Tower & University of Mumbai Library",
+        "building": "civic",
+        "height": 85.0,
+        "building:levels": 10,
+        "is_height_estimated": false,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8295,
+              18.93
+            ],
+            [
+              72.8302,
+              18.93
+            ],
+            [
+              72.8302,
+              18.9292
+            ],
+            [
+              72.8295,
+              18.9292
+            ],
+            [
+              72.8295,
+              18.93
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029505,
+        "name": "Bharat Diamond Bourse (BDB)",
+        "building": "commercial",
+        "height": 45.0,
+        "building:levels": 9,
+        "is_height_estimated": false,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.862,
+              19.0635
+            ],
+            [
+              72.866,
+              19.0635
+            ],
+            [
+              72.866,
+              19.0605
+            ],
+            [
+              72.862,
+              19.0605
+            ],
+            [
+              72.862,
+              19.0635
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029506,
+        "name": "Jio World Centre & Convention Centre",
+        "building": "commercial",
+        "height": 52.0,
+        "building:levels": 12,
+        "is_height_estimated": false,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.867,
+              19.0655
+            ],
+            [
+              72.871,
+              19.0655
+            ],
+            [
+              72.871,
+              19.0625
+            ],
+            [
+              72.867,
+              19.0625
+            ],
+            [
+              72.867,
+              19.0655
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 1029507,
+        "name": "National Stock Exchange of India (NSE)",
+        "building": "commercial",
+        "height": 55.0,
+        "building:levels": 14,
+        "is_height_estimated": false,
+        "amenity": ""
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864,
+              19.061
+            ],
+            [
+              72.8665,
+              19.061
+            ],
+            [
+              72.8665,
+              19.059
+            ],
+            [
+              72.864,
+              19.059
+            ],
+            [
+              72.864,
+              19.061
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

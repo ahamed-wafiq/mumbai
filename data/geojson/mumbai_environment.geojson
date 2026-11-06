@@ -1,0 +1,161 @@
+{
+  "type": "FeatureCollection",
+  "name": "mumbai_real_environment",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 5011001,
+        "name": "Back Bay (Arabian Sea)",
+        "natural": "water",
+        "water": "bay"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.822,
+              18.924
+            ],
+            [
+              72.8225,
+              18.9437
+            ],
+            [
+              72.812,
+              18.955
+            ],
+            [
+              72.802,
+              18.948
+            ],
+            [
+              72.793,
+              18.942
+            ],
+            [
+              72.805,
+              18.918
+            ],
+            [
+              72.818,
+              18.918
+            ],
+            [
+              72.822,
+              18.924
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 5011010,
+        "name": "Oval Maidan",
+        "leisure": "park",
+        "landuse": "recreation_ground"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8285,
+              18.9325
+            ],
+            [
+              72.8305,
+              18.9325
+            ],
+            [
+              72.8305,
+              18.927
+            ],
+            [
+              72.8285,
+              18.927
+            ],
+            [
+              72.8285,
+              18.9325
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 5011020,
+        "name": "Shivaji Park",
+        "leisure": "park"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.834,
+              19.0285
+            ],
+            [
+              72.8385,
+              19.0285
+            ],
+            [
+              72.8385,
+              19.024
+            ],
+            [
+              72.834,
+              19.024
+            ],
+            [
+              72.834,
+              19.0285
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 5011030,
+        "name": "Powai Lake",
+        "natural": "water",
+        "water": "lake"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.895,
+              19.135
+            ],
+            [
+              72.912,
+              19.135
+            ],
+            [
+              72.915,
+              19.122
+            ],
+            [
+              72.898,
+              19.122
+            ],
+            [
+              72.895,
+              19.135
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

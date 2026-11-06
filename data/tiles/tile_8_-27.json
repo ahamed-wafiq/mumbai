@@ -1,0 +1,95 @@
+{
+  "tile_coord": [
+    8,
+    -27
+  ],
+  "world_bounds": {
+    "min_x": 4000.0,
+    "max_x": 4500.0,
+    "min_z": -13500.0,
+    "max_z": -13000.0
+  },
+  "world_center": [
+    4250.0,
+    0.0,
+    -13250.0
+  ],
+  "roads": [
+    {
+      "osm_id": 98112040,
+      "name": "Bandra Kurla Complex (BKC) Avenue",
+      "highway": "primary",
+      "width": 16.0,
+      "lanes": 6,
+      "oneway": false,
+      "bridge": false,
+      "tunnel": false,
+      "points": [
+        [
+          2026.377,
+          0.0,
+          -12298.994
+        ],
+        [
+          4036.038,
+          0.0,
+          -13049.451
+        ],
+        [
+          5307.325,
+          0.0,
+          -13698.332
+        ],
+        [
+          6681.102,
+          0.0,
+          -14124.605
+        ]
+      ],
+      "length_m": 5010.9
+    }
+  ],
+  "buildings": [
+    {
+      "osm_id": 1029505,
+      "name": "Bharat Diamond Bourse (BDB)",
+      "building_type": "commercial",
+      "height": 45.0,
+      "levels": 9,
+      "is_height_estimated": false,
+      "center": [
+        4415.41,
+        0.0,
+        -13078.04
+      ],
+      "polygon": [
+        [
+          4248.601,
+          0.0,
+          -13212.947
+        ],
+        [
+          4669.672,
+          0.0,
+          -13207.818
+        ],
+        [
+          4665.63,
+          0.0,
+          -12875.69
+        ],
+        [
+          4244.552,
+          0.0,
+          -12880.818
+        ],
+        [
+          4248.601,
+          0.0,
+          -13212.947
+        ]
+      ]
+    }
+  ],
+  "environment": []
+}

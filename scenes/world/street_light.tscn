@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=3 uid="uid://cstreetlamp01"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_MetalPole"]
+albedo_color = Color(0.18, 0.2, 0.23, 1)
+metallic = 0.8
+roughness = 0.35
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_Pole"]
+material = SubResource("Mat_MetalPole")
+top_radius = 0.08
+bottom_radius = 0.12
+height = 6.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_Arm"]
+material = SubResource("Mat_MetalPole")
+size = Vector3(0.1, 0.1, 1.6)
+
+[sub_resource type="StandardMaterial3D" id="Mat_LampBulb"]
+albedo_color = Color(1, 0.9, 0.7, 1)
+emission_enabled = true
+emission = Color(1, 0.85, 0.6, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_Bulb"]
+material = SubResource("Mat_LampBulb")
+top_radius = 0.25
+bottom_radius = 0.15
+height = 0.15
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_Collision"]
+height = 6.0
+radius = 0.2
+
+[node name="StreetLight" type="StaticBody3D"]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+shape = SubResource("CylinderShape3D_Collision")
+
+[node name="Pole" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+mesh = SubResource("CylinderMesh_Pole")
+
+[node name="Arm" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.85, 0.7)
+mesh = SubResource("BoxMesh_Arm")
+
+[node name="LampBulb" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.75, 1.4)
+mesh = SubResource("CylinderMesh_Bulb")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="LampBulb"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+light_color = Color(1, 0.88, 0.7, 1)
+light_energy = 2.8
+omni_range = 18.0
+omni_attenuation = 1.2
+

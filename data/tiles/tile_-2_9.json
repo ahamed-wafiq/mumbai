@@ -1,0 +1,54 @@
+{
+  "tile_coord": [
+    -2,
+    9
+  ],
+  "world_bounds": {
+    "min_x": -1000.0,
+    "max_x": -500.0,
+    "min_z": 4500.0,
+    "max_z": 5000.0
+  },
+  "world_center": [
+    -750.0,
+    0.0,
+    4750.0
+  ],
+  "roads": [
+    {
+      "osm_id": 48219430,
+      "name": "Shahid Bhagat Singh Road (Colaba Causeway)",
+      "highway": "secondary",
+      "width": 12.0,
+      "lanes": 4,
+      "oneway": false,
+      "bridge": false,
+      "tunnel": false,
+      "points": [
+        [
+          1060.323,
+          0.0,
+          2028.278
+        ],
+        [
+          786.733,
+          0.0,
+          2855.369
+        ],
+        [
+          140.935,
+          0.0,
+          3954.697
+        ],
+        [
+          -608.941,
+          0.0,
+          4941.999
+        ]
+      ],
+      "length_m": 3385.9
+    }
+  ],
+  "buildings": [],
+  "environment": []
+}

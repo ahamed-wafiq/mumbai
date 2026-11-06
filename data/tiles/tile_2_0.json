@@ -1,0 +1,183 @@
+{
+  "tile_coord": [
+    2,
+    0
+  ],
+  "world_bounds": {
+    "min_x": 1000.0,
+    "max_x": 1500.0,
+    "min_z": 0.0,
+    "max_z": 500.0
+  },
+  "world_center": [
+    1250.0,
+    0.0,
+    250.0
+  ],
+  "roads": [
+    {
+      "osm_id": 48219425,
+      "name": "Mahatma Gandhi Road",
+      "highway": "primary",
+      "width": 16.0,
+      "lanes": 4,
+      "oneway": true,
+      "bridge": false,
+      "tunnel": false,
+      "points": [
+        [
+          1060.323,
+          0.0,
+          2028.278
+        ],
+        [
+          908.406,
+          0.0,
+          1528.144
+        ],
+        [
+          860.489,
+          0.0,
+          1140.012
+        ],
+        [
+          1024.634,
+          0.0,
+          643.758
+        ],
+        [
+          1292.759,
+          0.0,
+          259.506
+        ]
+      ],
+      "length_m": 1905.0
+    },
+    {
+      "osm_id": 98112050,
+      "name": "Dr. Babasaheb Ambedkar Road (Lalbaug Flyover)",
+      "highway": "primary",
+      "width": 16.0,
+      "lanes": 6,
+      "oneway": false,
+      "bridge": true,
+      "tunnel": false,
+      "points": [
+        [
+          1292.759,
+          6.0,
+          259.506
+        ],
+        [
+          1377.363,
+          6.0,
+          -2341.532
+        ],
+        [
+          1825.843,
+          6.0,
+          -4550.561
+        ],
+        [
+          2393.126,
+          6.0,
+          -7865.405
+        ],
+        [
+          3473.153,
+          6.0,
+          -10066.717
+        ],
+        [
+          4848.592,
+          6.0,
+          -10603.592
+        ]
+      ],
+      "length_m": 12148.0
+    }
+  ],
+  "buildings": [
+    {
+      "osm_id": 1029497,
+      "name": "Chhatrapati Shivaji Maharaj Terminus (CSMT - UNESCO Heritage)",
+      "building_type": "train_station",
+      "height": 45.0,
+      "levels": 5,
+      "is_height_estimated": false,
+      "center": [
+        1270.2,
+        0.0,
+        381.03
+      ],
+      "polygon": [
+        [
+          1187.005,
+          0.0,
+          291.426
+        ],
+        [
+          1397.698,
+          0.0,
+          294.011
+        ],
+        [
+          1394.983,
+          0.0,
+          515.43
+        ],
+        [
+          1184.287,
+          0.0,
+          512.846
+        ],
+        [
+          1187.005,
+          0.0,
+          291.426
+        ]
+      ]
+    },
+    {
+      "osm_id": 1029498,
+      "name": "Municipal Corporation of Greater Mumbai Headquarters (BMC HQ)",
+      "building_type": "civic",
+      "height": 42.0,
+      "levels": 5,
+      "is_height_estimated": false,
+      "center": [
+        1124.07,
+        0.0,
+        268.51
+      ],
+      "polygon": [
+        [
+          1082.474,
+          0.0,
+          223.707
+        ],
+        [
+          1187.82,
+          0.0,
+          225.0
+        ],
+        [
+          1186.461,
+          0.0,
+          335.71
+        ],
+        [
+          1081.114,
+          0.0,
+          334.417
+        ],
+        [
+          1082.474,
+          0.0,
+          223.707
+        ]
+      ]
+    }
+  ],
+  "environment": []
+}

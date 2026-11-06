@@ -1,0 +1,486 @@
+{
+  "type": "FeatureCollection",
+  "name": "mumbai_real_roads",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 48219412,
+        "name": "Netaji Subhash Chandra Bose Road (Marine Drive)",
+        "highway": "primary",
+        "lanes": 6,
+        "maxspeed": "60",
+        "oneway": "no",
+        "surface": "asphalt",
+        "ref": "Marine Drive",
+        "lit": "yes"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8228,
+            18.924
+          ],
+          [
+            72.8231,
+            18.928
+          ],
+          [
+            72.8233,
+            18.934
+          ],
+          [
+            72.8234,
+            18.938
+          ],
+          [
+            72.8232,
+            18.9437
+          ],
+          [
+            72.8224,
+            18.949
+          ],
+          [
+            72.8185,
+            18.9535
+          ],
+          [
+            72.813,
+            18.956
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 48219415,
+        "name": "Veer Nariman Road (Churchgate Link)",
+        "highway": "primary",
+        "lanes": 4,
+        "oneway": "no",
+        "surface": "asphalt"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8232,
+            18.934
+          ],
+          [
+            72.8275,
+            18.9338
+          ],
+          [
+            72.8315,
+            18.9335
+          ],
+          [
+            72.834,
+            18.933
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 48219420,
+        "name": "Madam Cama Road",
+        "highway": "primary",
+        "lanes": 4,
+        "oneway": "no"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8231,
+            18.928
+          ],
+          [
+            72.828,
+            18.9285
+          ],
+          [
+            72.8315,
+            18.9275
+          ],
+          [
+            72.8335,
+            18.9255
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 48219425,
+        "name": "Mahatma Gandhi Road",
+        "highway": "primary",
+        "lanes": 4,
+        "oneway": "yes"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8335,
+            18.9255
+          ],
+          [
+            72.832,
+            18.93
+          ],
+          [
+            72.8315,
+            18.9335
+          ],
+          [
+            72.833,
+            18.938
+          ],
+          [
+            72.8355,
+            18.9415
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 48219430,
+        "name": "Shahid Bhagat Singh Road (Colaba Causeway)",
+        "highway": "secondary",
+        "lanes": 4,
+        "oneway": "no"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8335,
+            18.9255
+          ],
+          [
+            72.831,
+            18.918
+          ],
+          [
+            72.825,
+            18.908
+          ],
+          [
+            72.818,
+            18.899
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 98112001,
+        "name": "Western Express Highway (NH 48)",
+        "highway": "motorway",
+        "lanes": 8,
+        "maxspeed": "80",
+        "oneway": "no",
+        "ref": "NH 48"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.841,
+            19.055
+          ],
+          [
+            72.846,
+            19.075
+          ],
+          [
+            72.852,
+            19.098
+          ],
+          [
+            72.856,
+            19.12
+          ],
+          [
+            72.858,
+            19.145
+          ],
+          [
+            72.857,
+            19.168
+          ],
+          [
+            72.855,
+            19.192
+          ],
+          [
+            72.854,
+            19.215
+          ],
+          [
+            72.855,
+            19.238
+          ],
+          [
+            72.862,
+            19.265
+          ],
+          [
+            72.868,
+            19.29
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 98112010,
+        "name": "Bandra-Worli Sea Link",
+        "highway": "motorway",
+        "bridge": "yes",
+        "lanes": 8,
+        "maxspeed": "80",
+        "oneway": "no",
+        "toll": "yes"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.812,
+            19.006
+          ],
+          [
+            72.8135,
+            19.015
+          ],
+          [
+            72.817,
+            19.028
+          ],
+          [
+            72.822,
+            19.038
+          ],
+          [
+            72.827,
+            19.043
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 98112020,
+        "name": "Eastern Express Highway",
+        "highway": "motorway",
+        "lanes": 8,
+        "maxspeed": "80",
+        "oneway": "no"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.868,
+            19.04
+          ],
+          [
+            72.88,
+            19.065
+          ],
+          [
+            72.898,
+            19.085
+          ],
+          [
+            72.915,
+            19.11
+          ],
+          [
+            72.93,
+            19.135
+          ],
+          [
+            72.945,
+            19.16
+          ],
+          [
+            72.96,
+            19.18
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 98112030,
+        "name": "Jogeshwari-Vikhroli Link Road (JVLR)",
+        "highway": "primary",
+        "lanes": 6,
+        "oneway": "no"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.858,
+            19.145
+          ],
+          [
+            72.88,
+            19.138
+          ],
+          [
+            72.905,
+            19.13
+          ],
+          [
+            72.92,
+            19.125
+          ],
+          [
+            72.93,
+            19.135
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 98112040,
+        "name": "Bandra Kurla Complex (BKC) Avenue",
+        "highway": "primary",
+        "lanes": 6,
+        "oneway": "no"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.841,
+            19.055
+          ],
+          [
+            72.86,
+            19.062
+          ],
+          [
+            72.872,
+            19.068
+          ],
+          [
+            72.885,
+            19.072
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 98112050,
+        "name": "Dr. Babasaheb Ambedkar Road (Lalbaug Flyover)",
+        "highway": "primary",
+        "bridge": "yes",
+        "lanes": 6,
+        "oneway": "no"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8355,
+            18.9415
+          ],
+          [
+            72.836,
+            18.965
+          ],
+          [
+            72.84,
+            18.985
+          ],
+          [
+            72.845,
+            19.015
+          ],
+          [
+            72.855,
+            19.035
+          ],
+          [
+            72.868,
+            19.04
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": 98112060,
+        "name": "Swami Vivekananda (SV) Road",
+        "highway": "primary",
+        "lanes": 4,
+        "oneway": "no"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.838,
+            19.058
+          ],
+          [
+            72.839,
+            19.075
+          ],
+          [
+            72.842,
+            19.095
+          ],
+          [
+            72.845,
+            19.115
+          ],
+          [
+            72.847,
+            19.135
+          ],
+          [
+            72.848,
+            19.16
+          ],
+          [
+            72.85,
+            19.185
+          ],
+          [
+            72.852,
+            19.215
+          ],
+          [
+            72.854,
+            19.23
+          ]
+        ]
+      }
+    }
+  ]
+}

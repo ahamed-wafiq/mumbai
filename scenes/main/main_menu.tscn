@@ -1,0 +1,176 @@
+[gd_scene load_steps=8 format=3 uid="uid://cmainmenu01"]
+
+[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1_menu"]
+[ext_resource type="PackedScene" path="res://scenes/main/settings_dialog.tscn" id="2_settings"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_Bg"]
+bg_color = Color(0.07, 0.08, 0.1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_Card"]
+bg_color = Color(0.1, 0.12, 0.15, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.22, 0.25, 0.3, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 32.0
+content_margin_top = 32.0
+content_margin_right = 32.0
+content_margin_bottom = 32.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_PlayBtn"]
+bg_color = Color(1, 0.42, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.55, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_top = 14.0
+content_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_PlayBtnHover"]
+bg_color = Color(1, 0.52, 0.1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.7, 0.4, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_top = 14.0
+content_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_SecondaryBtn"]
+bg_color = Color(0.14, 0.16, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25, 0.28, 0.35, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBox_Bg")
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Header" type="VBoxContainer" parent="Layout"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Layout/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.42, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.5)
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 52
+text = "MUMBAI DRIVE"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Layout/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.82, 1)
+theme_override_font_sizes/font_size = 15
+text = "OPEN WORLD 3D DRIVING SIMULATOR"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="Layout"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+
+[node name="Center" type="CenterContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="Card" type="PanelContainer" parent="Layout/Center"]
+custom_minimum_size = Vector2(360, 240)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_Card")
+
+[node name="VBox" type="VBoxContainer" parent="Layout/Center/Card"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="PlayBtn" type="Button" parent="Layout/Center/Card/VBox"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../ExitBtn")
+focus_neighbor_bottom = NodePath("../SettingsBtn")
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = SubResource("StyleBox_PlayBtn")
+theme_override_styles/hover = SubResource("StyleBox_PlayBtnHover")
+text = "START DRIVING"
+
+[node name="SettingsBtn" type="Button" parent="Layout/Center/Card/VBox"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../PlayBtn")
+focus_neighbor_bottom = NodePath("../ExitBtn")
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBox_SecondaryBtn")
+text = "SETTINGS"
+
+[node name="ExitBtn" type="Button" parent="Layout/Center/Card/VBox"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../SettingsBtn")
+focus_neighbor_bottom = NodePath("../PlayBtn")
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBox_SecondaryBtn")
+text = "QUIT"
+
+[node name="Footer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_bottom = 14
+
+[node name="VersionInfo" type="Label" parent="Footer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.44, 0.5, 1)
+theme_override_font_sizes/font_size = 12
+text = "v0.1.0 Prototype • Godot 4 & WebGL 2.0 Compatibility"
+horizontal_alignment = 1
+
+[node name="SettingsDialog" parent="." instance=ExtResource("2_settings")]
+visible = false
+layout_mode = 1
+

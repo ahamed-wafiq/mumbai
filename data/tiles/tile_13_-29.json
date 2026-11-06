@@ -1,0 +1,54 @@
+{
+  "tile_coord": [
+    13,
+    -29
+  ],
+  "world_bounds": {
+    "min_x": 6500.0,
+    "max_x": 7000.0,
+    "min_z": -14500.0,
+    "max_z": -14000.0
+  },
+  "world_center": [
+    6750.0,
+    0.0,
+    -14250.0
+  ],
+  "roads": [
+    {
+      "osm_id": 98112040,
+      "name": "Bandra Kurla Complex (BKC) Avenue",
+      "highway": "primary",
+      "width": 16.0,
+      "lanes": 6,
+      "oneway": false,
+      "bridge": false,
+      "tunnel": false,
+      "points": [
+        [
+          2026.377,
+          0.0,
+          -12298.994
+        ],
+        [
+          4036.038,
+          0.0,
+          -13049.451
+        ],
+        [
+          5307.325,
+          0.0,
+          -13698.332
+        ],
+        [
+          6681.102,
+          0.0,
+          -14124.605
+        ]
+      ],
+      "length_m": 5010.9
+    }
+  ],
+  "buildings": [],
+  "environment": []
+}

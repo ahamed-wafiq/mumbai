@@ -1,0 +1,64 @@
+{
+  "tile_coord": [
+    2,
+    -5
+  ],
+  "world_bounds": {
+    "min_x": 1000.0,
+    "max_x": 1500.0,
+    "min_z": -2500.0,
+    "max_z": -2000.0
+  },
+  "world_center": [
+    1250.0,
+    0.0,
+    -2250.0
+  ],
+  "roads": [
+    {
+      "osm_id": 98112050,
+      "name": "Dr. Babasaheb Ambedkar Road (Lalbaug Flyover)",
+      "highway": "primary",
+      "width": 16.0,
+      "lanes": 6,
+      "oneway": false,
+      "bridge": true,
+      "tunnel": false,
+      "points": [
+        [
+          1292.759,
+          6.0,
+          259.506
+        ],
+        [
+          1377.363,
+          6.0,
+          -2341.532
+        ],
+        [
+          1825.843,
+          6.0,
+          -4550.561
+        ],
+        [
+          2393.126,
+          6.0,
+          -7865.405
+        ],
+        [
+          3473.153,
+          6.0,
+          -10066.717
+        ],
+        [
+          4848.592,
+          6.0,
+          -10603.592
+        ]
+      ],
+      "length_m": 12148.0
+    }
+  ],
+  "buildings": [],
+  "environment": []
+}

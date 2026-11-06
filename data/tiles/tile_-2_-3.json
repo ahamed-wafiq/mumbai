@@ -1,0 +1,61 @@
+{
+  "tile_coord": [
+    -2,
+    -3
+  ],
+  "world_bounds": {
+    "min_x": -1000.0,
+    "max_x": -500.0,
+    "min_z": -1500.0,
+    "max_z": -1000.0
+  },
+  "world_center": [
+    -750.0,
+    0.0,
+    -1250.0
+  ],
+  "roads": [],
+  "buildings": [
+    {
+      "osm_id": 1029491,
+      "name": "Wilson College (Heritage Neo-Gothic)",
+      "building_type": "college",
+      "height": 25.0,
+      "levels": 4,
+      "is_height_estimated": true,
+      "center": [
+        -711.53,
+        0.0,
+        -1248.95
+      ],
+      "polygon": [
+        [
+          -794.981,
+          0.0,
+          -1316.418
+        ],
+        [
+          -584.303,
+          0.0,
+          -1313.809
+        ],
+        [
+          -586.359,
+          0.0,
+          -1147.743
+        ],
+        [
+          -797.038,
+          0.0,
+          -1150.352
+        ],
+        [
+          -794.981,
+          0.0,
+          -1316.418
+        ]
+      ]
+    }
+  ],
+  "environment": []
+}

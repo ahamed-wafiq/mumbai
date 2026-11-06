@@ -1,0 +1,59 @@
+{
+  "tile_coord": [
+    -2,
+    -16
+  ],
+  "world_bounds": {
+    "min_x": -1000.0,
+    "max_x": -500.0,
+    "min_z": -8000.0,
+    "max_z": -7500.0
+  },
+  "world_center": [
+    -750.0,
+    0.0,
+    -7750.0
+  ],
+  "roads": [
+    {
+      "osm_id": 98112010,
+      "name": "Bandra-Worli Sea Link",
+      "highway": "motorway",
+      "width": 24.0,
+      "lanes": 8,
+      "oneway": false,
+      "bridge": true,
+      "tunnel": false,
+      "points": [
+        [
+          -1094.189,
+          6.0,
+          -6911.928
+        ],
+        [
+          -923.836,
+          6.0,
+          -7906.37
+        ],
+        [
+          -537.401,
+          6.0,
+          -9341.041
+        ],
+        [
+          2.794,
+          6.0,
+          -10441.622
+        ],
+        [
+          536.077,
+          6.0,
+          -10988.655
+        ]
+      ],
+      "length_m": 4484.7
+    }
+  ],
+  "buildings": [],
+  "environment": []
+}

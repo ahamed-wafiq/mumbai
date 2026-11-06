@@ -1,0 +1,206 @@
+{
+  "tile_coord": [
+    2,
+    4
+  ],
+  "world_bounds": {
+    "min_x": 1000.0,
+    "max_x": 1500.0,
+    "min_z": 2000.0,
+    "max_z": 2500.0
+  },
+  "world_center": [
+    1250.0,
+    0.0,
+    2250.0
+  ],
+  "roads": [
+    {
+      "osm_id": 48219420,
+      "name": "Madam Cama Road",
+      "highway": "primary",
+      "width": 16.0,
+      "lanes": 4,
+      "oneway": false,
+      "bridge": false,
+      "tunnel": false,
+      "points": [
+        [
+          -31.976,
+          0.0,
+          1738.025
+        ],
+        [
+          484.947,
+          0.0,
+          1689.029
+        ],
+        [
+          852.329,
+          0.0,
+          1804.271
+        ],
+        [
+          1060.323,
+          0.0,
+          2028.278
+        ]
+      ],
+      "length_m": 1210.0
+    },
+    {
+      "osm_id": 48219425,
+      "name": "Mahatma Gandhi Road",
+      "highway": "primary",
+      "width": 16.0,
+      "lanes": 4,
+      "oneway": true,
+      "bridge": false,
+      "tunnel": false,
+      "points": [
+        [
+          1060.323,
+          0.0,
+          2028.278
+        ],
+        [
+          908.406,
+          0.0,
+          1528.144
+        ],
+        [
+          860.489,
+          0.0,
+          1140.012
+        ],
+        [
+          1024.634,
+          0.0,
+          643.758
+        ],
+        [
+          1292.759,
+          0.0,
+          259.506
+        ]
+      ],
+      "length_m": 1905.0
+    },
+    {
+      "osm_id": 48219430,
+      "name": "Shahid Bhagat Singh Road (Colaba Causeway)",
+      "highway": "secondary",
+      "width": 12.0,
+      "lanes": 4,
+      "oneway": false,
+      "bridge": false,
+      "tunnel": false,
+      "points": [
+        [
+          1060.323,
+          0.0,
+          2028.278
+        ],
+        [
+          786.733,
+          0.0,
+          2855.369
+        ],
+        [
+          140.935,
+          0.0,
+          3954.697
+        ],
+        [
+          -608.941,
+          0.0,
+          4941.999
+        ]
+      ],
+      "length_m": 3385.9
+    }
+  ],
+  "buildings": [
+    {
+      "osm_id": 1029495,
+      "name": "Gateway of India",
+      "building_type": "monument",
+      "height": 26.0,
+      "levels": 3,
+      "is_height_estimated": false,
+      "center": [
+        1179.92,
+        0.0,
+        2415.07
+      ],
+      "polygon": [
+        [
+          1150.799,
+          0.0,
+          2383.712
+        ],
+        [
+          1224.55,
+          0.0,
+          2384.617
+        ],
+        [
+          1223.6,
+          0.0,
+          2462.113
+        ],
+        [
+          1149.848,
+          0.0,
+          2461.209
+        ],
+        [
+          1150.799,
+          0.0,
+          2383.712
+        ]
+      ]
+    },
+    {
+      "osm_id": 1029496,
+      "name": "The Taj Mahal Palace & Tower Hotel",
+      "building_type": "hotel",
+      "height": 72.0,
+      "levels": 22,
+      "is_height_estimated": false,
+      "center": [
+        1032.01,
+        0.0,
+        2446.48
+      ],
+      "polygon": [
+        [
+          982.089,
+          0.0,
+          2392.715
+        ],
+        [
+          1108.52,
+          0.0,
+          2394.267
+        ],
+        [
+          1106.89,
+          0.0,
+          2527.118
+        ],
+        [
+          980.459,
+          0.0,
+          2525.567
+        ],
+        [
+          982.089,
+          0.0,
+          2392.715
+        ]
+      ]
+    }
+  ],
+  "environment": []
+}

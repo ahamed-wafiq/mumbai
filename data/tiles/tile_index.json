@@ -1,0 +1,31 @@
+{
+  "project": "Mumbai Drive",
+  "tile_size_meters": 500,
+  "coordinate_system": "WGS84_to_Local_Equirectangular",
+  "origin": {
+    "name": "Marine Drive / Nariman Point",
+    "latitude": 18.9438,
+    "longitude": 72.8232
+  },
+  "regions": {
+    "south_mumbai": {
+      "name": "South Mumbai (Colaba to Worli)",
+      "tile_bounds": {
+        "min_x": -3,
+        "max_x": 4,
+        "min_z": -12,
+        "max_z": 8
+      }
+    },
+    "suburbs": {
+      "name": "Western Suburbs (Bandra to Borivali)",
+      "tile_bounds": {
+        "min_x": -6,
+        "max_x": 6,
+        "min_z": 8,
+        "max_z": 45
+      }
+    }
+  }
+}
+

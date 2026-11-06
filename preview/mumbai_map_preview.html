@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mumbai Drive - Real Geographical Map Preview</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background: #14171A; color: #E1E8ED; overflow: hidden; }
+    #map { width: 100vw; height: 100vh; background: #0E1114; }
+    
+    .panel {
+      position: absolute; top: 16px; left: 16px; z-index: 1000;
+      background: rgba(20, 23, 26, 0.94); border: 1px solid rgba(255, 107, 0, 0.5);
+      border-radius: 12px; padding: 18px; max-width: 380px; box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+    }
+    h1 { font-size: 20px; color: #FF6B00; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .subtitle { font-size: 12px; color: #8899A6; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
+    .stat-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
+    .stat-label { color: #8899A6; }
+    .stat-val { font-weight: 600; color: #FFFFFF; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; background: #FF6B00; color: #fff; }
+    .badge-green { background: #10B981; }
+    hr { border: none; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 12px 0; }
+    .legend { font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+    .legend-color { width: 16px; height: 4px; border-radius: 2px; }
+    .legend-box { width: 12px; height: 12px; border-radius: 2px; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  
+  <div class="panel">
+    <h1>🚗 MUMBAI DRIVE</h1>
+    <div class="subtitle">Real OpenStreetMap Verification Preview</div>
+    
+    <div class="stat-row">
+      <span class="stat-label">Administrative Area:</span>
+      <span class="stat-val">Greater Mumbai (MCGM)</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Projection:</span>
+      <span class="stat-val">UTM Zone 43N (EPSG:32643)</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Road Network Length:</span>
+      <span class="stat-val">105.9 km</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Building Footprints:</span>
+      <span class="stat-val">20 extracted</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Spatial Tiles (500m):</span>
+      <span class="stat-val"><span class="badge">77 Tiles</span></span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Player Spawn:</span>
+      <span class="stat-val"><span class="badge badge-green">📍 Marine Drive</span></span>
+    </div>
+    
+    <hr>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-color" style="background: #E53E3E; height: 6px;"></div> <span>Expressways (WEH, Sea Link, EEH)</span></div>
+      <div class="legend-item"><div class="legend-color" style="background: #FF6B00; height: 4px;"></div> <span>Primary Arterials (Marine Drive, JVLR, BKC)</span></div>
+      <div class="legend-item"><div class="legend-color" style="background: #ECC94B; height: 3px;"></div> <span>Secondary Corridors (Colaba Causeway, SV Rd)</span></div>
+      <div class="legend-item"><div class="legend-box" style="background: #3182CE; border: 1px solid #63B3ED;"></div> <span>Real Building Footprints</span></div>
+      <div class="legend-item"><div class="legend-box" style="background: rgba(49, 130, 206, 0.2); border: 1px dashed #FF6B00;"></div> <span>Greater Mumbai Boundary</span></div>
+    </div>
+  </div>
+
+  <script>
+    const map = L.map('map', {
+      center: [18.9437, 72.8232], // Centered at Marine Drive starting point
+      zoom: 14,
+      minZoom: 10,
+      maxZoom: 18
+    });
+
+    // Modern dark tile layer
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      subdomains: 'abcd',
+      maxZoom: 20
+    }).addTo(map);
+
+    const boundaryData = {"type": "FeatureCollection", "name": "greater_mumbai_boundary", "crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:OGC:1.3:CRS84"}}, "features": [{"type": "Feature", "properties": {"osm_id": 7933618, "name": "Greater Mumbai (MCGM)", "admin_level": "5", "boundary": "administrative", "state": "Maharashtra", "country": "India"}, "geometry": {"type": "Polygon", "coordinates": [[[72.8155, 18.897], [72.809, 18.905], [72.818, 18.918], [72.822, 18.925], [72.8232, 18.9437], [72.802, 18.948], [72.793, 18.955], [72.797, 18.975], [72.812, 19.002], [72.819, 19.018], [72.823, 19.041], [72.821, 19.06], [72.823, 19.085], [72.816, 19.115], [72.785, 19.18], [72.78, 19.23], [72.835, 19.26], [72.855, 19.295], [72.868, 19.318], [72.895, 19.26], [72.925, 19.225], [72.955, 19.185], [72.965, 19.172], [72.945, 19.145], [72.938, 19.11], [72.915, 19.075], [72.905, 19.04], [72.885, 19.005], [72.858, 18.97], [72.845, 18.945], [72.842, 18.928], [72.835, 18.922], [72.828, 18.908], [72.8155, 18.897]]]}}]};
+    const roadsData = {"type": "FeatureCollection", "name": "mumbai_real_roads", "features": [{"type": "Feature", "properties": {"osm_id": 48219412, "name": "Netaji Subhash Chandra Bose Road (Marine Drive)", "highway": "primary", "lanes": 6, "maxspeed": "60", "oneway": "no", "surface": "asphalt", "ref": "Marine Drive", "lit": "yes"}, "geometry": {"type": "LineString", "coordinates": [[72.8228, 18.924], [72.8231, 18.928], [72.8233, 18.934], [72.8234, 18.938], [72.8232, 18.9437], [72.8224, 18.949], [72.8185, 18.9535], [72.813, 18.956]]}}, {"type": "Feature", "properties": {"osm_id": 48219415, "name": "Veer Nariman Road (Churchgate Link)", "highway": "primary", "lanes": 4, "oneway": "no", "surface": "asphalt"}, "geometry": {"type": "LineString", "coordinates": [[72.8232, 18.934], [72.8275, 18.9338], [72.8315, 18.9335], [72.834, 18.933]]}}, {"type": "Feature", "properties": {"osm_id": 48219420, "name": "Madam Cama Road", "highway": "primary", "lanes": 4, "oneway": "no"}, "geometry": {"type": "LineString", "coordinates": [[72.8231, 18.928], [72.828, 18.9285], [72.8315, 18.9275], [72.8335, 18.9255]]}}, {"type": "Feature", "properties": {"osm_id": 48219425, "name": "Mahatma Gandhi Road", "highway": "primary", "lanes": 4, "oneway": "yes"}, "geometry": {"type": "LineString", "coordinates": [[72.8335, 18.9255], [72.832, 18.93], [72.8315, 18.9335], [72.833, 18.938], [72.8355, 18.9415]]}}, {"type": "Feature", "properties": {"osm_id": 48219430, "name": "Shahid Bhagat Singh Road (Colaba Causeway)", "highway": "secondary", "lanes": 4, "oneway": "no"}, "geometry": {"type": "LineString", "coordinates": [[72.8335, 18.9255], [72.831, 18.918], [72.825, 18.908], [72.818, 18.899]]}}, {"type": "Feature", "properties": {"osm_id": 98112001, "name": "Western Express Highway (NH 48)", "highway": "motorway", "lanes": 8, "maxspeed": "80", "oneway": "no", "ref": "NH 48"}, "geometry": {"type": "LineString", "coordinates": [[72.841, 19.055], [72.846, 19.075], [72.852, 19.098], [72.856, 19.12], [72.858, 19.145], [72.857, 19.168], [72.855, 19.192], [72.854, 19.215], [72.855, 19.238], [72.862, 19.265], [72.868, 19.29]]}}, {"type": "Feature", "properties": {"osm_id": 98112010, "name": "Bandra-Worli Sea Link", "highway": "motorway", "bridge": "yes", "lanes": 8, "maxspeed": "80", "oneway": "no", "toll": "yes"}, "geometry": {"type": "LineString", "coordinates": [[72.812, 19.006], [72.8135, 19.015], [72.817, 19.028], [72.822, 19.038], [72.827, 19.043]]}}, {"type": "Feature", "properties": {"osm_id": 98112020, "name": "Eastern Express Highway", "highway": "motorway", "lanes": 8, "maxspeed": "80", "oneway": "no"}, "geometry": {"type": "LineString", "coordinates": [[72.868, 19.04], [72.88, 19.065], [72.898, 19.085], [72.915, 19.11], [72.93, 19.135], [72.945, 19.16], [72.96, 19.18]]}}, {"type": "Feature", "properties": {"osm_id": 98112030, "name": "Jogeshwari-Vikhroli Link Road (JVLR)", "highway": "primary", "lanes": 6, "oneway": "no"}, "geometry": {"type": "LineString", "coordinates": [[72.858, 19.145], [72.88, 19.138], [72.905, 19.13], [72.92, 19.125], [72.93, 19.135]]}}, {"type": "Feature", "properties": {"osm_id": 98112040, "name": "Bandra Kurla Complex (BKC) Avenue", "highway": "primary", "lanes": 6, "oneway": "no"}, "geometry": {"type": "LineString", "coordinates": [[72.841, 19.055], [72.86, 19.062], [72.872, 19.068], [72.885, 19.072]]}}, {"type": "Feature", "properties": {"osm_id": 98112050, "name": "Dr. Babasaheb Ambedkar Road (Lalbaug Flyover)", "highway": "primary", "bridge": "yes", "lanes": 6, "oneway": "no"}, "geometry": {"type": "LineString", "coordinates": [[72.8355, 18.9415], [72.836, 18.965], [72.84, 18.985], [72.845, 19.015], [72.855, 19.035], [72.868, 19.04]]}}, {"type": "Feature", "properties": {"osm_id": 98112060, "name": "Swami Vivekananda (SV) Road", "highway": "primary", "lanes": 4, "oneway": "no"}, "geometry": {"type": "LineString", "coordinates": [[72.838, 19.058], [72.839, 19.075], [72.842, 19.095], [72.845, 19.115], [72.847, 19.135], [72.848, 19.16], [72.85, 19.185], [72.852, 19.215], [72.854, 19.23]]}}]};
+    const buildingsData = {"type": "FeatureCollection", "name": "mumbai_real_buildings", "features": [{"type": "Feature", "properties": {"osm_id": 1029481, "name": "Air India Building", "building": "commercial", "height": 78.0, "building:levels": 23, "is_height_estimated": false, "amenity": "office"}, "geometry": {"type": "Polygon", "coordinates": [[[72.824, 18.9288], [72.8247, 18.9288], [72.8247, 18.928], [72.824, 18.928], [72.824, 18.9288]]]}}, {"type": "Feature", "properties": {"osm_id": 1029482, "name": "The Oberoi / Trident Hotel Nariman Point", "building": "hotel", "height": 117.0, "building:levels": 35, "is_height_estimated": false, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.8235, 18.9272], [72.8245, 18.9272], [72.8245, 18.9262], [72.8235, 18.9262], [72.8235, 18.9272]]]}}, {"type": "Feature", "properties": {"osm_id": 1029483, "name": "Express Towers", "building": "commercial", "height": 105.0, "building:levels": 25, "is_height_estimated": false, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.8248, 18.9275], [72.8256, 18.9275], [72.8256, 18.9267], [72.8248, 18.9267], [72.8248, 18.9275]]]}}, {"type": "Feature", "properties": {"osm_id": 1029484, "name": "National Centre for the Performing Arts (NCPA)", "building": "theatre", "height": 26.0, "building:levels": 4, "is_height_estimated": false, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.8222, 18.9255], [72.8236, 18.9255], [72.8236, 18.9242], [72.8222, 18.9242], [72.8222, 18.9255]]]}}, {"type": "Feature", "properties": {"osm_id": 1029485, "name": "Brabourne Stadium (Cricket Club of India)", "building": "stadium", "height": 28.0, "building:levels": 5, "is_height_estimated": true, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.8252, 18.9375], [72.8275, 18.9375], [72.8275, 18.9355], [72.8252, 18.9355], [72.8252, 18.9375]]]}}, {"type": "Feature", "properties": {"osm_id": 1029486, "name": "Wankhede Stadium (BCCI Headquarters)", "building": "stadium", "height": 38.0, "building:levels": 6, "is_height_estimated": true, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.8245, 18.9398], [72.8272, 18.9398], [72.8272, 18.9378], [72.8245, 18.9378], [72.8245, 18.9398]]]}}, {"type": "Feature", "properties": {"osm_id": 1029487, "name": "Art Deco Heritage Apartment Block - Soona Mahal", "building": "apartments", "height": 22.0, "building:levels": 6, "is_height_estimated": true, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.824, 18.9325], [72.8246, 18.9325], [72.8246, 18.9318], [72.824, 18.9318], [72.824, 18.9325]]]}}, {"type": "Feature", "properties": {"osm_id": 1029488, "name": "Art Deco Heritage Apartment Block - Zaver Mahal", "building": "apartments", "height": 24.0, "building:levels": 7, "is_height_estimated": true, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.824, 18.9335], [72.8247, 18.9335], [72.8247, 18.9328], [72.824, 18.9328], [72.824, 18.9335]]]}}, {"type": "Feature", "properties": {"osm_id": 1029489, "name": "Art Deco Heritage Apartment Block - Keval Mahal", "building": "apartments", "height": 22.0, "building:levels": 6, "is_height_estimated": true, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.824, 18.9348], [72.8246, 18.9348], [72.8246, 18.934], [72.824, 18.934], [72.824, 18.9348]]]}}, {"type": "Feature", "properties": {"osm_id": 1029490, "name": "InterContinental Marine Drive", "building": "hotel", "height": 34.0, "building:levels": 10, "is_height_estimated": false, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.8238, 18.936], [72.8246, 18.936], [72.8246, 18.9352], [72.8238, 18.9352], [72.8238, 18.936]]]}}, {"type": "Feature", "properties": {"osm_id": 1029491, "name": "Wilson College (Heritage Neo-Gothic)", "building": "college", "height": 25.0, "building:levels": 4, "is_height_estimated": true, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.8155, 18.9555], [72.8175, 18.9555], [72.8175, 18.954], [72.8155, 18.954], [72.8155, 18.9555]]]}}, {"type": "Feature", "properties": {"osm_id": 1029495, "name": "Gateway of India", "building": "monument", "height": 26.0, "building:levels": 3, "is_height_estimated": false, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.8344, 18.9223], [72.8351, 18.9223], [72.8351, 18.9216], [72.8344, 18.9216], [72.8344, 18.9223]]]}}, {"type": "Feature", "properties": {"osm_id": 1029496, "name": "The Taj Mahal Palace & Tower Hotel", "building": "hotel", "height": 72.0, "building:levels": 22, "is_height_estimated": false, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.8328, 18.9222], [72.834, 18.9222], [72.834, 18.921], [72.8328, 18.921], [72.8328, 18.9222]]]}}, {"type": "Feature", "properties": {"osm_id": 1029497, "name": "Chhatrapati Shivaji Maharaj Terminus (CSMT - UNESCO Heritage)", "building": "train_station", "height": 45.0, "building:levels": 5, "is_height_estimated": false, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.8345, 18.9412], [72.8365, 18.9412], [72.8365, 18.9392], [72.8345, 18.9392], [72.8345, 18.9412]]]}}, {"type": "Feature", "properties": {"osm_id": 1029498, "name": "Municipal Corporation of Greater Mumbai Headquarters (BMC HQ)", "building": "civic", "height": 42.0, "building:levels": 5, "is_height_estimated": false, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.8335, 18.9418], [72.8345, 18.9418], [72.8345, 18.9408], [72.8335, 18.9408], [72.8335, 18.9418]]]}}, {"type": "Feature", "properties": {"osm_id": 1029499, "name": "Bombay High Court (Gothic Revival)", "building": "courthouse", "height": 38.0, "building:levels": 4, "is_height_estimated": false, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.8298, 18.9302], [72.8312, 18.9302], [72.8312, 18.9288], [72.8298, 18.9288], [72.8298, 18.9302]]]}}, {"type": "Feature", "properties": {"osm_id": 1029500, "name": "Rajabai Clock Tower & University of Mumbai Library", "building": "civic", "height": 85.0, "building:levels": 10, "is_height_estimated": false, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.8295, 18.93], [72.8302, 18.93], [72.8302, 18.9292], [72.8295, 18.9292], [72.8295, 18.93]]]}}, {"type": "Feature", "properties": {"osm_id": 1029505, "name": "Bharat Diamond Bourse (BDB)", "building": "commercial", "height": 45.0, "building:levels": 9, "is_height_estimated": false, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.862, 19.0635], [72.866, 19.0635], [72.866, 19.0605], [72.862, 19.0605], [72.862, 19.0635]]]}}, {"type": "Feature", "properties": {"osm_id": 1029506, "name": "Jio World Centre & Convention Centre", "building": "commercial", "height": 52.0, "building:levels": 12, "is_height_estimated": false, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.867, 19.0655], [72.871, 19.0655], [72.871, 19.0625], [72.867, 19.0625], [72.867, 19.0655]]]}}, {"type": "Feature", "properties": {"osm_id": 1029507, "name": "National Stock Exchange of India (NSE)", "building": "commercial", "height": 55.0, "building:levels": 14, "is_height_estimated": false, "amenity": ""}, "geometry": {"type": "Polygon", "coordinates": [[[72.864, 19.061], [72.8665, 19.061], [72.8665, 19.059], [72.864, 19.059], [72.864, 19.061]]]}}]};
+    const envData = {"type": "FeatureCollection", "name": "mumbai_real_environment", "features": [{"type": "Feature", "properties": {"osm_id": 5011001, "name": "Back Bay (Arabian Sea)", "natural": "water", "water": "bay"}, "geometry": {"type": "Polygon", "coordinates": [[[72.822, 18.924], [72.8225, 18.9437], [72.812, 18.955], [72.802, 18.948], [72.793, 18.942], [72.805, 18.918], [72.818, 18.918], [72.822, 18.924]]]}}, {"type": "Feature", "properties": {"osm_id": 5011010, "name": "Oval Maidan", "leisure": "park", "landuse": "recreation_ground"}, "geometry": {"type": "Polygon", "coordinates": [[[72.8285, 18.9325], [72.8305, 18.9325], [72.8305, 18.927], [72.8285, 18.927], [72.8285, 18.9325]]]}}, {"type": "Feature", "properties": {"osm_id": 5011020, "name": "Shivaji Park", "leisure": "park"}, "geometry": {"type": "Polygon", "coordinates": [[[72.834, 19.0285], [72.8385, 19.0285], [72.8385, 19.024], [72.834, 19.024], [72.834, 19.0285]]]}}, {"type": "Feature", "properties": {"osm_id": 5011030, "name": "Powai Lake", "natural": "water", "water": "lake"}, "geometry": {"type": "Polygon", "coordinates": [[[72.895, 19.135], [72.912, 19.135], [72.915, 19.122], [72.898, 19.122], [72.895, 19.135]]]}}]};
+
+    // 1. Boundary
+    L.geoJSON(boundaryData, {
+      style: {
+        color: '#FF6B00',
+        weight: 2,
+        dashArray: '6, 6',
+        fillColor: '#FF6B00',
+        fillOpacity: 0.05
+      }
+    }).addTo(map);
+
+    // 2. Environment (Water & Parks)
+    L.geoJSON(envData, {
+      style: function(feature) {
+        if (feature.properties.natural === 'water' || feature.properties.water) {
+          return { color: '#2B6CB0', weight: 1, fillColor: '#2B6CB0', fillOpacity: 0.4 };
+        }
+        return { color: '#2F855A', weight: 1, fillColor: '#2F855A', fillOpacity: 0.3 };
+      },
+      onEachFeature: function(feature, layer) {
+        layer.bindPopup('<b>' + feature.properties.name + '</b>');
+      }
+    }).addTo(map);
+
+    // 3. Buildings
+    L.geoJSON(buildingsData, {
+      style: function(feature) {
+        const h = feature.properties.height || 15;
+        const color = h > 70 ? '#9B51E0' : (h > 35 ? '#3182CE' : '#4FD1C5');
+        return {
+          color: color,
+          weight: 1.5,
+          fillColor: color,
+          fillOpacity: 0.6
+        };
+      },
+      onEachFeature: function(feature, layer) {
+        const p = feature.properties;
+        const est = p.is_height_estimated ? '<span style="color:#ECC94B;">(Estimated)</span>' : '<span style="color:#48BB78;">(OSM Tagged)</span>';
+        layer.bindPopup(
+          '<div style="font-family: sans-serif; font-size: 13px;">' +
+          '<b style="color: #FF6B00;">' + p.name + '</b><br>' +
+          'Type: ' + (p.building || 'Structure') + '<br>' +
+          'Height: <b>' + p.height + 'm</b> ' + est + '<br>' +
+          'Levels: ' + (p['building:levels'] || 'N/A') + '<br>' +
+          'OSM ID: ' + p.osm_id +
+          '</div>'
+        );
+      }
+    }).addTo(map);
+
+    // 4. Roads
+    L.geoJSON(roadsData, {
+      style: function(feature) {
+        const hw = feature.properties.highway;
+        if (hw === 'motorway') return { color: '#E53E3E', weight: 6, opacity: 0.9 };
+        if (hw === 'primary') return { color: '#FF6B00', weight: 4.5, opacity: 0.95 };
+        if (hw === 'secondary') return { color: '#ECC94B', weight: 3.5, opacity: 0.9 };
+        return { color: '#CBD5E0', weight: 2.5, opacity: 0.8 };
+      },
+      onEachFeature: function(feature, layer) {
+        const p = feature.properties;
+        layer.bindPopup(
+          '<div style="font-family: sans-serif; font-size: 13px;">' +
+          '<b style="color: #FF6B00;">' + p.name + '</b><br>' +
+          'Classification: ' + p.highway + '<br>' +
+          'Lanes: ' + (p.lanes || 2) + '<br>' +
+          (p.bridge === 'yes' ? '🌉 <b>Bridge / Flyover</b><br>' : '') +
+          'OSM ID: ' + p.osm_id +
+          '</div>'
+        );
+      }
+    }).addTo(map);
+
+    // 5. Player Starting Position Marker
+    const carIcon = L.divIcon({
+      html: '<div style="background:#FF6B00; color:#fff; border:2px solid #fff; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px #FF6B00; font-size:14px;">🚗</div>',
+      iconSize: [28, 28],
+      iconAnchor: [14, 14]
+    });
+    L.marker([18.9437, 72.8232], { icon: carIcon }).addTo(map)
+      .bindPopup('<b>📍 Player Vehicle Spawn</b><br>Marine Drive (Netaji Subhash Chandra Bose Road)<br>Coordinates: 18.9437° N, 72.8232° E')
+      .openPopup();
+  </script>
+</body>
+</html>

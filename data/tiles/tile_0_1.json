@@ -1,0 +1,195 @@
+{
+  "tile_coord": [
+    0,
+    1
+  ],
+  "world_bounds": {
+    "min_x": 0.0,
+    "max_x": 500.0,
+    "min_z": 500.0,
+    "max_z": 1000.0
+  },
+  "world_center": [
+    250.0,
+    0.0,
+    750.0
+  ],
+  "roads": [
+    {
+      "osm_id": 48219412,
+      "name": "Netaji Subhash Chandra Bose Road (Marine Drive)",
+      "highway": "primary",
+      "width": 16.0,
+      "lanes": 6,
+      "oneway": false,
+      "bridge": false,
+      "tunnel": false,
+      "points": [
+        [
+          -69.043,
+          0.0,
+          2180.477
+        ],
+        [
+          -31.976,
+          0.0,
+          1738.025
+        ],
+        [
+          -2.713,
+          0.0,
+          1074.022
+        ],
+        [
+          13.284,
+          0.0,
+          631.31
+        ],
+        [
+          0.0,
+          0.0,
+          -0.0
+        ],
+        [
+          -77.032,
+          0.0,
+          -587.807
+        ],
+        [
+          -481.705,
+          0.0,
+          -1091.083
+        ],
+        [
+          -1057.641,
+          0.0,
+          -1375.039
+        ]
+      ],
+      "length_m": 4063.9
+    }
+  ],
+  "buildings": [
+    {
+      "osm_id": 1029485,
+      "name": "Brabourne Stadium (Cricket Club of India)",
+      "building_type": "stadium",
+      "height": 28.0,
+      "levels": 5,
+      "is_height_estimated": true,
+      "center": [
+        298.06,
+        0.0,
+        778.77
+      ],
+      "polygon": [
+        [
+          202.23,
+          0.0,
+          689.003
+        ],
+        [
+          444.534,
+          0.0,
+          691.988
+        ],
+        [
+          441.808,
+          0.0,
+          913.409
+        ],
+        [
+          199.501,
+          0.0,
+          910.424
+        ],
+        [
+          202.23,
+          0.0,
+          689.003
+        ]
+      ]
+    },
+    {
+      "osm_id": 1029486,
+      "name": "Wankhede Stadium (BCCI Headquarters)",
+      "building_type": "stadium",
+      "height": 38.0,
+      "levels": 6,
+      "is_height_estimated": true,
+      "center": [
+        244.31,
+        0.0,
+        523.43
+      ],
+      "polygon": [
+        [
+          131.625,
+          0.0,
+          433.46
+        ],
+        [
+          416.064,
+          0.0,
+          436.965
+        ],
+        [
+          413.338,
+          0.0,
+          658.386
+        ],
+        [
+          128.895,
+          0.0,
+          654.881
+        ],
+        [
+          131.625,
+          0.0,
+          433.46
+        ]
+      ]
+    },
+    {
+      "osm_id": 1029490,
+      "name": "InterContinental Marine Drive",
+      "building_type": "hotel",
+      "height": 34.0,
+      "levels": 10,
+      "is_height_estimated": false,
+      "center": [
+        85.97,
+        0.0,
+        889.09
+      ],
+      "polygon": [
+        [
+          52.693,
+          0.0,
+          853.251
+        ],
+        [
+          136.973,
+          0.0,
+          854.29
+        ],
+        [
+          135.882,
+          0.0,
+          942.858
+        ],
+        [
+          51.601,
+          0.0,
+          941.819
+        ],
+        [
+          52.693,
+          0.0,
+          853.251
+        ]
+      ]
+    }
+  ],
+  "environment": []
+}

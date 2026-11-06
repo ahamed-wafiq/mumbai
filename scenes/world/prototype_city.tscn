@@ -1,0 +1,111 @@
+[gd_scene load_steps=21 format=3 uid="uid://cprotocity01"]
+
+[ext_resource type="Script" path="res://scripts/world/world_manager.gd" id="1_world"]
+[ext_resource type="Script" path="res://scripts/world/mumbai_city_builder.gd" id="2_city_builder"]
+[ext_resource type="Script" path="res://scripts/world/road_generator.gd" id="3_road_gen"]
+[ext_resource type="Script" path="res://scripts/world/building_generator.gd" id="4_bld_gen"]
+[ext_resource type="Script" path="res://scripts/world/map_tile_manager.gd" id="5_tile_mgr"]
+[ext_resource type="Script" path="res://scripts/world/world_streamer.gd" id="6_streamer"]
+[ext_resource type="PackedScene" path="res://scenes/vehicle/car.tscn" id="7_car"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="8_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="9_pause"]
+[ext_resource type="PackedScene" path="res://scenes/main/settings_dialog.tscn" id="10_settings"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSky_Mumbai"]
+sky_top_color = Color(0.24, 0.42, 0.65, 1)
+sky_horizon_color = Color(0.85, 0.68, 0.52, 1)
+ground_bottom_color = Color(0.12, 0.14, 0.16, 1)
+ground_horizon_color = Color(0.72, 0.58, 0.45, 1)
+sun_angle_max = 28.0
+
+[sub_resource type="Sky" id="Sky_Mumbai"]
+sky_material = SubResource("ProceduralSky_Mumbai")
+
+[sub_resource type="Environment" id="Environment_Mumbai"]
+background_mode = 2
+sky = SubResource("Sky_Mumbai")
+ambient_light_source = 3
+ambient_light_color = Color(0.85, 0.88, 0.95, 1)
+ambient_light_sky_contribution = 0.65
+tonemap_mode = 3
+tonemap_exposure = 1.05
+
+[sub_resource type="StandardMaterial3D" id="Mat_LandTerrain"]
+albedo_color = Color(0.18, 0.2, 0.22, 1)
+roughness = 0.95
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_LandTerrain"]
+material = SubResource("Mat_LandTerrain")
+size = Vector2(1600, 4500)
+
+[sub_resource type="BoxShape3D" id="BoxShape_LandTerrain"]
+size = Vector3(1600, 1, 4500)
+
+[sub_resource type="StandardMaterial3D" id="Mat_SeaWater"]
+albedo_color = Color(0.08, 0.25, 0.42, 0.92)
+metallic = 0.4
+roughness = 0.15
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_Ocean"]
+material = SubResource("Mat_SeaWater")
+size = Vector2(2500, 4500)
+
+[node name="PrototypeCity" type="Node3D"]
+script = ExtResource("1_world")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_Mumbai")
+
+[node name="SunLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, 0.25, -0.433013, 0, 0.866025, 0.5, 0.5, -0.433013, 0.75, 0, 50, 0)
+light_color = Color(1, 0.92, 0.82, 1)
+light_energy = 1.25
+shadow_enabled = true
+shadow_bias = 0.05
+directional_shadow_max_distance = 250.0
+
+[node name="GroundTerrain" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 300, -0.1, 400)
+collision_layer = 1
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="GroundTerrain"]
+mesh = SubResource("PlaneMesh_LandTerrain")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GroundTerrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape_LandTerrain")
+
+[node name="ArabianSea" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1250, -0.5, 400)
+mesh = SubResource("PlaneMesh_Ocean")
+
+[node name="CityBuilder" type="Node3D" parent="."]
+script = ExtResource("2_city_builder")
+
+[node name="RoadGenerator" type="Node" parent="."]
+script = ExtResource("3_road_gen")
+
+[node name="BuildingGenerator" type="Node" parent="."]
+script = ExtResource("4_bld_gen")
+
+[node name="MapTileManager" type="Node" parent="."]
+script = ExtResource("5_tile_mgr")
+
+[node name="StreamedWorld" type="Node3D" parent="."]
+
+[node name="WorldStreamer" type="Node" parent="."]
+script = ExtResource("6_streamer")
+player_target_path = NodePath("../Car")
+tile_manager_path = NodePath("../MapTileManager")
+tiles_container_path = NodePath("../StreamedWorld")
+
+[node name="Car" parent="." instance=ExtResource("7_car")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.45, 50)
+
+[node name="HUD" parent="." instance=ExtResource("8_hud")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("9_pause")]
+
+[node name="SettingsDialog" parent="." instance=ExtResource("10_settings")]
+visible = false

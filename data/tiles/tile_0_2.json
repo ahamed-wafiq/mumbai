@@ -1,0 +1,175 @@
+{
+  "tile_coord": [
+    0,
+    2
+  ],
+  "world_bounds": {
+    "min_x": 0.0,
+    "max_x": 500.0,
+    "min_z": 1000.0,
+    "max_z": 1500.0
+  },
+  "world_center": [
+    250.0,
+    0.0,
+    1250.0
+  ],
+  "roads": [
+    {
+      "osm_id": 48219415,
+      "name": "Veer Nariman Road (Churchgate Link)",
+      "highway": "primary",
+      "width": 16.0,
+      "lanes": 4,
+      "oneway": false,
+      "bridge": false,
+      "tunnel": false,
+      "points": [
+        [
+          -13.248,
+          0.0,
+          1073.892
+        ],
+        [
+          439.491,
+          0.0,
+          1101.616
+        ],
+        [
+          860.489,
+          0.0,
+          1140.012
+        ],
+        [
+          1123.189,
+          0.0,
+          1198.601
+        ]
+      ],
+      "length_m": 1145.5
+    }
+  ],
+  "buildings": [
+    {
+      "osm_id": 1029487,
+      "name": "Art Deco Heritage Apartment Block - Soona Mahal",
+      "building_type": "apartments",
+      "height": 22.0,
+      "levels": 6,
+      "is_height_estimated": true,
+      "center": [
+        93.89,
+        0.0,
+        1272.31
+      ],
+      "polygon": [
+        [
+          68.986,
+          0.0,
+          1240.997
+        ],
+        [
+          132.197,
+          0.0,
+          1241.776
+        ],
+        [
+          131.242,
+          0.0,
+          1319.274
+        ],
+        [
+          68.03,
+          0.0,
+          1318.495
+        ],
+        [
+          68.986,
+          0.0,
+          1240.997
+        ]
+      ]
+    },
+    {
+      "osm_id": 1029488,
+      "name": "Art Deco Heritage Apartment Block - Zaver Mahal",
+      "building_type": "apartments",
+      "height": 24.0,
+      "levels": 7,
+      "is_height_estimated": true,
+      "center": [
+        99.47,
+        0.0,
+        1161.65
+      ],
+      "polygon": [
+        [
+          70.351,
+          0.0,
+          1130.287
+        ],
+        [
+          144.097,
+          0.0,
+          1131.196
+        ],
+        [
+          143.142,
+          0.0,
+          1208.693
+        ],
+        [
+          69.395,
+          0.0,
+          1207.784
+        ],
+        [
+          70.351,
+          0.0,
+          1130.287
+        ]
+      ]
+    },
+    {
+      "osm_id": 1029489,
+      "name": "Art Deco Heritage Apartment Block - Keval Mahal",
+      "building_type": "apartments",
+      "height": 22.0,
+      "levels": 6,
+      "is_height_estimated": true,
+      "center": [
+        96.97,
+        0.0,
+        1022.1
+      ],
+      "polygon": [
+        [
+          72.125,
+          0.0,
+          986.363
+        ],
+        [
+          135.336,
+          0.0,
+          987.143
+        ],
+        [
+          134.244,
+          0.0,
+          1075.711
+        ],
+        [
+          71.033,
+          0.0,
+          1074.932
+        ],
+        [
+          72.125,
+          0.0,
+          986.363
+        ]
+      ]
+    }
+  ],
+  "environment": []
+}
