@@ -15,12 +15,13 @@ var valid_polygons: int = 0
 var meshes_created: int = 0
 var visible_buildings: int = 0
 
-# Architectural Materials (CULL_DISABLED ensures 100% visibility regardless of polygon winding)
-var _mat_commercial: StandardMaterial3D
-var _mat_residential: StandardMaterial3D
-var _mat_hotel: StandardMaterial3D
-var _mat_heritage: StandardMaterial3D
-var _mat_roof_trim: StandardMaterial3D
+# Architectural Materials (Procedural Facade Shaders)
+var _facade_shader: Shader = preload("res://assets/shaders/building_facade.gdshader")
+var _mat_commercial: Material
+var _mat_residential: Material
+var _mat_hotel: Material
+var _mat_heritage: Material
+var _mat_roof_trim: Material
 
 # High-contrast debug materials for testing
 var _debug_mats: Array[StandardMaterial3D] = []
@@ -33,38 +34,68 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F4:
 		toggle_debug_materials()
 
+func _create_facade_mat(wall_col: Color, trim_col: Color, win_col: Color, floor_h: float, win_w: float, win_h: float, emiss_str: float, metallic_val: float, rough_val: float) -> Material:
+	if _facade_shader:
+		var sm := ShaderMaterial.new()
+		sm.shader = _facade_shader
+		sm.set_shader_parameter("wall_color", wall_col)
+		sm.set_shader_parameter("trim_color", trim_col)
+		sm.set_shader_parameter("window_color", win_col)
+		sm.set_shader_parameter("floor_height", floor_h)
+		sm.set_shader_parameter("window_width", win_w)
+		sm.set_shader_parameter("window_height", win_h)
+		sm.set_shader_parameter("emission_strength", emiss_str)
+		sm.set_shader_parameter("emission_color", Color(1.0, 0.88, 0.65, 1.0))
+		sm.set_shader_parameter("glass_metallic", metallic_val)
+		sm.set_shader_parameter("window_roughness", rough_val)
+		sm.set_shader_parameter("wall_roughness", 0.75)
+		return sm
+	else:
+		var m := StandardMaterial3D.new()
+		m.albedo_color = wall_col
+		m.roughness = 0.7
+		m.cull_mode = BaseMaterial3D.CULL_DISABLED
+		return m
+
 func _init_materials() -> void:
-	# 1. Art Deco / Heritage Sandstone & Granite (Double-sided)
-	_mat_heritage = StandardMaterial3D.new()
-	_mat_heritage.albedo_color = Color(0.78, 0.72, 0.62, 1.0)
-	_mat_heritage.roughness = 0.7
-	_mat_heritage.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# 1. Marine Drive Art Deco Apartments & Residential Mansions
+	_mat_residential = _create_facade_mat(
+		Color(0.85, 0.80, 0.72, 1.0), # Warm Art Deco Cream
+		Color(0.95, 0.48, 0.15, 1.0), # Terracotta Orange trim
+		Color(0.10, 0.16, 0.22, 1.0), # Deep reflective glass
+		3.5, 0.65, 0.55, 1.3, 0.85, 0.12
+	)
 	
-	# 2. Modern Commercial Glass & Slate Concrete (Double-sided)
-	_mat_commercial = StandardMaterial3D.new()
-	_mat_commercial.albedo_color = Color(0.24, 0.32, 0.42, 1.0)
-	_mat_commercial.metallic = 0.5
-	_mat_commercial.roughness = 0.25
-	_mat_commercial.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# 2. Modern Commercial Glass & Slate Corporate Headquarters
+	_mat_commercial = _create_facade_mat(
+		Color(0.24, 0.28, 0.35, 1.0), # Slate charcoal concrete
+		Color(0.30, 0.70, 0.90, 1.0), # Cyan / chrome architectural accent
+		Color(0.08, 0.14, 0.20, 1.0), # Reflective blue glass
+		3.8, 0.75, 0.65, 1.6, 0.92, 0.08
+	)
 	
-	# 3. Seafront Hotel & Corporate Towers (Double-sided)
-	_mat_hotel = StandardMaterial3D.new()
-	_mat_hotel.albedo_color = Color(0.32, 0.38, 0.48, 1.0)
-	_mat_hotel.metallic = 0.4
-	_mat_hotel.roughness = 0.35
-	_mat_hotel.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# 3. Seafront Luxury Hotels (The Oberoi, Trident, InterContinental)
+	_mat_hotel = _create_facade_mat(
+		Color(0.80, 0.78, 0.74, 1.0), # Ivory travertine marble
+		Color(0.95, 0.75, 0.25, 1.0), # Gold / brass spandrel trim
+		Color(0.12, 0.18, 0.20, 1.0), # Emerald glass tint
+		3.6, 0.70, 0.60, 1.5, 0.88, 0.10
+	)
 	
-	# 4. Marine Drive Art Deco Apartments & Stucco (Double-sided)
-	_mat_residential = StandardMaterial3D.new()
-	_mat_residential.albedo_color = Color(0.82, 0.75, 0.66, 1.0)
-	_mat_residential.roughness = 0.65
-	_mat_residential.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# 4. Victorian Gothic & Heritage Institutions (High Court, CSMT, Wilson College)
+	_mat_heritage = _create_facade_mat(
+		Color(0.70, 0.62, 0.52, 1.0), # Mumbai Kurla yellow basalt
+		Color(0.48, 0.40, 0.32, 1.0), # Dark teak wood & stone trim
+		Color(0.15, 0.16, 0.18, 1.0), # Arched dark pane glass
+		4.2, 0.50, 0.65, 0.9, 0.40, 0.25
+	)
 	
-	# 5. Roof Parapet Accent Trim
-	_mat_roof_trim = StandardMaterial3D.new()
-	_mat_roof_trim.albedo_color = Color(1.0, 0.45, 0.05, 1.0)
-	_mat_roof_trim.roughness = 0.4
-	_mat_roof_trim.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# 5. Parapet trim
+	var m_trim := StandardMaterial3D.new()
+	m_trim.albedo_color = Color(1.0, 0.45, 0.05, 1.0)
+	m_trim.roughness = 0.4
+	m_trim.cull_mode = BaseMaterial3D.CULL_DISABLED
+	_mat_roof_trim = m_trim
 	
 	# 6. Vibrant Debug Materials (High visibility)
 	var debug_colors := [
@@ -87,6 +118,29 @@ func toggle_debug_materials() -> void:
 	debug_bright_materials = not debug_bright_materials
 	print("[BuildingGenerator] High-contrast debug building materials: ", "ENABLED" if debug_bright_materials else "DISABLED")
 
+## Applies geometric road clearance to building polygon vertices
+## Guarantees buildings never encroach into road lanes or sidewalks
+func _apply_road_clearance(raw_poly: Array) -> Array:
+	var cleared: Array = []
+	for pt in raw_poly:
+		var x: float = float(pt[0])
+		var y: float = float(pt[1])
+		var z: float = float(pt[2])
+		
+		# Marine Drive Queen's Necklace corridor clearance:
+		# Road centerline runs along X ~ 0.0 to 1.0 from Z = -1400 to 2200.
+		# Road half-width is 9.0m, east sidewalk extends to 13.5m.
+		# Any building on the east side (X > 0) must sit safely behind sidewalk (X >= 13.8m).
+		# Any building on the seaside (X < 0) must sit past promenade (X <= -16.0m).
+		if z >= -1400.0 and z <= 2200.0:
+			if x >= 0.0 and x < 13.8:
+				x = 13.8
+			elif x < 0.0 and x > -16.0:
+				x = -16.0
+				
+		cleared.append([x, y, z])
+	return cleared
+
 ## Generates a visible 3D building from a tile building data dictionary.
 ## Supports both 'footprint' and 'polygon' keys.
 func generate_building_from_tile_data(b_data: Dictionary) -> Node3D:
@@ -96,6 +150,9 @@ func generate_building_from_tile_data(b_data: Dictionary) -> Node3D:
 	var raw_poly: Array = b_data.get("footprint", b_data.get("polygon", []))
 	if raw_poly.size() < 3:
 		return null
+		
+	# Apply road clearance pushback to avoid buildings encroaching into road lanes
+	raw_poly = _apply_road_clearance(raw_poly)
 		
 	valid_polygons += 1
 	
@@ -120,6 +177,10 @@ func generate_building_from_tile_data(b_data: Dictionary) -> Node3D:
 		
 	var center := Vector3(sum_x / float(count_for_center), 0.0, sum_z / float(count_for_center))
 	
+	# Cull any erroneous building whose entire centroid sits inside the road corridor
+	if absf(center.x) < 8.0 and center.z >= -1400.0 and center.z <= 2200.0:
+		return null
+		
 	# Convert footprint points to local space relative to center
 	var local_pts: PackedVector3Array = []
 	for i in range(count_for_center):

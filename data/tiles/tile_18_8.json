@@ -1,0 +1,1 @@
+{"grid_x":18,"grid_z":8,"bounds":[9000.0,9500.0,4000.0,4500.0],"roads":[{"id":"1187551454","name":"Service Road","highway":"service","width":5.0,"lanes":2,"oneway":false,"bridge":false,"tunnel":false,"points":[[9085.521,0.0,4716.701],[9085.023,0.0,4704.45],[9088.241,0.0,4514.259],[9090.022,0.0,4316.4],[9086.882,0.0,4103.358]]}],"buildings":[],"environment":[]}

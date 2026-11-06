@@ -8,16 +8,20 @@ extends Node3D
 
 @export var build_on_ready: bool = true
 
+# Shader preloads for advanced rendering
+var _asphalt_shader: Shader = preload("res://assets/shaders/asphalt_road.gdshader")
+var _facade_shader: Shader = preload("res://assets/shaders/building_facade.gdshader")
+
 # Materials
-var mat_asphalt: StandardMaterial3D
+var mat_asphalt: Material
 var mat_yellow_line: StandardMaterial3D
 var mat_white_line: StandardMaterial3D
 var mat_sidewalk: StandardMaterial3D
 var mat_seawall: StandardMaterial3D
-var mat_art_deco_cream: StandardMaterial3D
-var mat_art_deco_terracotta: StandardMaterial3D
-var mat_modern_glass: StandardMaterial3D
-var mat_heritage_stone: StandardMaterial3D
+var mat_art_deco_cream: Material
+var mat_art_deco_terracotta: Material
+var mat_modern_glass: Material
+var mat_heritage_stone: Material
 var mat_window: StandardMaterial3D
 var mat_lamp_glow: StandardMaterial3D
 var _geo: GeoConverter
@@ -28,68 +32,104 @@ func _ready() -> void:
 	if build_on_ready:
 		build_city()
 
+func _create_facade_mat(wall_col: Color, trim_col: Color, win_col: Color, floor_h: float, win_w: float, win_h: float, emiss_str: float, metallic_val: float, rough_val: float) -> Material:
+	if _facade_shader:
+		var sm := ShaderMaterial.new()
+		sm.shader = _facade_shader
+		sm.set_shader_parameter("wall_color", wall_col)
+		sm.set_shader_parameter("trim_color", trim_col)
+		sm.set_shader_parameter("window_color", win_col)
+		sm.set_shader_parameter("floor_height", floor_h)
+		sm.set_shader_parameter("window_width", win_w)
+		sm.set_shader_parameter("window_height", win_h)
+		sm.set_shader_parameter("emission_strength", emiss_str)
+		sm.set_shader_parameter("emission_color", Color(1.0, 0.88, 0.65, 1.0))
+		sm.set_shader_parameter("glass_metallic", metallic_val)
+		sm.set_shader_parameter("window_roughness", rough_val)
+		sm.set_shader_parameter("wall_roughness", 0.75)
+		return sm
+	else:
+		var m := StandardMaterial3D.new()
+		m.albedo_color = wall_col
+		m.roughness = 0.7
+		m.cull_mode = BaseMaterial3D.CULL_DISABLED
+		return m
+
 func _init_materials() -> void:
-	# CULL_DISABLED ensures ribbons and surfaces are 100% visible from all camera angles
-	mat_asphalt = StandardMaterial3D.new()
-	mat_asphalt.albedo_color = Color(0.12, 0.13, 0.15, 1.0)
-	mat_asphalt.roughness = 0.85
-	mat_asphalt.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# 1. High-Fidelity Coastal Wet Asphalt Road Shader
+	if _asphalt_shader:
+		var road_sm := ShaderMaterial.new()
+		road_sm.shader = _asphalt_shader
+		road_sm.set_shader_parameter("asphalt_color", Color(0.12, 0.13, 0.15, 1.0))
+		road_sm.set_shader_parameter("tire_track_color", Color(0.08, 0.09, 0.10, 1.0))
+		road_sm.set_shader_parameter("wetness_sheen", 0.55)
+		road_sm.set_shader_parameter("road_roughness", 0.65)
+		mat_asphalt = road_sm
+	else:
+		var default_asphalt := StandardMaterial3D.new()
+		default_asphalt.albedo_color = Color(0.12, 0.13, 0.15, 1.0)
+		default_asphalt.roughness = 0.8
+		default_asphalt.cull_mode = BaseMaterial3D.CULL_DISABLED
+		mat_asphalt = default_asphalt
 	
 	mat_yellow_line = StandardMaterial3D.new()
-	mat_yellow_line.albedo_color = Color(1.0, 0.72, 0.05, 1.0)
+	mat_yellow_line.albedo_color = Color(1.0, 0.75, 0.08, 1.0)
 	mat_yellow_line.emission_enabled = true
-	mat_yellow_line.emission = Color(1.0, 0.72, 0.05, 1.0)
-	mat_yellow_line.emission_energy_multiplier = 0.5
+	mat_yellow_line.emission = Color(1.0, 0.75, 0.08, 1.0)
+	mat_yellow_line.emission_energy_multiplier = 1.2
 	mat_yellow_line.cull_mode = BaseMaterial3D.CULL_DISABLED
 	
 	mat_white_line = StandardMaterial3D.new()
-	mat_white_line.albedo_color = Color(0.95, 0.96, 0.98, 1.0)
+	mat_white_line.albedo_color = Color(0.96, 0.97, 0.99, 1.0)
 	mat_white_line.emission_enabled = true
-	mat_white_line.emission = Color(0.95, 0.96, 0.98, 1.0)
-	mat_white_line.emission_energy_multiplier = 0.4
+	mat_white_line.emission = Color(0.96, 0.97, 0.99, 1.0)
+	mat_white_line.emission_energy_multiplier = 0.8
 	mat_white_line.cull_mode = BaseMaterial3D.CULL_DISABLED
 	
+	# Art Deco Promenade Pavers
 	mat_sidewalk = StandardMaterial3D.new()
-	mat_sidewalk.albedo_color = Color(0.42, 0.45, 0.49, 1.0)
-	mat_sidewalk.roughness = 0.75
+	mat_sidewalk.albedo_color = Color(0.55, 0.52, 0.48, 1.0)
+	mat_sidewalk.roughness = 0.65
 	mat_sidewalk.cull_mode = BaseMaterial3D.CULL_DISABLED
 	
+	# Marine Drive Seawall Granite / Basalt
 	mat_seawall = StandardMaterial3D.new()
-	mat_seawall.albedo_color = Color(0.55, 0.58, 0.62, 1.0)
-	mat_seawall.roughness = 0.65
+	mat_seawall.albedo_color = Color(0.48, 0.50, 0.52, 1.0)
+	mat_seawall.roughness = 0.55
 	mat_seawall.cull_mode = BaseMaterial3D.CULL_DISABLED
 	
-	mat_art_deco_cream = StandardMaterial3D.new()
-	mat_art_deco_cream.albedo_color = Color(0.85, 0.80, 0.70, 1.0)
-	mat_art_deco_cream.roughness = 0.7
-	mat_art_deco_cream.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# 2. Architectural Facade Shaders for Landmark Buildings
+	mat_art_deco_cream = _create_facade_mat(
+		Color(0.85, 0.80, 0.70, 1.0), Color(0.95, 0.48, 0.15, 1.0), Color(0.10, 0.16, 0.22, 1.0),
+		3.5, 0.65, 0.55, 1.3, 0.85, 0.12
+	)
 	
-	mat_art_deco_terracotta = StandardMaterial3D.new()
-	mat_art_deco_terracotta.albedo_color = Color(0.76, 0.54, 0.42, 1.0)
-	mat_art_deco_terracotta.roughness = 0.75
-	mat_art_deco_terracotta.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mat_art_deco_terracotta = _create_facade_mat(
+		Color(0.78, 0.52, 0.40, 1.0), Color(0.95, 0.80, 0.65, 1.0), Color(0.12, 0.18, 0.20, 1.0),
+		3.6, 0.70, 0.60, 1.4, 0.88, 0.10
+	)
 	
-	mat_modern_glass = StandardMaterial3D.new()
-	mat_modern_glass.albedo_color = Color(0.18, 0.24, 0.32, 1.0)
-	mat_modern_glass.metallic = 0.75
-	mat_modern_glass.roughness = 0.2
-	mat_modern_glass.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mat_modern_glass = _create_facade_mat(
+		Color(0.24, 0.28, 0.35, 1.0), Color(0.30, 0.70, 0.90, 1.0), Color(0.08, 0.14, 0.20, 1.0),
+		3.8, 0.75, 0.65, 1.6, 0.92, 0.08
+	)
 	
-	mat_heritage_stone = StandardMaterial3D.new()
-	mat_heritage_stone.albedo_color = Color(0.62, 0.58, 0.52, 1.0)
-	mat_heritage_stone.roughness = 0.85
-	mat_heritage_stone.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mat_heritage_stone = _create_facade_mat(
+		Color(0.70, 0.62, 0.52, 1.0), Color(0.48, 0.40, 0.32, 1.0), Color(0.15, 0.16, 0.18, 1.0),
+		4.2, 0.50, 0.65, 0.9, 0.40, 0.25
+	)
 	
 	mat_window = StandardMaterial3D.new()
 	mat_window.albedo_color = Color(0.1, 0.15, 0.2, 1.0)
 	mat_window.metallic = 0.9
 	mat_window.roughness = 0.15
 	
+	# Queen's Necklace Streetlamp Warm Golden Glow
 	mat_lamp_glow = StandardMaterial3D.new()
-	mat_lamp_glow.albedo_color = Color(1.0, 0.92, 0.75, 1.0)
+	mat_lamp_glow.albedo_color = Color(1.0, 0.88, 0.65, 1.0)
 	mat_lamp_glow.emission_enabled = true
 	mat_lamp_glow.emission = Color(1.0, 0.88, 0.65, 1.0)
-	mat_lamp_glow.emission_energy_multiplier = 4.0
+	mat_lamp_glow.emission_energy_multiplier = 5.0
 
 ## Builds the full Marine Drive urban corridor
 func build_city() -> void:
@@ -352,6 +392,14 @@ func _create_real_footprint_building(b_name: String, world_pts: PackedVector3Arr
 	var count := world_pts.size()
 	if count < 3:
 		return null
+		
+	# Road setback: push landmark footprint points out past the Marine Drive road and sidewalk
+	for i in range(count):
+		if world_pts[i].z >= -1400.0 and world_pts[i].z <= 2200.0:
+			if world_pts[i].x >= 0.0 and world_pts[i].x < 13.8:
+				world_pts[i].x = 13.8
+			elif world_pts[i].x < 0.0 and world_pts[i].x > -16.0:
+				world_pts[i].x = -16.0
 		
 	# Compute centroid
 	var sum_x: float = 0.0

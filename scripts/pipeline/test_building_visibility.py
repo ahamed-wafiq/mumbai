@@ -49,3 +49,4 @@ print(f"\nGeoJSON Landmarks: {len(gj.get('features', []))} features")
 for i, f in enumerate(gj.get("features", [])[:5]):
     props = f.get("properties", {})
     print(f"[{i+1}] Landmark: {props.get('name')} | Height: {props.get('height')}m | Levels: {props.get('building:levels')}")
+

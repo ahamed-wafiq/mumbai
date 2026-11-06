@@ -154,3 +154,4 @@ with open(report_file, "w", encoding="utf-8") as f:
 
 print(f"Generated: {report_file}")
 print(f"Report size: {os.path.getsize(report_file):,} bytes")
+

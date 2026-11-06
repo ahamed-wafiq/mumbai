@@ -1,0 +1,1 @@
+{"grid_x":31,"grid_z":-76,"bounds":[15500.0,16000.0,-38000.0,-37500.0],"roads":[{"id":"1055007740","name":"Residential Road","highway":"residential","width":7.5,"lanes":2,"oneway":false,"bridge":false,"tunnel":false,"points":[[15899.045,0.0,-37535.96],[15914.667,0.0,-37556.526],[15919.882,0.0,-37568.246]]}],"buildings":[],"environment":[]}

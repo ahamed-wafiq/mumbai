@@ -330,6 +330,14 @@ def run_tile_generation():
             for idx in range(0, len(exterior_ring), step):
                 lon, lat = exterior_ring[idx]
                 x, y, z = proj.geo_to_godot(lat, lon, 0.0)
+                
+                # Marine Drive corridor road clearance (preserve open lanes & sidewalks)
+                if -1400.0 <= z <= 2200.0:
+                    if 0.0 <= x < 13.8:
+                        x = 13.8
+                    elif -16.0 < x < 0.0:
+                        x = -16.0
+                        
                 simplified_pts.append([x, y, z])
                 sum_x += x
                 sum_z += z

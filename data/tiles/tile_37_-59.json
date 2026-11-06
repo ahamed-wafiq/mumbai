@@ -1,0 +1,1 @@
+{"grid_x":37,"grid_z":-59,"bounds":[18500.0,19000.0,-29500.0,-29000.0],"roads":[{"id":"102264556","name":"Eastern Express Highway","highway":"trunk","width":20.0,"lanes":3,"oneway":true,"bridge":true,"tunnel":false,"points":[[18542.932,6.0,-29151.895],[18342.148,6.0,-29187.346]]}],"buildings":[],"environment":[]}

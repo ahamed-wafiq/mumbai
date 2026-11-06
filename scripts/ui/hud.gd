@@ -13,13 +13,13 @@ extends Control
 @export var debug_panel_path: NodePath = "TopRight/DebugCard"
 @export var debug_label_path: NodePath = "TopRight/DebugCard/DebugText"
 
-var _speed_label: Label
-var _gear_label: Label
-var _speed_bar: ProgressBar
-var _location_label: Label
-var _coords_label: Label
-var _debug_panel: PanelContainer
-var _debug_label: RichTextLabel
+var _speed_label: Control
+var _gear_label: Control
+var _speed_bar: Range
+var _location_label: Control
+var _coords_label: Control
+var _debug_panel: Control
+var _debug_label: Control
 
 func _ready() -> void:
 	_speed_label = get_node_or_null(speed_label_path)
