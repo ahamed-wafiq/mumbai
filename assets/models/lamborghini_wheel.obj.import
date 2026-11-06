@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bg2q2jp7vk30"
+path="res://.godot/imported/lamborghini_wheel.obj-294eb593b6fad26c3e15b05bc24f92aa.mesh"
+
+[deps]
+
+files=["res://.godot/imported/lamborghini_wheel.obj-294eb593b6fad26c3e15b05bc24f92aa.mesh"]
+
+source_file="res://assets/models/lamborghini_wheel.obj"
+dest_files=["res://.godot/imported/lamborghini_wheel.obj-294eb593b6fad26c3e15b05bc24f92aa.mesh", "res://.godot/imported/lamborghini_wheel.obj-294eb593b6fad26c3e15b05bc24f92aa.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
