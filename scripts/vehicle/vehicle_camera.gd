@@ -48,4 +48,3 @@ func _physics_process(delta: float) -> void:
 	if _target is CharacterBody3D:
 		var speed_ratio: float = clampf(_target.velocity.length() / 40.0, 0.0, 1.0)
 		fov = lerpf(base_fov, max_fov, speed_ratio)
-
