@@ -144,22 +144,17 @@ func _apply_road_clearance(raw_poly: Array) -> Array:
 	# Marine Drive Queen's Necklace corridor clearance:
 	# Centerline is at X ~ 0 to 1.0, road half-width 9.0m, sidewalk extends to 13.5m.
 	if center_z >= -1400.0 and center_z <= 2200.0:
-		if center_x >= 0.0:
-			# City side: ensure all building vertices sit safely behind sidewalk (X >= 13.8m)
-			if min_x < 13.8:
-				var shift_x: float = 13.8 - min_x
-				var shifted: Array = []
-				for pt in raw_poly:
-					shifted.append([float(pt[0]) + shift_x, float(pt[1]), float(pt[2])])
-				return shifted
-		else:
-			# Sea side: ensure all building vertices sit past promenade wall (X <= -16.0m)
-			if max_x > -16.0:
-				var shift_x: float = -16.0 - max_x
-				var shifted: Array = []
-				for pt in raw_poly:
-					shifted.append([float(pt[0]) + shift_x, float(pt[1]), float(pt[2])])
-				return shifted
+		var shift_x: float = 0.0
+		if center_x >= 0.0 and min_x < 13.8:
+			shift_x = 13.8 - min_x
+		elif center_x < 0.0 and max_x > -16.0:
+			shift_x = -16.0 - max_x
+			
+		if absf(shift_x) > 0.001:
+			var shifted: Array = []
+			for pt in raw_poly:
+				shifted.append([float(pt[0]) + shift_x, float(pt[1]), float(pt[2])])
+			return shifted
 				
 	return raw_poly
 

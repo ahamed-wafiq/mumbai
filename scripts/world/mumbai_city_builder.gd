@@ -396,23 +396,24 @@ func _create_real_footprint_building(b_name: String, world_pts: PackedVector3Arr
 	# Road setback: rigidly shift landmark buildings out past the Marine Drive road and sidewalk
 	var min_x := 999999.0
 	var max_x := -999999.0
-	var sum_x := 0.0
-	var sum_z := 0.0
+	var initial_sum_x := 0.0
+	var initial_sum_z := 0.0
 	for i in range(count):
 		min_x = minf(min_x, world_pts[i].x)
 		max_x = maxf(max_x, world_pts[i].x)
-		sum_x += world_pts[i].x
-		sum_z += world_pts[i].z
-	var center_x := sum_x / float(count)
-	var center_z := sum_z / float(count)
+		initial_sum_x += world_pts[i].x
+		initial_sum_z += world_pts[i].z
+	var center_x := initial_sum_x / float(count)
+	var center_z := initial_sum_z / float(count)
 	
 	if center_z >= -1400.0 and center_z <= 2200.0:
+		var shift := 0.0
 		if center_x >= 0.0 and min_x < 13.8:
-			var shift := 13.8 - min_x
-			for i in range(count):
-				world_pts[i].x += shift
+			shift = 13.8 - min_x
 		elif center_x < 0.0 and max_x > -16.0:
-			var shift := -16.0 - max_x
+			shift = -16.0 - max_x
+			
+		if absf(shift) > 0.001:
 			for i in range(count):
 				world_pts[i].x += shift
 		
