@@ -50,3 +50,4 @@ print(f"Total buildings in tile_0_0: {len(blds)}")
 print(f"Buildings overlapping roads: {len(overlapping_blds)}")
 for ob in overlapping_blds[:10]:
     print(ob)
+

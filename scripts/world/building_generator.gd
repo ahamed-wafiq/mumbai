@@ -119,27 +119,49 @@ func toggle_debug_materials() -> void:
 	print("[BuildingGenerator] High-contrast debug building materials: ", "ENABLED" if debug_bright_materials else "DISABLED")
 
 ## Applies geometric road clearance to building polygon vertices
-## Guarantees buildings never encroach into road lanes or sidewalks
+## Rigidly shifts buildings away from road corridors preserving their exact architectural geometry
 func _apply_road_clearance(raw_poly: Array) -> Array:
-	var cleared: Array = []
-	for pt in raw_poly:
-		var x: float = float(pt[0])
-		var y: float = float(pt[1])
-		var z: float = float(pt[2])
+	if raw_poly.is_empty():
+		return raw_poly
 		
-		# Marine Drive Queen's Necklace corridor clearance:
-		# Road centerline runs along X ~ 0.0 to 1.0 from Z = -1400 to 2200.
-		# Road half-width is 9.0m, east sidewalk extends to 13.5m.
-		# Any building on the east side (X > 0) must sit safely behind sidewalk (X >= 13.8m).
-		# Any building on the seaside (X < 0) must sit past promenade (X <= -16.0m).
-		if z >= -1400.0 and z <= 2200.0:
-			if x >= 0.0 and x < 13.8:
-				x = 13.8
-			elif x < 0.0 and x > -16.0:
-				x = -16.0
+	var sum_x: float = 0.0
+	var sum_z: float = 0.0
+	var min_x: float = 999999.0
+	var max_x: float = -999999.0
+	
+	for pt in raw_poly:
+		var px: float = float(pt[0])
+		var pz: float = float(pt[2])
+		sum_x += px
+		sum_z += pz
+		min_x = minf(min_x, px)
+		max_x = maxf(max_x, px)
+		
+	var count: float = float(raw_poly.size())
+	var center_x: float = sum_x / count
+	var center_z: float = sum_z / count
+	
+	# Marine Drive Queen's Necklace corridor clearance:
+	# Centerline is at X ~ 0 to 1.0, road half-width 9.0m, sidewalk extends to 13.5m.
+	if center_z >= -1400.0 and center_z <= 2200.0:
+		if center_x >= 0.0:
+			# City side: ensure all building vertices sit safely behind sidewalk (X >= 13.8m)
+			if min_x < 13.8:
+				var shift_x: float = 13.8 - min_x
+				var shifted: Array = []
+				for pt in raw_poly:
+					shifted.append([float(pt[0]) + shift_x, float(pt[1]), float(pt[2])])
+				return shifted
+		else:
+			# Sea side: ensure all building vertices sit past promenade wall (X <= -16.0m)
+			if max_x > -16.0:
+				var shift_x: float = -16.0 - max_x
+				var shifted: Array = []
+				for pt in raw_poly:
+					shifted.append([float(pt[0]) + shift_x, float(pt[1]), float(pt[2])])
+				return shifted
 				
-		cleared.append([x, y, z])
-	return cleared
+	return raw_poly
 
 ## Generates a visible 3D building from a tile building data dictionary.
 ## Supports both 'footprint' and 'polygon' keys.

@@ -80,7 +80,7 @@ func update_debug_telemetry(data: Dictionary) -> void:
 	var ground_str: String = "[color=#48BB78]YES[/color]" if data.get("grounded", false) else "[color=#E53E3E]IN AIR[/color]"
 	
 	var pos: Vector3 = data.get("position", Vector3.ZERO)
-	var vel: Vector3 = data.get("velocity", Vector3.ZERO)
+	var _vel: Vector3 = data.get("velocity", Vector3.ZERO)
 	var spd: float = data.get("speed_kmh", 0.0)
 	var fwd_ms: float = data.get("forward_speed_ms", 0.0)
 	

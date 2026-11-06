@@ -90,3 +90,4 @@ print("Original X min:", min(p[0] for p in sample_fp))
 print("Adjusted X min:", min(p[0] for p in adjusted))
 print("Safe road boundary: X > 11.0m (Road half_width 9.0 + clearance 2.0 = 11.0m)")
 print("Adjusted footprint safe:", all(p[0] >= 11.0 for p in adjusted if p[2] >= 0.0))
+

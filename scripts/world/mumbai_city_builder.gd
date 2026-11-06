@@ -393,13 +393,28 @@ func _create_real_footprint_building(b_name: String, world_pts: PackedVector3Arr
 	if count < 3:
 		return null
 		
-	# Road setback: push landmark footprint points out past the Marine Drive road and sidewalk
+	# Road setback: rigidly shift landmark buildings out past the Marine Drive road and sidewalk
+	var min_x := 999999.0
+	var max_x := -999999.0
+	var sum_x := 0.0
+	var sum_z := 0.0
 	for i in range(count):
-		if world_pts[i].z >= -1400.0 and world_pts[i].z <= 2200.0:
-			if world_pts[i].x >= 0.0 and world_pts[i].x < 13.8:
-				world_pts[i].x = 13.8
-			elif world_pts[i].x < 0.0 and world_pts[i].x > -16.0:
-				world_pts[i].x = -16.0
+		min_x = minf(min_x, world_pts[i].x)
+		max_x = maxf(max_x, world_pts[i].x)
+		sum_x += world_pts[i].x
+		sum_z += world_pts[i].z
+	var center_x := sum_x / float(count)
+	var center_z := sum_z / float(count)
+	
+	if center_z >= -1400.0 and center_z <= 2200.0:
+		if center_x >= 0.0 and min_x < 13.8:
+			var shift := 13.8 - min_x
+			for i in range(count):
+				world_pts[i].x += shift
+		elif center_x < 0.0 and max_x > -16.0:
+			var shift := -16.0 - max_x
+			for i in range(count):
+				world_pts[i].x += shift
 		
 	# Compute centroid
 	var sum_x: float = 0.0
