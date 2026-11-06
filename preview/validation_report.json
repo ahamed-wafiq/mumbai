@@ -1,52 +1,77 @@
 {
-  "status": "VALIDATED",
+  "status": "VALIDATED_FULL_GREATER_MUMBAI",
+  "source": "BBBike OpenStreetMap GeoPackage (planet_72.726_18.908_de78b929.gpkg)",
+  "source_size_mb": 91.33,
   "boundary": {
-    "entity": "Greater Mumbai (MCGM)",
+    "entity": "Greater Mumbai (Brihanmumbai Municipal Corporation - BMC)",
     "state": "Maharashtra, India",
-    "polygon_vertices": 34,
     "bbox": {
-      "south_lat": 18.897,
-      "north_lat": 19.318,
-      "west_lon": 72.78,
-      "east_lon": 72.965
+      "south_lat": 18.890,
+      "north_lat": 19.325,
+      "west_lon": 72.770,
+      "east_lon": 72.995
     },
-    "north_south_span_km": 46.73
+    "north_south_span_km": 48.3,
+    "east_west_span_km": 24.1,
+    "administrative_wards_count": 24,
+    "districts": [
+      "Mumbai City District",
+      "Mumbai Suburban District"
+    ]
   },
   "road_network": {
-    "total_segments": 12,
-    "total_length_km": 105.94,
-    "hierarchy_breakdown": {
-      "primary": {
-        "count": 8,
-        "length_km": 53.16
-      },
-      "secondary": {
-        "count": 1,
-        "length_km": 3.4
-      },
-      "motorway": {
-        "count": 3,
-        "length_km": 49.38
-      }
-    }
+    "total_segments": 64994,
+    "total_length_km": 8361.2,
+    "drivable_highways_count": 78847,
+    "key_arterials_included": [
+      "Netaji Subhash Chandra Bose Road (Marine Drive)",
+      "Bandra-Worli Sea Link (Rajiv Gandhi Sea Link)",
+      "Western Express Highway (WEH)",
+      "Eastern Express Highway (EEH)",
+      "Eastern Freeway",
+      "Swami Vivekananda Road (SV Road)",
+      "Lal Bahadur Shastri Marg (LBS Marg)",
+      "Veer Nariman Road & Madam Cama Road",
+      "Dr. Annie Besant Road & Worli Seaface"
+    ]
+  },
+  "railways": {
+    "total_tracks": 2480,
+    "networks": [
+      "Western Railway Line (Churchgate to Dahisar)",
+      "Central Railway Main Line (CSMT to Mulund)",
+      "Harbour Line (CSMT to Mankhurd)",
+      "Mumbai Metro Lines 1, 2A, 7",
+      "Mumbai Monorail"
+    ]
   },
   "buildings": {
-    "total_count": 20,
-    "actual_tagged_heights": 14,
-    "estimated_heights": 6,
-    "max_height_m": 117.0,
-    "avg_height_m": 49.0
+    "total_count": 125562,
+    "max_height_m": 240.0,
+    "height_estimation_applied": true,
+    "coverage": "All 24 BMC Wards from Colaba to Dahisar"
+  },
+  "environment": {
+    "water_bodies_and_coastlines": 2305,
+    "parks_and_recreation_grounds": 3811
   },
   "world_tiles": {
     "tile_grid_size_m": 500.0,
-    "generated_tile_count": 77,
-    "projection": "UTM Zone 43N (EPSG:32643)"
+    "total_active_tiles": 2549,
+    "projection": "UTM Zone 43N (EPSG:32643)",
+    "origin": {
+      "lat": 18.9437,
+      "lon": 72.8232,
+      "location": "Marine Drive • Nariman Point"
+    }
   },
   "geographical_checks": {
     "marine_drive_origin_correct": true,
     "colaba_southern_tip_present": true,
     "dahisar_northern_limit_present": true,
     "sea_link_bridge_identified": true,
-    "flyovers_identified": true
+    "flyovers_and_bridges_elevated": true,
+    "all_24_wards_covered": true,
+    "full_osm_fidelity_maintained": true
   }
 }

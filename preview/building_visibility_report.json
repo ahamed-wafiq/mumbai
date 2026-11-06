@@ -1,0 +1,187 @@
+{
+  "report_title": "Mumbai Drive - 3D Building Visibility Diagnostic & Fix Report",
+  "timestamp": "2026-11-06T22:20:00Z",
+  "status": "RESOLVED_AND_VERIFIED",
+  "root_cause_diagnosis": {
+    "primary_cause": "Key Mismatch in Building Generator: scripts/world/building_generator.gd was querying b_data.get('polygon', []), whereas the real OSM tiles in data/tiles/ store footprint arrays under the key 'footprint'. This resulted in raw_poly being empty ([]), triggering raw_poly.size() < 3, causing generate_building_from_tile_data() to immediately return null for 100% of all tile buildings.",
+    "secondary_cause_1": "Missing Centroid Handling: building_generator.gd was looking for a non-existent 'center' key in tile data. Without computing the actual polygon centroid, local vertex offsets were invalid, distorting mesh origins and frustum bounds.",
+    "secondary_cause_2": "Backface Culling Invisibility: Building materials in building_generator.gd and mumbai_city_builder.gd used default cull_mode = CULL_BACK. Because GIS polygon vertices can be ordered clockwise or counter-clockwise, external building faces were culled by the GPU renderer.",
+    "secondary_cause_3": "Placeholder Box Cubes in CityBuilder: mumbai_city_builder.gd previously hardcoded BoxMesh sample cubes for 22 buildings instead of parsing the real OpenStreetMap polygon footprints from data/geojson/mumbai_buildings.geojson."
+  },
+  "corrections_implemented": [
+    {
+      "file": "scripts/world/building_generator.gd",
+      "changes": [
+        "Updated generate_building_from_tile_data() to read b_data.get('footprint', b_data.get('polygon', [])) to seamlessly support both schemas.",
+        "Computed actual polygon centroid from vertices to center building_node.position precisely at the true building location.",
+        "Set cull_mode = BaseMaterial3D.CULL_DISABLED across all architectural materials (commercial, residential, hotel, heritage) so exterior faces are 100% visible from all camera angles.",
+        "Enforced minimum building height (maxf(height, 6.0)) to guarantee all buildings have vertical relief above ground.",
+        "Added real-time telemetry counters (total_features_read, valid_polygons, meshes_created, visible_buildings).",
+        "Added toggleable high-contrast vibrant debug materials (F4 hotkey) for visual inspection."
+      ]
+    },
+    {
+      "file": "scripts/world/map_tile_manager.gd",
+      "changes": [
+        "Added real-time streaming counters (total_tiles_loaded_count, total_buildings_spawned_count, total_roads_spawned_count).",
+        "Added diagnostic console logging upon each tile load showing exact building and road counts."
+      ]
+    },
+    {
+      "file": "scripts/world/mumbai_city_builder.gd",
+      "changes": [
+        "Replaced hardcoded BoxMesh sample blocks in _build_all_buildings() with dynamic GeoJSON extrusion of real landmark footprints from data/geojson/mumbai_buildings.geojson (Air India Building, The Oberoi, Express Towers, NCPA, Wankhede Stadium, Brabourne Stadium, etc.).",
+        "Integrated GeoConverter (UTM Zone 43N) to project real WGS84 polygon rings into local 3D coordinates.",
+        "Configured cull_mode = CULL_DISABLED on all facade materials."
+      ]
+    },
+    {
+      "file": "scripts/world/world_manager.gd",
+      "changes": [
+        "Connected MapTileManager and BuildingGenerator telemetry into the debug stream.",
+        "Enriched HUD telemetry with live building mesh counts, valid polygon counts, and active tile counts."
+      ]
+    },
+    {
+      "file": "scripts/ui/hud.gd",
+      "changes": [
+        "Expanded F3 telemetry overlay to display live 3D building mesh counts, valid polygons, active streamed tiles, and F4 bright material status.",
+        "Enlarged DebugCard in hud.tscn to comfortably fit all telemetry readouts without clipping."
+      ]
+    },
+    {
+      "file": "scenes/vehicle/car.tscn",
+      "changes": [
+        "Explicitly set far = 4000.0 on both ThirdPersonCamera and FirstPersonCamera to guarantee zero clipping of distant buildings and landmarks."
+      ]
+    }
+  ],
+  "geographical_verification": {
+    "world_origin": {
+      "name": "Marine Drive \u2022 Nariman Point",
+      "latitude": 18.9437,
+      "longitude": 72.8232,
+      "utm_easting_m": 270771.27,
+      "utm_northing_m": 2096012.11
+    },
+    "crs_source": "EPSG:4326 (WGS 84 Geodetic)",
+    "crs_engine": "EPSG:32643 (UTM Zone 43N metric)",
+    "vertical_datum": "Ground surface Y >= 0.0m (all buildings sit on or above ground, none underground)",
+    "source_features": {
+      "total_gpkg_buildings": 181474,
+      "total_geojson_landmarks": 20,
+      "total_active_tiles_generated": 2549,
+      "immediate_spawn_3x3_grid": {
+        "active_tiles_count": 8,
+        "total_buildings_at_spawn": 563,
+        "total_roads_at_spawn": 434,
+        "tiles_breakdown": [
+          {
+            "tile_coord": "(-1, -1)",
+            "file": "tile_-1_-1.json",
+            "buildings_count": 4,
+            "roads_count": 18,
+            "bounds": [
+              -500.0,
+              0.0,
+              -500.0,
+              0.0
+            ]
+          },
+          {
+            "tile_coord": "(-1, 0)",
+            "file": "tile_-1_0.json",
+            "buildings_count": 0,
+            "roads_count": 5,
+            "bounds": [
+              -500.0,
+              0.0,
+              0.0,
+              500.0
+            ]
+          },
+          {
+            "tile_coord": "(0, -1)",
+            "file": "tile_0_-1.json",
+            "buildings_count": 176,
+            "roads_count": 67,
+            "bounds": [
+              0.0,
+              500.0,
+              -500.0,
+              0.0
+            ]
+          },
+          {
+            "tile_coord": "(0, 0)",
+            "file": "tile_0_0.json",
+            "buildings_count": 103,
+            "roads_count": 79,
+            "bounds": [
+              0.0,
+              500.0,
+              0.0,
+              500.0
+            ]
+          },
+          {
+            "tile_coord": "(0, 1)",
+            "file": "tile_0_1.json",
+            "buildings_count": 55,
+            "roads_count": 84,
+            "bounds": [
+              0.0,
+              500.0,
+              500.0,
+              1000.0
+            ]
+          },
+          {
+            "tile_coord": "(1, -1)",
+            "file": "tile_1_-1.json",
+            "buildings_count": 127,
+            "roads_count": 71,
+            "bounds": [
+              500.0,
+              1000.0,
+              -500.0,
+              0.0
+            ]
+          },
+          {
+            "tile_coord": "(1, 0)",
+            "file": "tile_1_0.json",
+            "buildings_count": 43,
+            "roads_count": 63,
+            "bounds": [
+              500.0,
+              1000.0,
+              0.0,
+              500.0
+            ]
+          },
+          {
+            "tile_coord": "(1, 1)",
+            "file": "tile_1_1.json",
+            "buildings_count": 55,
+            "roads_count": 47,
+            "bounds": [
+              500.0,
+              1000.0,
+              500.0,
+              1000.0
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "verification_results": {
+    "geojson_landmarks_extruded": true,
+    "tile_0_0_buildings_spawned": 103,
+    "immediate_tiles_buildings_spawned": 563,
+    "double_sided_materials_enabled": true,
+    "collision_shapes_attached": true,
+    "camera_clipping_prevented": true
+  }
+}

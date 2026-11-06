@@ -84,15 +84,26 @@ func update_debug_telemetry(data: Dictionary) -> void:
 	var spd: float = data.get("speed_kmh", 0.0)
 	var fwd_ms: float = data.get("forward_speed_ms", 0.0)
 	
-	var text := """[b]VEHICLE DEBUG TELEMETRY (F3)[/b]
-• W (Throttle): %s  |  S (Brake/Rev): %s
-• Steer: [%s %s]  |  Handbrake: %s
-• Grounded (on_floor): %s
+	var b_read: int = data.get("bld_read", 0)
+	var b_valid: int = data.get("bld_valid", 0)
+	var b_mesh: int = data.get("bld_meshes", 0)
+	var b_vis: int = data.get("bld_visible", 0)
+	var t_act: int = data.get("tiles_active", 0)
+	var b_bright: bool = data.get("bld_bright", false)
+	var bright_str: String = "[color=#48BB78]ON (Vibrant)[/color]" if b_bright else "[color=#A0AEC0]OFF (Realistic)[/color]"
+	
+	var text := """[b]MUMBAI DRIVE TELEMETRY (F3)[/b]
+• Throttle (W): %s  |  Brake (S): %s
+• Steer: [%s %s]  |  Handbrake: %s  |  Floor: %s
 • Speed: [b][color=#FF6B00]%.1f KM/H[/color][/b] (%.1f m/s)
-• Velocity: (%.1f, %.1f, %.1f)
-• Position: (%.1f, %.1f, %.1f)""" % [
+• Position: (%.1f, %.1f, %.1f)
+[b]3D BUILDINGS & WORLD STREAMING[/b]
+• 3D Meshes Created: [color=#48BB78]%d[/color] (from %d valid polys / %d read)
+• Active Streamed Tiles: [color=#48BB78]%d[/color] | Visible Blds: %d
+• Bright Debug Material (F4): %s""" % [
 		w_str, s_str, a_str, d_str, hb_str, ground_str,
-		spd, fwd_ms, vel.x, vel.y, vel.z, pos.x, pos.y, pos.z
+		spd, fwd_ms, pos.x, pos.y, pos.z,
+		b_mesh, b_valid, b_read, t_act, b_vis, bright_str
 	]
 	
 	_debug_label.text = text

@@ -205,9 +205,11 @@ mesh = SubResource("CylinderMesh_Rim")
 transform = Transform3D(1, 0, 0, 0, 0.956305, 0.292372, 0, -0.292372, 0.956305, 0, 2.4, 5.5)
 current = true
 fov = 70.0
+far = 4000.0
 script = ExtResource("2_cam")
 target_node = NodePath("../..")
 
 [node name="FirstPersonCamera" type="Camera3D" parent="Cameras"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0.2)
 fov = 75.0
+far = 4000.0

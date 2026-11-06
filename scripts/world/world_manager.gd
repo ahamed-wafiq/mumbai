@@ -9,11 +9,15 @@ extends Node3D
 @export var hud_node_path: NodePath = "HUD"
 @export var pause_menu_node_path: NodePath = "PauseMenu"
 @export var settings_dialog_node_path: NodePath = "SettingsDialog"
+@export var tile_manager_path: NodePath = "MapTileManager"
+@export var building_generator_path: NodePath = "BuildingGenerator"
 
 var _car: CarController
 var _hud: InGameHUD
 var _pause_menu: PauseMenu
 var _settings_dialog: SettingsDialog
+var _tile_manager: MapTileManager
+var _bld_gen: BuildingGenerator
 var _geo: GeoConverter
 
 func _ready() -> void:
@@ -21,11 +25,13 @@ func _ready() -> void:
 	_hud = get_node_or_null(hud_node_path)
 	_pause_menu = get_node_or_null(pause_menu_node_path)
 	_settings_dialog = get_node_or_null(settings_dialog_node_path)
+	_tile_manager = get_node_or_null(tile_manager_path)
+	_bld_gen = get_node_or_null(building_generator_path)
 	_geo = GeoConverter.new(18.9437, 72.8232)
 	
 	if _car and _hud:
 		_car.speed_updated.connect(_hud.update_speed)
-		_car.debug_telemetry_updated.connect(_hud.update_debug_telemetry)
+		_car.debug_telemetry_updated.connect(_on_debug_telemetry_updated)
 		
 	if _pause_menu:
 		_pause_menu.restart_requested.connect(_on_restart_requested)
@@ -64,6 +70,19 @@ func _process(_delta: float) -> void:
 		zone_name = "South Mumbai • Colaba Point"
 		
 	_hud.update_location(zone_name, current_lat, current_lon)
+
+func _on_debug_telemetry_updated(data: Dictionary) -> void:
+	if _bld_gen:
+		data["bld_read"] = _bld_gen.total_features_read
+		data["bld_valid"] = _bld_gen.valid_polygons
+		data["bld_meshes"] = _bld_gen.meshes_created
+		data["bld_visible"] = _bld_gen.visible_buildings
+		data["bld_bright"] = _bld_gen.debug_bright_materials
+	if _tile_manager:
+		data["tiles_active"] = _tile_manager._active_tiles.size()
+		data["tiles_loaded_total"] = _tile_manager.total_tiles_loaded_count
+	if _hud:
+		_hud.update_debug_telemetry(data)
 
 func _on_restart_requested() -> void:
 	if _car:

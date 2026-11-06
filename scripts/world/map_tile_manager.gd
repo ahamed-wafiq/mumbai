@@ -19,6 +19,11 @@ var _active_tiles: Dictionary = {} # Vector2i -> Node3D
 var _tile_manifest: Dictionary = {}
 var _ground_material: StandardMaterial3D
 
+# Streaming Telemetry
+var total_tiles_loaded_count: int = 0
+var total_buildings_spawned_count: int = 0
+var total_roads_spawned_count: int = 0
+
 func _ready() -> void:
 	_road_gen = get_node_or_null(road_generator_path)
 	_bld_gen = get_node_or_null(building_generator_path)
@@ -76,20 +81,32 @@ func load_tile(coord: Vector2i, parent_node: Node3D) -> Node3D:
 	_create_tile_ground(tile_root, cx, cz)
 	
 	# 2. Instantiate Real OSM Roads in this tile
+	var roads_in_tile: int = 0
 	if _road_gen:
 		var roads_arr: Array = tile_data.get("roads", [])
 		for r_data in roads_arr:
 			var road_node := _road_gen.generate_road_from_tile_data(r_data)
 			if road_node:
 				tile_root.add_child(road_node)
+				roads_in_tile += 1
 				
 	# 3. Instantiate Real OSM Buildings in this tile
+	var blds_in_tile: int = 0
 	if _bld_gen:
 		var blds_arr: Array = tile_data.get("buildings", [])
 		for b_data in blds_arr:
 			var bld_node := _bld_gen.generate_building_from_tile_data(b_data)
 			if bld_node:
 				tile_root.add_child(bld_node)
+				blds_in_tile += 1
+				
+	total_tiles_loaded_count += 1
+	total_buildings_spawned_count += blds_in_tile
+	total_roads_spawned_count += roads_in_tile
+	
+	print("[MapTileManager] Tile (%d, %d) loaded: %d buildings, %d roads (Total active buildings: %d)" % [
+		coord.x, coord.y, blds_in_tile, roads_in_tile, _bld_gen.visible_buildings if _bld_gen else total_buildings_spawned_count
+	])
 				
 	_active_tiles[coord] = tile_root
 	tile_loaded.emit(coord, tile_root)

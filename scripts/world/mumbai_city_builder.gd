@@ -20,8 +20,10 @@ var mat_modern_glass: StandardMaterial3D
 var mat_heritage_stone: StandardMaterial3D
 var mat_window: StandardMaterial3D
 var mat_lamp_glow: StandardMaterial3D
+var _geo: GeoConverter
 
 func _ready() -> void:
+	_geo = GeoConverter.new(18.9437, 72.8232)
 	_init_materials()
 	if build_on_ready:
 		build_city()
@@ -60,19 +62,23 @@ func _init_materials() -> void:
 	mat_art_deco_cream = StandardMaterial3D.new()
 	mat_art_deco_cream.albedo_color = Color(0.85, 0.80, 0.70, 1.0)
 	mat_art_deco_cream.roughness = 0.7
+	mat_art_deco_cream.cull_mode = BaseMaterial3D.CULL_DISABLED
 	
 	mat_art_deco_terracotta = StandardMaterial3D.new()
 	mat_art_deco_terracotta.albedo_color = Color(0.76, 0.54, 0.42, 1.0)
 	mat_art_deco_terracotta.roughness = 0.75
+	mat_art_deco_terracotta.cull_mode = BaseMaterial3D.CULL_DISABLED
 	
 	mat_modern_glass = StandardMaterial3D.new()
 	mat_modern_glass.albedo_color = Color(0.18, 0.24, 0.32, 1.0)
 	mat_modern_glass.metallic = 0.75
 	mat_modern_glass.roughness = 0.2
+	mat_modern_glass.cull_mode = BaseMaterial3D.CULL_DISABLED
 	
 	mat_heritage_stone = StandardMaterial3D.new()
 	mat_heritage_stone.albedo_color = Color(0.62, 0.58, 0.52, 1.0)
 	mat_heritage_stone.roughness = 0.85
+	mat_heritage_stone.cull_mode = BaseMaterial3D.CULL_DISABLED
 	
 	mat_window = StandardMaterial3D.new()
 	mat_window.albedo_color = Color(0.1, 0.15, 0.2, 1.0)
@@ -298,119 +304,168 @@ func _build_cross_streets() -> void:
 	mc_col.add_child(mc_shape)
 	cross_root.add_child(mc_col)
 
-## Builds buildings directly flanking the road on both sides
+## Builds real architectural landmark buildings directly from GeoJSON footprints
 func _build_all_buildings(_points: PackedVector3Array) -> void:
 	var buildings_root := Node3D.new()
-	buildings_root.name = "MarineDriveBuildings"
+	buildings_root.name = "RealMumbaiLandmarks"
 	add_child(buildings_root)
 	
-	# List of buildings positioned immediately along the road corridor
-	var buildings: Array[Dictionary] = [
-		# --- DIRECTLY IN FRONT OF PLAYER SPAWN (Heading North Z <= 50) ---
-		{"name": "Marine Drive Promenade Mansions", "x": 16.0, "z": 0.0, "w": 32.0, "d": 28.0, "h": 26.0, "mat": mat_art_deco_cream},
-		{"name": "Chowpatty View Seafront Court", "x": 16.0, "z": -40.0, "w": 30.0, "d": 26.0, "h": 28.0, "mat": mat_art_deco_terracotta},
-		{"name": "Taraporewala Aquarium & Research Pavilion", "x": 16.0, "z": -85.0, "w": 40.0, "d": 30.0, "h": 20.0, "mat": mat_modern_glass},
-		{"name": "Princess Street Heritage Residence", "x": 15.0, "z": -140.0, "w": 34.0, "d": 28.0, "h": 25.0, "mat": mat_art_deco_cream},
-		{"name": "Charni Road Art Deco Block", "x": -10.0, "z": -210.0, "w": 36.0, "d": 28.0, "h": 24.0, "mat": mat_art_deco_terracotta},
-		{"name": "Queen's View Residential Tower", "x": -25.0, "z": -290.0, "w": 35.0, "d": 30.0, "h": 36.0, "mat": mat_modern_glass},
-		{"name": "Walkeshwar Coastal Tower A", "x": -45.0, "z": -380.0, "w": 38.0, "d": 32.0, "h": 42.0, "mat": mat_modern_glass},
-		{"name": "Walkeshwar Coastal Tower B", "x": -50.0, "z": -460.0, "w": 36.0, "d": 30.0, "h": 38.0, "mat": mat_modern_glass},
-		{"name": "Wilson College Heritage Hall", "x": -120.0, "z": -650.0, "w": 65.0, "d": 45.0, "h": 26.0, "mat": mat_heritage_stone},
-		{"name": "Girgaon Chowpatty Pavilions", "x": -320.0, "z": -900.0, "w": 70.0, "d": 40.0, "h": 22.0, "mat": mat_heritage_stone},
-		
-		# --- WEST SIDE / WALKESHWAR HILL (Overlooking the Bay) ---
-		{"name": "Malabar Hill Overlook Tower", "x": -90.0, "z": -500.0, "w": 40.0, "d": 35.0, "h": 48.0, "mat": mat_modern_glass},
-		{"name": "Walkeshwar Sea-Facing Enclave", "x": -160.0, "z": -700.0, "w": 45.0, "d": 38.0, "h": 34.0, "mat": mat_art_deco_cream},
-		
-		# --- IMMEDIATELY AT AND BEHIND SPAWN (Heading South Z >= 50) ---
-		{"name": "Soona Mahal (Art Deco Heritage 1937)", "x": 16.0, "z": 80.0, "w": 32.0, "d": 26.0, "h": 22.0, "mat": mat_art_deco_cream},
-		{"name": "Zaver Mahal (Art Deco Heritage 1937)", "x": 16.0, "z": 130.0, "w": 34.0, "d": 26.0, "h": 25.0, "mat": mat_art_deco_terracotta},
-		{"name": "Keval Mahal (Art Deco Heritage 1937)", "x": 16.0, "z": 180.0, "w": 34.0, "d": 26.0, "h": 22.0, "mat": mat_art_deco_cream},
-		{"name": "Kapur Mahal (Art Deco Heritage)", "x": 16.0, "z": 240.0, "w": 35.0, "d": 26.0, "h": 24.0, "mat": mat_art_deco_cream},
-		{"name": "Churchgate Court Executive Suites", "x": 17.0, "z": 310.0, "w": 38.0, "d": 30.0, "h": 35.0, "mat": mat_modern_glass},
-		
-		# --- VEER NARIMAN ROAD CORNER (Z ~ 400) ---
-		{"name": "Eros Cinema (Art Deco Landmark 1938)", "x": 20.0, "z": 380.0, "w": 45.0, "d": 35.0, "h": 32.0, "mat": mat_art_deco_terracotta},
-		{"name": "Churchgate Station Terminal Tower", "x": 80.0, "z": 360.0, "w": 55.0, "d": 45.0, "h": 65.0, "mat": mat_modern_glass},
-		{"name": "Wankhede Stadium (Cricket Grandstand)", "x": 75.0, "z": 460.0, "w": 110.0, "d": 90.0, "h": 38.0, "mat": mat_heritage_stone},
-		{"name": "InterContinental Marine Drive", "x": 18.0, "z": 480.0, "w": 42.0, "d": 30.0, "h": 36.0, "mat": mat_modern_glass},
-		
-		# --- BRABOURNE & NARIMAN POINT ROW (Z >= 600) ---
-		{"name": "Sea Green Hotel", "x": 17.0, "z": 580.0, "w": 32.0, "d": 24.0, "h": 22.0, "mat": mat_art_deco_cream},
-		{"name": "Brabourne Stadium (CCI Pavilion)", "x": 70.0, "z": 750.0, "w": 105.0, "d": 85.0, "h": 28.0, "mat": mat_heritage_stone},
-		{"name": "Marine Plaza Hotel", "x": 18.0, "z": 900.0, "w": 38.0, "d": 28.0, "h": 34.0, "mat": mat_modern_glass},
-		{"name": "Mafatlal Commercial Centre", "x": 22.0, "z": 1050.0, "w": 48.0, "d": 36.0, "h": 62.0, "mat": mat_modern_glass},
-		{"name": "The Oberoi & Trident Towers", "x": 24.0, "z": 1300.0, "w": 65.0, "d": 50.0, "h": 117.0, "mat": mat_modern_glass},
-		{"name": "Express Towers (Nariman Point)", "x": 25.0, "z": 1500.0, "w": 55.0, "d": 45.0, "h": 105.0, "mat": mat_modern_glass},
-		{"name": "Air India Building (Iconic Landmark)", "x": 22.0, "z": 1720.0, "w": 58.0, "d": 44.0, "h": 78.0, "mat": mat_modern_glass},
-		{"name": "NCPA Theatre Complex", "x": 26.0, "z": 1980.0, "w": 80.0, "d": 60.0, "h": 26.0, "mat": mat_heritage_stone}
-	]
+	var geojson_path := "res://data/geojson/mumbai_buildings.geojson"
+	var loaded_from_geojson := false
 	
-	for b in buildings:
-		var b_node := _create_architectural_building(
-			b["name"],
-			Vector3(b["x"], 0.0, b["z"]),
-			b["w"],
-			b["d"],
-			b["h"],
-			b["mat"]
-		)
-		buildings_root.add_child(b_node)
+	if FileAccess.file_exists(geojson_path):
+		var file := FileAccess.open(geojson_path, FileAccess.READ)
+		if file:
+			var json_obj := JSON.new()
+			if json_obj.parse(file.get_as_text()) == OK:
+				var data: Dictionary = json_obj.data
+				var features: Array = data.get("features", [])
+				print("[MumbaiCityBuilder] Loading %d real landmark footprints from %s..." % [features.size(), geojson_path])
+				
+				for feat in features:
+					var props: Dictionary = feat.get("properties", {})
+					var geom: Dictionary = feat.get("geometry", {})
+					var b_name: String = str(props.get("name", "Landmark Building"))
+					var height: float = maxf(float(props.get("height", 24.0)), 8.0)
+					var b_type: String = str(props.get("building", "commercial"))
+					
+					var coords_list: Array = geom.get("coordinates", [])
+					if coords_list.size() > 0 and coords_list[0].size() >= 3:
+						var ring: Array = coords_list[0]
+						var world_pts: PackedVector3Array = []
+						for pt in ring:
+							var lon: float = float(pt[0])
+							var lat: float = float(pt[1])
+							var wpos := _geo.geo_to_world(lat, lon, 0.0)
+							world_pts.append(wpos)
+							
+						var b_node := _create_real_footprint_building(b_name, world_pts, height, b_type)
+						if b_node:
+							buildings_root.add_child(b_node)
+							loaded_from_geojson = true
+							
+	if not loaded_from_geojson:
+		print("[MumbaiCityBuilder] Landmark GeoJSON not found, skipping corridor landmarks.")
 
-## Creates a detailed 3D building with facade, accent trim, and collision
-func _create_architectural_building(b_name: String, pos: Vector3, width: float, depth: float, height: float, facade_mat: Material) -> StaticBody3D:
+## Extrudes a true polygon footprint into a 3D architectural building
+func _create_real_footprint_building(b_name: String, world_pts: PackedVector3Array, height: float, b_type: String) -> Node3D:
+	var count := world_pts.size()
+	if count < 3:
+		return null
+		
+	# Compute centroid
+	var sum_x: float = 0.0
+	var sum_z: float = 0.0
+	for i in range(count - 1):
+		sum_x += world_pts[i].x
+		sum_z += world_pts[i].z
+	var center := Vector3(sum_x / float(max(1, count - 1)), 0.0, sum_z / float(max(1, count - 1)))
+	
+	# Local points relative to center
+	var local_pts: PackedVector3Array = []
+	for i in range(count - 1):
+		local_pts.append(Vector3(world_pts[i].x - center.x, 0.0, world_pts[i].z - center.z))
+	local_pts.append(local_pts[0]) # Close loop
+	
 	var body := StaticBody3D.new()
-	body.name = b_name.replace(" ", "_")
-	body.position = Vector3(pos.x + (width * 0.5), 0.0, pos.z)
+	body.name = "Landmark_" + b_name.replace(" ", "_").replace("/", "_").replace("(", "").replace(")", "")
+	body.position = center
 	body.collision_layer = 1
 	body.collision_mask = 0
 	
-	# 1. Main Facade Block
-	var main_box := BoxMesh.new()
-	main_box.size = Vector3(width, height, depth)
-	main_box.material = facade_mat
+	# Choose material
+	var facade_mat := mat_modern_glass
+	match b_type:
+		"heritage", "monument", "stadium", "university", "civic":
+			facade_mat = mat_heritage_stone
+		"apartments", "residential":
+			facade_mat = mat_art_deco_cream
+		"hotel":
+			facade_mat = mat_art_deco_terracotta
+		_:
+			facade_mat = mat_modern_glass
+			
+	# Extrude 3D building mesh
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	
-	var main_inst := MeshInstance3D.new()
-	main_inst.name = "Facade"
-	main_inst.mesh = main_box
-	main_inst.position = Vector3(0.0, height * 0.5, 0.0)
-	body.add_child(main_inst)
+	# Walls
+	for i in range(local_pts.size() - 1):
+		var p1 := local_pts[i]
+		var p2 := local_pts[i + 1]
+		if p1.distance_squared_to(p2) < 0.001:
+			continue
+			
+		var b1 := Vector3(p1.x, 0.0, p1.z)
+		var b2 := Vector3(p2.x, 0.0, p2.z)
+		var t1 := Vector3(p1.x, height, p1.z)
+		var t2 := Vector3(p2.x, height, p2.z)
+		
+		var edge := (b2 - b1).normalized()
+		var wall_norm := edge.cross(Vector3.UP).normalized()
+		var uv_u := (b2 - b1).length() / 4.0
+		var uv_v := height / 3.5
+		
+		st.set_normal(wall_norm)
+		st.set_uv(Vector2(0, 0))
+		st.add_vertex(b1)
+		
+		st.set_normal(wall_norm)
+		st.set_uv(Vector2(0, uv_v))
+		st.add_vertex(t1)
+		
+		st.set_normal(wall_norm)
+		st.set_uv(Vector2(uv_u, 0))
+		st.add_vertex(b2)
+		
+		st.set_normal(wall_norm)
+		st.set_uv(Vector2(0, uv_v))
+		st.add_vertex(t1)
+		
+		st.set_normal(wall_norm)
+		st.set_uv(Vector2(uv_u, uv_v))
+		st.add_vertex(t2)
+		
+		st.set_normal(wall_norm)
+		st.set_uv(Vector2(uv_u, 0))
+		st.add_vertex(b2)
+		
+	# Roof
+	var roof_center := Vector3(0.0, height, 0.0)
+	for i in range(local_pts.size() - 1):
+		var v1 := Vector3(local_pts[i].x, height, local_pts[i].z)
+		var v2 := Vector3(local_pts[i + 1].x, height, local_pts[i + 1].z)
+		if v1.distance_squared_to(v2) < 0.001:
+			continue
+			
+		st.set_normal(Vector3.UP)
+		st.set_uv(Vector2(0, 0))
+		st.add_vertex(v1)
+		
+		st.set_normal(Vector3.UP)
+		st.set_uv(Vector2(1, 0))
+		st.add_vertex(v2)
+		
+		st.set_normal(Vector3.UP)
+		st.set_uv(Vector2(0.5, 0.5))
+		st.add_vertex(roof_center)
+		
+	st.generate_normals()
+	var mesh := st.commit()
 	
-	# 2. Roof Parapet Trim with Mumbai Orange accent
-	var trim_box := BoxMesh.new()
-	trim_box.size = Vector3(width + 0.6, 0.8, depth + 0.6)
-	var trim_mat := StandardMaterial3D.new()
-	trim_mat.albedo_color = Color(1.0, 0.42, 0.0, 1.0)
-	trim_box.material = trim_mat
+	var mesh_inst := MeshInstance3D.new()
+	mesh_inst.name = "Facade"
+	mesh_inst.mesh = mesh
+	mesh_inst.material_override = facade_mat
+	body.add_child(mesh_inst)
 	
-	var trim_inst := MeshInstance3D.new()
-	trim_inst.name = "RoofTrim"
-	trim_inst.mesh = trim_box
-	trim_inst.position = Vector3(0.0, height + 0.4, 0.0)
-	body.add_child(trim_inst)
-	
-	# 3. Rooftop tank / tower
-	var tank_cyl := CylinderMesh.new()
-	tank_cyl.top_radius = minf(width, depth) * 0.15
-	tank_cyl.bottom_radius = minf(width, depth) * 0.15
-	tank_cyl.height = 3.5
-	var tank_mat := StandardMaterial3D.new()
-	tank_mat.albedo_color = Color(0.2, 0.22, 0.25, 1.0)
-	tank_cyl.material = tank_mat
-	
-	var tank_inst := MeshInstance3D.new()
-	tank_inst.mesh = tank_cyl
-	tank_inst.position = Vector3(width * 0.2, height + 2.5, depth * 0.1)
-	body.add_child(tank_inst)
-	
-	# 4. Box Collision Shape for vehicle crashes
-	var shape := BoxShape3D.new()
-	shape.size = Vector3(width, height, depth)
-	var col := CollisionShape3D.new()
-	col.shape = shape
-	col.position = Vector3(0.0, height * 0.5, 0.0)
-	body.add_child(col)
-	
+	# Collision
+	var shape := mesh.create_trimesh_shape()
+	if shape:
+		var col := CollisionShape3D.new()
+		col.shape = shape
+		body.add_child(col)
+		
 	return body
 
 ## Places coastal lampposts every 25 meters along both sides of Marine Drive

@@ -18,3 +18,9 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+# Large raw GIS binary archives (>50MB)
+*.gpkg
+*.zip
+*.pbf
+
+

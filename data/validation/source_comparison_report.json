@@ -1,0 +1,396 @@
+{
+  "report_title": "Mumbai Drive - Source Comparison & Geographical Authority Report",
+  "timestamp": "2026-11-06T21:40:00Z",
+  "geopackage": {
+    "filename": "planet_72.726_18.908_de78b929.gpkg",
+    "relative_path": "data/geojson/planet_72.726_18.908_de78b929.gpkg",
+    "file_size_bytes": 95764480,
+    "file_size_mb": 91.33,
+    "crs_primary": "EPSG:4326 (WGS 84 Geodetic)",
+    "target_game_crs": "EPSG:32643 (UTM Zone 43N)",
+    "total_layers": 5,
+    "layers": {
+      "points": {
+        "table_name": "points",
+        "feature_count": 66334,
+        "data_type": "features",
+        "geometry_type": "POINT",
+        "srs_id": 4326,
+        "crs": "EPSG:4326",
+        "bounding_box": {
+          "min_x_lon": 72.7468656,
+          "min_y_lat": 18.3549654,
+          "max_x_lon": 73.3816556,
+          "max_y_lat": 19.9615492
+        },
+        "column_count": 12,
+        "columns": [
+          "id",
+          "geom",
+          "osm_id",
+          "name",
+          "barrier",
+          "highway",
+          "ref",
+          "address",
+          "is_in",
+          "place",
+          "man_made",
+          "other_tags"
+        ]
+      },
+      "lines": {
+        "table_name": "lines",
+        "feature_count": 101281,
+        "data_type": "features",
+        "geometry_type": "LINESTRING",
+        "srs_id": 4326,
+        "crs": "EPSG:4326",
+        "bounding_box": {
+          "min_x_lon": 71.8024993,
+          "min_y_lat": 4.464491599999999,
+          "max_x_lon": 100.1908064,
+          "max_y_lat": 20.3451217
+        },
+        "column_count": 12,
+        "columns": [
+          "id",
+          "geom",
+          "osm_id",
+          "name",
+          "highway",
+          "waterway",
+          "aerialway",
+          "barrier",
+          "man_made",
+          "railway",
+          "z_order",
+          "other_tags"
+        ]
+      },
+      "multilinestrings": {
+        "table_name": "multilinestrings",
+        "feature_count": 1009,
+        "data_type": "features",
+        "geometry_type": "MULTILINESTRING",
+        "srs_id": 4326,
+        "crs": "EPSG:4326",
+        "bounding_box": {
+          "min_x_lon": 72.77601239999998,
+          "min_y_lat": 18.84736529999999,
+          "max_x_lon": 73.12966699999998,
+          "max_y_lat": 20.3451217
+        },
+        "column_count": 6,
+        "columns": [
+          "id",
+          "geom",
+          "osm_id",
+          "name",
+          "type",
+          "other_tags"
+        ]
+      },
+      "multipolygons": {
+        "table_name": "multipolygons",
+        "feature_count": 200076,
+        "data_type": "features",
+        "geometry_type": "MULTIPOLYGON",
+        "srs_id": 4326,
+        "crs": "EPSG:4326",
+        "bounding_box": {
+          "min_x_lon": 72.7568643,
+          "min_y_lat": 18.806056,
+          "max_x_lon": 73.1236052,
+          "max_y_lat": 19.4764243
+        },
+        "column_count": 27,
+        "columns": [
+          "id",
+          "geom",
+          "osm_id",
+          "osm_way_id",
+          "name",
+          "type",
+          "aeroway",
+          "amenity",
+          "admin_level",
+          "barrier",
+          "boundary",
+          "building",
+          "craft",
+          "geological",
+          "historic",
+          "land_area",
+          "landuse",
+          "leisure",
+          "man_made",
+          "military",
+          "natural",
+          "office",
+          "place",
+          "shop",
+          "sport",
+          "tourism",
+          "other_tags"
+        ]
+      },
+      "other_relations": {
+        "table_name": "other_relations",
+        "feature_count": 579,
+        "data_type": "features",
+        "geometry_type": "GEOMETRYCOLLECTION",
+        "srs_id": 4326,
+        "crs": "EPSG:4326",
+        "bounding_box": {
+          "min_x_lon": 72.795892,
+          "min_y_lat": 18.7627191,
+          "max_x_lon": 73.4086125,
+          "max_y_lat": 19.3403823
+        },
+        "column_count": 6,
+        "columns": [
+          "id",
+          "geom",
+          "osm_id",
+          "name",
+          "type",
+          "other_tags"
+        ]
+      }
+    },
+    "feature_breakdown": {
+      "all_highways": 92393,
+      "drivable_highways": 78847,
+      "railways": 2480,
+      "waterways": 1422,
+      "buildings": 181474,
+      "water_bodies": 883,
+      "parks_and_greenery": 3811,
+      "administrative_boundaries": 38
+    }
+  },
+  "geojson_sources": {
+    "roads": {
+      "filename": "mumbai_roads.geojson",
+      "file_size_bytes": 9266,
+      "feature_count": 12,
+      "crs": "EPSG:4326 (default)",
+      "geometry_types": [
+        "LineString"
+      ],
+      "osm_ids": [
+        "48219412",
+        "48219415",
+        "48219420",
+        "48219425",
+        "48219430",
+        "98112001",
+        "98112010",
+        "98112020",
+        "98112030",
+        "98112040",
+        "98112050",
+        "98112060"
+      ],
+      "is_complete_extract": false,
+      "sample_type": "Starter hand-crafted prototype sample"
+    },
+    "buildings": {
+      "filename": "mumbai_buildings.geojson",
+      "file_size_bytes": 16496,
+      "feature_count": 20,
+      "crs": "EPSG:4326 (default)",
+      "geometry_types": [
+        "Polygon"
+      ],
+      "osm_ids": [
+        "1029481",
+        "1029482",
+        "1029483",
+        "1029484",
+        "1029485",
+        "1029486",
+        "1029487",
+        "1029488",
+        "1029489",
+        "1029490",
+        "1029491",
+        "1029495",
+        "1029496",
+        "1029497",
+        "1029498",
+        "1029499",
+        "1029500",
+        "1029505",
+        "1029506",
+        "1029507"
+      ],
+      "is_complete_extract": false,
+      "sample_type": "Starter hand-crafted prototype sample"
+    },
+    "boundary": {
+      "filename": "mumbai_boundary.geojson",
+      "file_size_bytes": 3181,
+      "feature_count": 1,
+      "crs": "urn:ogc:def:crs:OGC:1.3:CRS84",
+      "geometry_types": [
+        "Polygon"
+      ],
+      "osm_ids": [
+        "7933618"
+      ],
+      "is_complete_extract": false,
+      "sample_type": "Starter hand-crafted prototype sample"
+    },
+    "environment": {
+      "filename": "mumbai_environment.geojson",
+      "file_size_bytes": 3087,
+      "feature_count": 4,
+      "crs": "EPSG:4326 (default)",
+      "geometry_types": [
+        "Polygon"
+      ],
+      "osm_ids": [
+        "5011001",
+        "5011010",
+        "5011020",
+        "5011030"
+      ],
+      "is_complete_extract": false,
+      "sample_type": "Starter hand-crafted prototype sample"
+    }
+  },
+  "source_completeness_assessment": {
+    "geojson_status": "PARTIAL PROTOTYPE SAMPLES (Coarse placeholders representing only Marine Drive demo)",
+    "geopackage_status": "FULL OPENSTREETMAP EXTRACT (Covers entire Greater Mumbai and metropolitan region)",
+    "verdict": "The original BBBike GeoPackage is designated as the primary authoritative data source for all 3D city generation."
+  },
+  "duplicate_analysis": {
+    "roads": {
+      "geojson_total_ids": 12,
+      "exact_osm_id_duplicates_in_gpkg": 0,
+      "details": [],
+      "note": "GeoJSON files contain prototype test IDs (e.g. 48219412) not in BBBike OSM export or modified IDs."
+    },
+    "buildings": {
+      "geojson_total_ids": 20,
+      "exact_osm_id_duplicates_in_gpkg": 0,
+      "details": [],
+      "note": "GeoJSON files contain prototype test IDs (e.g. 48219412) not in BBBike OSM export or modified IDs."
+    },
+    "boundary": {
+      "geojson_total_ids": 1,
+      "exact_osm_id_duplicates_in_gpkg": 0,
+      "details": [],
+      "note": "GeoJSON files contain prototype test IDs (e.g. 48219412) not in BBBike OSM export or modified IDs."
+    },
+    "environment": {
+      "geojson_total_ids": 4,
+      "exact_osm_id_duplicates_in_gpkg": 0,
+      "details": [],
+      "note": "GeoJSON files contain prototype test IDs (e.g. 48219412) not in BBBike OSM export or modified IDs."
+    }
+  },
+  "missing_layers_in_geojson": [
+    {
+      "layer": "railways",
+      "description": "Mumbai Suburban Railway (Western, Central, Harbour Lines), Mumbai Metro Lines 1, 2A, 7, and Monorail tracks",
+      "gpkg_feature_count": 2480,
+      "geojson_status": "Missing completely from GeoJSON"
+    },
+    {
+      "layer": "administrative_wards",
+      "description": "All 24 Brihanmumbai Municipal Corporation (BMC) administrative wards (A Ward through T Ward)",
+      "gpkg_feature_count": 38,
+      "geojson_status": "Missing from GeoJSON (GeoJSON only had 1 coarse boundary rectangle)"
+    },
+    {
+      "layer": "waterways_and_coastlines",
+      "description": "Mithi River, Oshiwara River, Poisar River, Arabian Sea coastline & bays",
+      "gpkg_feature_count": 2305,
+      "geojson_status": "GeoJSON only had 4 water polygons"
+    },
+    {
+      "layer": "parks_and_nature_reserves",
+      "description": "Sanjay Gandhi National Park, Oval Maidan, Shivaji Park, Hanging Gardens",
+      "gpkg_feature_count": 3811,
+      "geojson_status": "GeoJSON only had coarse simplified green spaces"
+    },
+    {
+      "layer": "pedestrian_and_amenity_points",
+      "description": "Landmarks, traffic signals, fuel stations, hospitals, colleges",
+      "gpkg_feature_count": 66334,
+      "geojson_status": "Missing completely from GeoJSON"
+    }
+  ],
+  "authoritative_sources_by_category": {
+    "roads": {
+      "chosen_source": "BBBike GeoPackage (lines table)",
+      "feature_count": 92393,
+      "drivable_roads": 78847,
+      "reason": "GeoPackage contains full road network of Greater Mumbai (92,393 segments) compared to 12 segments in GeoJSON."
+    },
+    "railways": {
+      "chosen_source": "BBBike GeoPackage (lines table, railway IS NOT NULL)",
+      "feature_count": 2480,
+      "reason": "Complete Western & Central railway tracks, sidings, and Metro corridors; completely absent in GeoJSON."
+    },
+    "buildings": {
+      "chosen_source": "BBBike GeoPackage (multipolygons table, building IS NOT NULL)",
+      "feature_count": 181474,
+      "reason": "GeoPackage contains 181,474 real building footprints across all Mumbai suburbs vs 20 buildings in GeoJSON."
+    },
+    "water_and_coastline": {
+      "chosen_source": "BBBike GeoPackage (multipolygons & lines)",
+      "feature_count": 2305,
+      "reason": "High-fidelity coastline, rivers (Mithi River), creeks (Thane Creek, Mahim Creek) and reservoirs (Vihar, Tulsi lakes)."
+    },
+    "parks_and_greenery": {
+      "chosen_source": "BBBike GeoPackage (multipolygons table)",
+      "feature_count": 3811,
+      "reason": "Accurate polygons for Sanjay Gandhi National Park, Aarey Milk Colony, maidans and recreational grounds."
+    },
+    "administrative_boundary": {
+      "chosen_source": "BBBike GeoPackage (multipolygons table, boundary='administrative')",
+      "feature_count": 38,
+      "reason": "True legal boundaries for BMC Greater Mumbai, Mumbai City, Mumbai Suburban, and all 24 municipal wards."
+    }
+  },
+  "geographical_coverage_verification": {
+    "bounds_lat_min": 18.89,
+    "bounds_lat_max": 19.32,
+    "bounds_lon_min": 72.77,
+    "bounds_lon_max": 72.99,
+    "regions_covered": [
+      "Colaba",
+      "Fort",
+      "Churchgate",
+      "Marine Drive",
+      "Girgaon",
+      "Byculla",
+      "Worli",
+      "Lower Parel",
+      "Dadar",
+      "Mahim",
+      "Bandra",
+      "Khar",
+      "Santacruz",
+      "Vile Parle",
+      "Andheri",
+      "Jogeshwari",
+      "Goregaon",
+      "Malad",
+      "Kandivali",
+      "Borivali",
+      "Dahisar",
+      "Powai",
+      "Kurla",
+      "Ghatkopar",
+      "Chembur",
+      "Mulund",
+      "Bhandup"
+    ],
+    "is_greater_mumbai_fully_covered": true
+  }
+}
