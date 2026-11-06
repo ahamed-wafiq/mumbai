@@ -58,7 +58,7 @@ func update_speed(speed_kmh: float, gear: String) -> void:
 				_gear_label.modulate = Color(1.0, 0.85, 0.2)  # Yellow
 				
 	if _speed_bar:
-		_speed_bar.value = clampf(speed_kmh, 0.0, 160.0)
+		_speed_bar.value = clampf(speed_kmh, 0.0, 340.0)
 
 ## Updates coordinates and location information
 func update_location(zone_name: String, lat: float, lon: float) -> void:

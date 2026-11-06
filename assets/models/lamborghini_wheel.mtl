@@ -1,0 +1,32 @@
+# Material library for Lamborghini Wheel
+newmtl Mat_Tire
+Ka 0.05 0.05 0.06
+Kd 0.10 0.10 0.11
+Ks 0.15 0.15 0.15
+Ns 20.0
+d 1.0
+illum 2
+
+newmtl Mat_Rim
+Ka 0.25 0.26 0.28
+Kd 0.75 0.78 0.82
+Ks 0.95 0.95 0.95
+Ns 110.0
+d 1.0
+illum 2
+
+newmtl Mat_BrakeDisc
+Ka 0.15 0.15 0.16
+Kd 0.45 0.46 0.48
+Ks 0.85 0.85 0.85
+Ns 80.0
+d 1.0
+illum 2
+
+newmtl Mat_BrakeCaliper
+Ka 0.2 0.16 0.02
+Kd 0.98 0.82 0.08
+Ks 0.9 0.9 0.9
+Ns 90.0
+d 1.0
+illum 2

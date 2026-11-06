@@ -1,0 +1,50 @@
+# Material library for Lamborghini Supercar Body
+newmtl Mat_LamboPaint
+Ka 0.2 0.16 0.02
+Kd 0.98 0.82 0.08
+Ks 0.95 0.95 0.95
+Ns 120.0
+d 1.0
+illum 2
+
+newmtl Mat_CarbonFiber
+Ka 0.05 0.05 0.05
+Kd 0.12 0.13 0.14
+Ks 0.35 0.35 0.35
+Ns 45.0
+d 1.0
+illum 2
+
+newmtl Mat_LamboGlass
+Ka 0.02 0.02 0.03
+Kd 0.06 0.08 0.10
+Ks 0.98 0.98 0.98
+Ns 180.0
+d 0.92
+illum 2
+
+newmtl Mat_Headlights
+Ka 1.0 0.98 0.92
+Kd 1.0 1.0 1.0
+Ks 1.0 1.0 1.0
+Ns 200.0
+Ke 1.0 0.98 0.90
+d 1.0
+illum 2
+
+newmtl Mat_Taillights
+Ka 0.8 0.05 0.05
+Kd 0.95 0.08 0.08
+Ks 0.9 0.4 0.4
+Ns 100.0
+Ke 1.0 0.05 0.05
+d 1.0
+illum 2
+
+newmtl Mat_TitaniumExhaust
+Ka 0.15 0.16 0.20
+Kd 0.38 0.42 0.50
+Ks 0.9 0.92 0.95
+Ns 90.0
+d 1.0
+illum 2

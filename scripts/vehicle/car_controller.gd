@@ -178,12 +178,20 @@ func _physics_process(delta: float) -> void:
 	elif absf(forward_speed) < 0.3:
 		current_gear = "N"
 	else:
-		if actual_speed_kmh < 40.0:
+		if actual_speed_kmh < 55.0:
 			current_gear = "1"
-		elif actual_speed_kmh < 85.0:
+		elif actual_speed_kmh < 95.0:
 			current_gear = "2"
-		else:
+		elif actual_speed_kmh < 145.0:
 			current_gear = "3"
+		elif actual_speed_kmh < 195.0:
+			current_gear = "4"
+		elif actual_speed_kmh < 245.0:
+			current_gear = "5"
+		elif actual_speed_kmh < 290.0:
+			current_gear = "6"
+		else:
+			current_gear = "7"
 			
 	speed_updated.emit(actual_speed_kmh, current_gear)
 	
