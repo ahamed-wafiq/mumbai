@@ -3,7 +3,8 @@ extends Node
 
 ## BuildingGenerator for Mumbai Drive
 ## Extrudes real OpenStreetMap building footprints into visible 3D meshes with
-## actual or typology-estimated heights, double-sided materials, and collision.
+## authentic architectural typologies, realistic height variations, roof parapets,
+## strict road-clearance and intersection collision avoidance.
 
 @export var default_floor_height: float = 3.5
 @export var building_material: Material
@@ -15,13 +16,16 @@ var valid_polygons: int = 0
 var meshes_created: int = 0
 var visible_buildings: int = 0
 
-# Architectural Materials (Procedural Facade Shaders)
+# Architectural Materials (8 Diverse Procedural Facade Shaders)
 var _facade_shader: Shader = preload("res://assets/shaders/building_facade.gdshader")
+var _mat_art_deco_cream: Material
+var _mat_art_deco_coral: Material
+var _mat_heritage_basalt: Material
+var _mat_street_shop: Material
+var _mat_residential_pastel: Material
 var _mat_commercial: Material
-var _mat_residential: Material
-var _mat_hotel: Material
-var _mat_heritage: Material
-var _mat_roof_trim: Material
+var _mat_skyscraper_silver: Material
+var _mat_hotel_luxury: Material
 
 # High-contrast debug materials for testing
 var _debug_mats: Array[StandardMaterial3D] = []
@@ -58,52 +62,77 @@ func _create_facade_mat(wall_col: Color, trim_col: Color, win_col: Color, floor_
 		return m
 
 func _init_materials() -> void:
-	# 1. Marine Drive Art Deco Apartments & Residential Mansions
-	_mat_residential = _create_facade_mat(
-		Color(0.85, 0.80, 0.72, 1.0), # Warm Art Deco Cream
-		Color(0.95, 0.48, 0.15, 1.0), # Terracotta Orange trim
-		Color(0.10, 0.16, 0.22, 1.0), # Deep reflective glass
+	# 1. Classic Marine Drive Art Deco (Cream & Terracotta Orange)
+	_mat_art_deco_cream = _create_facade_mat(
+		Color(0.86, 0.82, 0.73, 1.0),
+		Color(0.95, 0.46, 0.14, 1.0),
+		Color(0.10, 0.16, 0.22, 1.0),
 		3.5, 0.65, 0.55, 1.3, 0.85, 0.12
 	)
 	
-	# 2. Modern Commercial Glass & Slate Corporate Headquarters
+	# 2. Promenade Coastal Art Deco (Coral Pink & Ivory Trim)
+	_mat_art_deco_coral = _create_facade_mat(
+		Color(0.82, 0.58, 0.50, 1.0),
+		Color(0.96, 0.92, 0.84, 1.0),
+		Color(0.12, 0.18, 0.24, 1.0),
+		3.6, 0.68, 0.58, 1.4, 0.88, 0.10
+	)
+	
+	# 3. Victorian Gothic & Heritage Institutions (Mumbai Kurla Basalt & Teak)
+	_mat_heritage_basalt = _create_facade_mat(
+		Color(0.68, 0.60, 0.50, 1.0),
+		Color(0.42, 0.35, 0.28, 1.0),
+		Color(0.14, 0.15, 0.17, 1.0),
+		4.2, 0.48, 0.65, 0.9, 0.40, 0.25
+	)
+	
+	# 4. Bustling Mumbai Street Shops (Ochre Walls, Illuminated Shopfronts)
+	_mat_street_shop = _create_facade_mat(
+		Color(0.78, 0.68, 0.54, 1.0),
+		Color(0.85, 0.30, 0.20, 1.0),
+		Color(0.15, 0.18, 0.22, 1.0),
+		3.2, 0.72, 0.52, 1.8, 0.70, 0.18
+	)
+	
+	# 5. Coastal Residential Apartments (Mint Green / Pastel Yellow Plaster)
+	_mat_residential_pastel = _create_facade_mat(
+		Color(0.72, 0.78, 0.72, 1.0),
+		Color(0.92, 0.90, 0.85, 1.0),
+		Color(0.12, 0.16, 0.20, 1.0),
+		3.2, 0.60, 0.52, 1.1, 0.80, 0.15
+	)
+	
+	# 6. Modern Commercial Slate Concrete & Cyan Architectural Accent
 	_mat_commercial = _create_facade_mat(
-		Color(0.24, 0.28, 0.35, 1.0), # Slate charcoal concrete
-		Color(0.30, 0.70, 0.90, 1.0), # Cyan / chrome architectural accent
-		Color(0.08, 0.14, 0.20, 1.0), # Reflective blue glass
-		3.8, 0.75, 0.65, 1.6, 0.92, 0.08
+		Color(0.24, 0.28, 0.35, 1.0),
+		Color(0.30, 0.70, 0.90, 1.0),
+		Color(0.08, 0.14, 0.20, 1.0),
+		3.8, 0.78, 0.68, 1.6, 0.92, 0.08
 	)
 	
-	# 3. Seafront Luxury Hotels (The Oberoi, Trident, InterContinental)
-	_mat_hotel = _create_facade_mat(
-		Color(0.80, 0.78, 0.74, 1.0), # Ivory travertine marble
-		Color(0.95, 0.75, 0.25, 1.0), # Gold / brass spandrel trim
-		Color(0.12, 0.18, 0.20, 1.0), # Emerald glass tint
-		3.6, 0.70, 0.60, 1.5, 0.88, 0.10
+	# 7. Modern Silver Mirrored Glass Skyscraper Curtain Wall
+	_mat_skyscraper_silver = _create_facade_mat(
+		Color(0.75, 0.78, 0.82, 1.0),
+		Color(0.92, 0.95, 1.0, 1.0),
+		Color(0.10, 0.16, 0.25, 1.0),
+		4.0, 0.82, 0.75, 1.7, 0.95, 0.05
 	)
 	
-	# 4. Victorian Gothic & Heritage Institutions (High Court, CSMT, Wilson College)
-	_mat_heritage = _create_facade_mat(
-		Color(0.70, 0.62, 0.52, 1.0), # Mumbai Kurla yellow basalt
-		Color(0.48, 0.40, 0.32, 1.0), # Dark teak wood & stone trim
-		Color(0.15, 0.16, 0.18, 1.0), # Arched dark pane glass
-		4.2, 0.50, 0.65, 0.9, 0.40, 0.25
+	# 8. Seafront Luxury Hotels (Ivory Travertine Marble & Brass Spandrels)
+	_mat_hotel_luxury = _create_facade_mat(
+		Color(0.88, 0.85, 0.80, 1.0),
+		Color(0.85, 0.68, 0.28, 1.0),
+		Color(0.10, 0.20, 0.22, 1.0),
+		3.8, 0.72, 0.62, 1.5, 0.88, 0.10
 	)
 	
-	# 5. Parapet trim
-	var m_trim := StandardMaterial3D.new()
-	m_trim.albedo_color = Color(1.0, 0.45, 0.05, 1.0)
-	m_trim.roughness = 0.4
-	m_trim.cull_mode = BaseMaterial3D.CULL_DISABLED
-	_mat_roof_trim = m_trim
-	
-	# 6. Vibrant Debug Materials (High visibility)
+	# Vibrant Debug Materials (High visibility)
 	var debug_colors := [
-		Color(0.0, 0.85, 1.0, 1.0),  # Bright Cyan
-		Color(1.0, 0.75, 0.0, 1.0),  # Vibrant Gold
-		Color(1.0, 0.35, 0.1, 1.0),  # Neon Orange
-		Color(0.2, 0.95, 0.4, 1.0),  # Bright Emerald
-		Color(0.9, 0.25, 0.85, 1.0), # Vivid Magenta
+		Color(0.0, 0.85, 1.0, 1.0),
+		Color(1.0, 0.75, 0.0, 1.0),
+		Color(1.0, 0.35, 0.1, 1.0),
+		Color(0.2, 0.95, 0.4, 1.0),
+		Color(0.9, 0.25, 0.85, 1.0),
 	]
 	_debug_mats.clear()
 	for col in debug_colors:
@@ -118,71 +147,180 @@ func toggle_debug_materials() -> void:
 	debug_bright_materials = not debug_bright_materials
 	print("[BuildingGenerator] High-contrast debug building materials: ", "ENABLED" if debug_bright_materials else "DISABLED")
 
-## Applies geometric road clearance to building polygon vertices
-## Rigidly shifts buildings away from road corridors preserving their exact architectural geometry
-func _apply_road_clearance(raw_poly: Array) -> Array:
-	if raw_poly.is_empty():
-		return raw_poly
+## Helper distance from 2D point (px, pz) to 2D line segment (ax, az)-(bx, bz)
+func _dist_point_to_seg(px: float, pz: float, ax: float, az: float, bx: float, bz: float) -> Array:
+	var dx: float = bx - ax
+	var dz: float = bz - az
+	var len_sq: float = dx * dx + dz * dz
+	if len_sq < 0.0001:
+		var d0: float = sqrt((px - ax) * (px - ax) + (pz - az) * (pz - az))
+		return [d0, ax, az, 0.0, 0.0]
+	var t: float = clampf(((px - ax) * dx + (pz - az) * dz) / len_sq, 0.0, 1.0)
+	var proj_x: float = ax + t * dx
+	var proj_z: float = az + t * dz
+	var dist: float = sqrt((px - proj_x) * (px - proj_x) + (pz - proj_z) * (pz - proj_z))
+	return [dist, proj_x, proj_z, dx, dz]
+
+## Rigorous road clearance and designated building plot verification
+## Pushes vertices away from road corridors or culls buildings encroaching on lanes/junctions
+func _apply_road_clearance(raw_poly: Array, roads: Array) -> Array:
+	if raw_poly.size() < 3:
+		return []
 		
+	var pt_count: int = raw_poly.size()
 	var sum_x: float = 0.0
 	var sum_z: float = 0.0
-	var min_x: float = 999999.0
-	var max_x: float = -999999.0
+	for p in raw_poly:
+		sum_x += float(p[0])
+		sum_z += float(p[2])
+	var cx: float = sum_x / float(pt_count)
+	var cz: float = sum_z / float(pt_count)
 	
-	for pt in raw_poly:
-		var px: float = float(pt[0])
-		var pz: float = float(pt[2])
-		sum_x += px
-		sum_z += pz
-		min_x = minf(min_x, px)
-		max_x = maxf(max_x, px)
-		
-	var count: float = float(raw_poly.size())
-	var center_x: float = sum_x / count
-	var center_z: float = sum_z / count
-	
-	# Marine Drive Queen's Necklace corridor clearance:
-	# Centerline is at X ~ 0 to 1.0, road half-width 9.0m, sidewalk extends to 13.5m.
-	if center_z >= -1400.0 and center_z <= 2200.0:
-		var shift_x: float = 0.0
-		if center_x >= 0.0 and min_x < 13.8:
-			shift_x = 13.8 - min_x
-		elif center_x < 0.0 and max_x > -16.0:
-			shift_x = -16.0 - max_x
+	# 1. Marine Drive Queen's Necklace corridor clearance
+	# Road centerline at X ~ 0.0, half-width 9.0m, sidewalk to 12.0m.
+	if cz >= -1400.0 and cz <= 2200.0:
+		if absf(cx) < 8.0:
+			return [] # Centroid directly in the middle of Marine Drive
 			
-		if absf(shift_x) > 0.001:
-			var shifted: Array = []
-			for pt in raw_poly:
-				shifted.append([float(pt[0]) + shift_x, float(pt[1]), float(pt[2])])
-			return shifted
+	# 2. Check centroid against tile road segments and junction nodes
+	for r in roads:
+		var pts: Array = r.get("points", [])
+		var hw: float = float(r.get("width", 8.0)) * 0.5
+		if pts.size() >= 2:
+			# Junction node check on endpoints
+			var p_start = pts[0]
+			var p_end = pts[pts.size() - 1]
+			var d_start: float = sqrt((cx - float(p_start[0])) * (cx - float(p_start[0])) + (cz - float(p_start[2])) * (cz - float(p_start[2])))
+			var d_end: float = sqrt((cx - float(p_end[0])) * (cx - float(p_end[0])) + (cz - float(p_end[2])) * (cz - float(p_end[2])))
+			if d_start < (hw + 1.5) or d_end < (hw + 1.5):
+				return [] # Centroid inside road intersection
 				
-	return raw_poly
+			for i in range(pts.size() - 1):
+				var res = _dist_point_to_seg(cx, cz, float(pts[i][0]), float(pts[i][2]), float(pts[i+1][0]), float(pts[i+1][2]))
+				if float(res[0]) < hw:
+					return [] # Centroid on road asphalt
+					
+	# 3. Push infringing vertices outward past sidewalk buffer (hw + 2.5m)
+	var shifted_poly: Array = []
+	var severe_shifts: int = 0
+	
+	for p in raw_poly:
+		var px: float = float(p[0])
+		var py: float = float(p[1])
+		var pz: float = float(p[2])
+		var max_push_x: float = 0.0
+		var max_push_z: float = 0.0
+		var infringed: bool = false
+		
+		# Marine Drive boundary push
+		if pz >= -1400.0 and pz <= 2200.0:
+			if cx >= 0.0 and px < 12.5:
+				max_push_x = 12.5 - px
+				infringed = true
+			elif cx < 0.0 and px > -14.0:
+				max_push_x = -14.0 - px
+				infringed = true
+				
+		# Cross-streets and tile roads boundary push
+		for r in roads:
+			var pts: Array = r.get("points", [])
+			var hw: float = float(r.get("width", 8.0)) * 0.5
+			var safe_dist: float = hw + 2.5
+			for i in range(pts.size() - 1):
+				var res = _dist_point_to_seg(px, pz, float(pts[i][0]), float(pts[i][2]), float(pts[i+1][0]), float(pts[i+1][2]))
+				var d: float = float(res[0])
+				if d < safe_dist:
+					infringed = true
+					var proj_x: float = float(res[1])
+					var proj_z: float = float(res[2])
+					var dx_seg: float = float(res[3])
+					var dz_seg: float = float(res[4])
+					
+					var dir_x: float = 0.0
+					var dir_z: float = 0.0
+					var dist_to_proj: float = sqrt((px - proj_x) * (px - proj_x) + (pz - proj_z) * (pz - proj_z))
+					if dist_to_proj > 0.001:
+						dir_x = (px - proj_x) / dist_to_proj
+						dir_z = (pz - proj_z) / dist_to_proj
+					else:
+						var sl: float = sqrt(dx_seg * dx_seg + dz_seg * dz_seg)
+						if sl > 0.001:
+							dir_x = -dz_seg / sl
+							dir_z = dx_seg / sl
+						else:
+							dir_x = 1.0
+							
+					var needed: float = safe_dist - d
+					var sx: float = dir_x * needed
+					var sz: float = dir_z * needed
+					if (sx * sx + sz * sz) > (max_push_x * max_push_x + max_push_z * max_push_z):
+						max_push_x = sx
+						max_push_z = sz
+						
+		if infringed:
+			var push_mag: float = sqrt(max_push_x * max_push_x + max_push_z * max_push_z)
+			if push_mag > 7.0:
+				severe_shifts += 1
+			shifted_poly.append([px + max_push_x, py, pz + max_push_z])
+		else:
+			shifted_poly.append([px, py, pz])
+			
+	if severe_shifts > (pt_count / 2):
+		return [] # Building too deeply entrenched in roads, cull
+		
+	# 4. Final verification: Ensure no pushed vertex still sits in road asphalt
+	for p in shifted_poly:
+		var qx: float = float(p[0])
+		var qz: float = float(p[2])
+		for r in roads:
+			var pts: Array = r.get("points", [])
+			var hw: float = float(r.get("width", 8.0)) * 0.5
+			for i in range(pts.size() - 1):
+				var res = _dist_point_to_seg(qx, qz, float(pts[i][0]), float(pts[i][2]), float(pts[i+1][0]), float(pts[i+1][2]))
+				if float(res[0]) < hw:
+					return [] # Pushing still left vertex in road, cull building
+					
+	return shifted_poly
 
-## Generates a visible 3D building from a tile building data dictionary.
-## Supports both 'footprint' and 'polygon' keys.
-func generate_building_from_tile_data(b_data: Dictionary) -> Node3D:
+## Computes 2D polygon area using Shoelace formula
+func _calc_poly_area(pts: Array) -> float:
+	var n: int = pts.size()
+	if n < 3:
+		return 0.0
+	var area: float = 0.0
+	for i in range(n):
+		var j: int = (i + 1) % n
+		area += float(pts[i][0]) * float(pts[j][2]) - float(pts[j][0]) * float(pts[i][2])
+	return absf(area) * 0.5
+
+## Generates a visible 3D building from tile data with road clearance and architectural diversity
+func generate_building_from_tile_data(b_data: Dictionary, roads_in_tile: Array = []) -> Node3D:
 	total_features_read += 1
 	
-	# Support both 'footprint' (standard tile JSON) and 'polygon' keys
 	var raw_poly: Array = b_data.get("footprint", b_data.get("polygon", []))
 	if raw_poly.size() < 3:
 		return null
 		
-	# Apply road clearance pushback to avoid buildings encroaching into road lanes
-	raw_poly = _apply_road_clearance(raw_poly)
+	# Apply strict road clearance & designated plot boundary placement
+	raw_poly = _apply_road_clearance(raw_poly, roads_in_tile)
+	if raw_poly.size() < 3:
+		return null
+		
+	var area: float = _calc_poly_area(raw_poly)
+	if area < 16.0:
+		return null # Filter slivers
 		
 	valid_polygons += 1
 	
-	var height: float = maxf(float(b_data.get("height", 14.0)), 6.0)
-	var b_type: String = str(b_data.get("type", b_data.get("building_type", "residential")))
+	var b_type: String = str(b_data.get("type", b_data.get("building_type", "residential"))).to_lower()
 	var b_name: String = str(b_data.get("name", "Building"))
+	var is_estimated: bool = bool(b_data.get("estimated", true))
+	var height: float = float(b_data.get("height", 14.0))
 	
-	# Compute building centroid in world coordinates
+	# Centroid calculation
 	var sum_x: float = 0.0
 	var sum_z: float = 0.0
 	var pt_count: int = raw_poly.size()
-	
-	# Check if polygon is closed (last point == first point)
 	var is_closed: bool = (pt_count > 3 and 
 		absf(float(raw_poly[0][0]) - float(raw_poly[pt_count - 1][0])) < 0.01 and 
 		absf(float(raw_poly[0][2]) - float(raw_poly[pt_count - 1][2])) < 0.01)
@@ -193,25 +331,49 @@ func generate_building_from_tile_data(b_data: Dictionary) -> Node3D:
 		sum_z += float(raw_poly[i][2])
 		
 	var center := Vector3(sum_x / float(count_for_center), 0.0, sum_z / float(count_for_center))
+	var pos_hash: int = abs(int(center.x * 31.0 + center.z * 17.0))
 	
-	# Cull any erroneous building whose entire centroid sits inside the road corridor
-	if absf(center.x) < 8.0 and center.z >= -1400.0 and center.z <= 2200.0:
-		return null
-		
+	# Authentic Mumbai Height Variation
+	if is_estimated or height == 14.0 or height == 22.0:
+		if b_type == "hotel":
+			height = 36.0 + float(pos_hash % 8) * 4.0 # 36m to 64m
+		elif b_type in ["commercial", "office"]:
+			if area > 800.0 or center.z > 1400.0: # Nariman Point corporate skyscrapers
+				height = 55.0 + float(pos_hash % 12) * 6.5 # 55m to 125m
+			else:
+				height = 28.0 + float(pos_hash % 6) * 3.5 # 28m to 45m
+		elif b_type in ["school", "university", "civic", "courthouse", "heritage"]:
+			height = 16.0 + float(pos_hash % 4) * 2.5 # 16m to 23m
+		elif b_type in ["retail", "shop", "kiosk"]:
+			height = 8.0 + float(pos_hash % 4) * 1.5 # 8m to 12m
+		else: # Apartments / Residential / Yes
+			if area < 140.0:
+				# Low-rise street shops and chawls
+				height = 9.0 + float(pos_hash % 3) * 2.0 # 9m to 13m
+			elif area < 450.0:
+				# Mid-rise apartments
+				height = 18.0 + float(pos_hash % 5) * 3.0 # 18m to 30m
+			elif area < 900.0:
+				# High-rise residential towers
+				height = 32.0 + float(pos_hash % 7) * 4.0 # 32m to 56m
+			else:
+				# Massive skyscrapers (Nariman Point & Churchgate)
+				height = 58.0 + float(pos_hash % 10) * 7.0 # 58m to 120m
+	height = maxf(height, 7.5)
+	
 	# Convert footprint points to local space relative to center
 	var local_pts: PackedVector3Array = []
 	for i in range(count_for_center):
 		var p = raw_poly[i]
 		local_pts.append(Vector3(float(p[0]) - center.x, 0.0, float(p[2]) - center.z))
-	# Ensure loop is closed for wall extrusion
 	local_pts.append(local_pts[0])
 	
-	# Create parent node placed at centroid
+	# Create parent node
 	var building_node := Node3D.new()
 	building_node.name = "Bld_" + b_name.replace(" ", "_")
 	building_node.position = center
 	
-	# Extrude visible 3D mesh (walls + roof)
+	# Extrude visible 3D mesh with parapets
 	var mesh := _extrude_building_mesh(local_pts, height)
 	if not mesh:
 		return null
@@ -220,30 +382,46 @@ func generate_building_from_tile_data(b_data: Dictionary) -> Node3D:
 	mesh_inst.name = "BuildingMesh"
 	mesh_inst.mesh = mesh
 	
-	# Assign material
+	# Architectural Style & Material Assignment
 	var chosen_mat: Material
 	if debug_bright_materials and _debug_mats.size() > 0:
-		var hash_idx: int = abs(b_name.hash()) % _debug_mats.size()
+		var hash_idx: int = pos_hash % _debug_mats.size()
 		chosen_mat = _debug_mats[hash_idx]
 	elif building_material:
 		chosen_mat = building_material
 	else:
-		match b_type:
-			"commercial", "office":
-				chosen_mat = _mat_commercial
-			"hotel":
-				chosen_mat = _mat_hotel
-			"monument", "civic", "courthouse", "stadium", "university", "heritage":
-				chosen_mat = _mat_heritage
-			_:
-				chosen_mat = _mat_residential
-				
+		if b_type == "hotel":
+			chosen_mat = _mat_hotel_luxury
+		elif b_type in ["commercial", "office"]:
+			chosen_mat = _mat_skyscraper_silver if height > 55.0 else _mat_commercial
+		elif b_type in ["civic", "courthouse", "monument", "university", "school", "heritage", "place_of_worship"]:
+			chosen_mat = _mat_heritage_basalt
+		elif b_type in ["retail", "shop", "kiosk"]:
+			chosen_mat = _mat_street_shop
+		else: # Residential / Apartments / Yes
+			# Marine Drive coastal promenade buildings
+			if center.x >= 5.0 and center.x <= 130.0 and center.z >= -1400.0 and center.z <= 2200.0:
+				var deco_variant: int = pos_hash % 3
+				match deco_variant:
+					0: chosen_mat = _mat_art_deco_cream
+					1: chosen_mat = _mat_art_deco_coral
+					_: chosen_mat = _mat_hotel_luxury
+			elif area < 160.0:
+				chosen_mat = _mat_street_shop
+			elif height > 55.0:
+				chosen_mat = _mat_skyscraper_silver
+			else:
+				var res_variant: int = pos_hash % 4
+				match res_variant:
+					0: chosen_mat = _mat_art_deco_cream
+					1: chosen_mat = _mat_art_deco_coral
+					2: chosen_mat = _mat_residential_pastel
+					_: chosen_mat = _mat_heritage_basalt
+					
 	mesh_inst.material_override = chosen_mat
 	building_node.add_child(mesh_inst)
 	
-	# Add Static Collision only for buildings close to the road (within 50m)
-	# Uses ultra-efficient BoxShape3D instead of heavy concave create_trimesh_shape()
-	# to prevent physics server memory exhaustion and crashes on integrated GPUs.
+	# Add Static Collision Box for buildings within 50m of roadways
 	if absf(center.x) <= 50.0:
 		var aabb := mesh.get_aabb()
 		if aabb.size.x > 1.0 and aabb.size.z > 1.0:
@@ -259,12 +437,12 @@ func generate_building_from_tile_data(b_data: Dictionary) -> Node3D:
 			col_shape.position = aabb.get_center()
 			static_body.add_child(col_shape)
 			building_node.add_child(static_body)
-	
+			
 	meshes_created += 1
 	visible_buildings += 1
 	return building_node
 
-## Extrudes a 2D local footprint into 3D walls and flat roof with double-sided rendering
+## Extrudes 2D local footprint into 3D walls, flat roof, and architectural parapet
 func _extrude_building_mesh(local_pts: PackedVector3Array, height: float) -> ArrayMesh:
 	var count := local_pts.size()
 	if count < 3:
@@ -273,12 +451,13 @@ func _extrude_building_mesh(local_pts: PackedVector3Array, height: float) -> Arr
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	
+	var parapet_height: float = 0.9
+	
 	# 1. Extrude Vertical Walls
 	for i in range(count - 1):
 		var p1 := local_pts[i]
 		var p2 := local_pts[i + 1]
 		
-		# Skip duplicate consecutive vertices
 		if p1.distance_squared_to(p2) < 0.001:
 			continue
 			
@@ -318,6 +497,34 @@ func _extrude_building_mesh(local_pts: PackedVector3Array, height: float) -> Arr
 		st.set_normal(wall_normal)
 		st.set_uv(Vector2(uv_scale, 0))
 		st.add_vertex(b2)
+		
+		# Rooftop Parapet Wall (t1 -> pr1 -> pr2 -> t2)
+		var pr1 := Vector3(p1.x, height + parapet_height, p1.z)
+		var pr2 := Vector3(p2.x, height + parapet_height, p2.z)
+		
+		st.set_normal(wall_normal)
+		st.set_uv(Vector2(0, uv_v))
+		st.add_vertex(t1)
+		
+		st.set_normal(wall_normal)
+		st.set_uv(Vector2(0, uv_v + 0.3))
+		st.add_vertex(pr1)
+		
+		st.set_normal(wall_normal)
+		st.set_uv(Vector2(uv_scale, uv_v))
+		st.add_vertex(t2)
+		
+		st.set_normal(wall_normal)
+		st.set_uv(Vector2(0, uv_v + 0.3))
+		st.add_vertex(pr1)
+		
+		st.set_normal(wall_normal)
+		st.set_uv(Vector2(uv_scale, uv_v + 0.3))
+		st.add_vertex(pr2)
+		
+		st.set_normal(wall_normal)
+		st.set_uv(Vector2(uv_scale, uv_v))
+		st.add_vertex(t2)
 		
 	# 2. Triangulate Horizontal Roof using Centroid Fan
 	var roof_center := Vector3.ZERO

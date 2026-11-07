@@ -88,20 +88,20 @@ func load_tile(coord: Vector2i, parent_node: Node3D) -> Node3D:
 	
 	# 2. Instantiate Real OSM Roads in this tile
 	var roads_in_tile: int = 0
+	var roads_arr: Array = tile_data.get("roads", [])
 	if _road_gen:
-		var roads_arr: Array = tile_data.get("roads", [])
 		for r_data in roads_arr:
 			var road_node := _road_gen.generate_road_from_tile_data(r_data)
 			if road_node:
 				tile_root.add_child(road_node)
 				roads_in_tile += 1
 				
-	# 3. Instantiate Real OSM Buildings in this tile
+	# 3. Instantiate Real OSM Buildings in this tile (with road clearance)
 	var blds_in_tile: int = 0
 	if _bld_gen:
 		var blds_arr: Array = tile_data.get("buildings", [])
 		for b_data in blds_arr:
-			var bld_node := _bld_gen.generate_building_from_tile_data(b_data)
+			var bld_node := _bld_gen.generate_building_from_tile_data(b_data, roads_arr)
 			if bld_node:
 				tile_root.add_child(bld_node)
 				blds_in_tile += 1
