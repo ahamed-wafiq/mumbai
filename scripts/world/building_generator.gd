@@ -1,10 +1,10 @@
 class_name BuildingGenerator
 extends Node
 
-## BuildingGenerator for Mumbai Drive
-## Extrudes real OpenStreetMap building footprints into visible 3D meshes with
-## authentic architectural typologies, realistic height variations, roof parapets,
-## strict road-clearance and intersection collision avoidance.
+## BuildingGenerator for Mumbai Drive (High-Performance GPU-Optimized)
+## Extrudes real OpenStreetMap building footprints into single-draw-call 3D meshes
+## with authentic architectural typologies, realistic height variations, rooftop parapets,
+## elevator penthouses, distance LOD culling, and strict zero-overlap road protection.
 
 @export var default_floor_height: float = 3.5
 @export var building_material: Material
@@ -26,15 +26,6 @@ var _mat_residential_pastel: Material
 var _mat_commercial: Material
 var _mat_skyscraper_silver: Material
 var _mat_hotel_luxury: Material
-
-# Rooftop & Entrance Detail Materials
-var _mat_rooftop_concrete: StandardMaterial3D
-var _mat_rooftop_metal: StandardMaterial3D
-var _mat_entrance_glass: StandardMaterial3D
-var _mat_garden_grass: StandardMaterial3D
-var _mat_tree_trunk: StandardMaterial3D
-var _mat_tree_foliage: StandardMaterial3D
-var _mat_beacon_red: StandardMaterial3D
 
 # High-contrast debug materials for testing
 var _debug_mats: Array[StandardMaterial3D] = []
@@ -135,44 +126,7 @@ func _init_materials() -> void:
 		3.8, 0.72, 0.62, 1.5, 0.88, 0.10
 	)
 	
-	# 9. Rooftop Mechanical & Architectural Detailing Materials
-	_mat_rooftop_concrete = StandardMaterial3D.new()
-	_mat_rooftop_concrete.albedo_color = Color(0.26, 0.28, 0.30, 1.0)
-	_mat_rooftop_concrete.roughness = 0.85
-
-	_mat_rooftop_metal = StandardMaterial3D.new()
-	_mat_rooftop_metal.albedo_color = Color(0.70, 0.73, 0.76, 1.0)
-	_mat_rooftop_metal.metallic = 0.85
-	_mat_rooftop_metal.roughness = 0.25
-
-	_mat_entrance_glass = StandardMaterial3D.new()
-	_mat_entrance_glass.albedo_color = Color(0.20, 0.26, 0.32, 0.85)
-	_mat_entrance_glass.metallic = 0.8
-	_mat_entrance_glass.roughness = 0.1
-	_mat_entrance_glass.emission_enabled = true
-	_mat_entrance_glass.emission = Color(1.0, 0.90, 0.72, 1.0)
-	_mat_entrance_glass.emission_energy_multiplier = 1.6
-
-	_mat_garden_grass = StandardMaterial3D.new()
-	_mat_garden_grass.albedo_color = Color(0.24, 0.44, 0.18, 1.0)
-	_mat_garden_grass.roughness = 0.85
-
-	_mat_tree_trunk = StandardMaterial3D.new()
-	_mat_tree_trunk.albedo_color = Color(0.32, 0.24, 0.18, 1.0)
-	_mat_tree_trunk.roughness = 0.9
-
-	_mat_tree_foliage = StandardMaterial3D.new()
-	_mat_tree_foliage.albedo_color = Color(0.18, 0.46, 0.16, 1.0)
-	_mat_tree_foliage.roughness = 0.7
-	_mat_tree_foliage.cull_mode = BaseMaterial3D.CULL_DISABLED
-
-	_mat_beacon_red = StandardMaterial3D.new()
-	_mat_beacon_red.albedo_color = Color(1.0, 0.15, 0.15, 1.0)
-	_mat_beacon_red.emission_enabled = true
-	_mat_beacon_red.emission = Color(1.0, 0.15, 0.15, 1.0)
-	_mat_beacon_red.emission_energy_multiplier = 4.0
-	
-	# Vibrant Debug Materials (High visibility)
+	# Debug Materials
 	var debug_colors := [
 		Color(0.0, 0.85, 1.0, 1.0),
 		Color(1.0, 0.75, 0.0, 1.0),
@@ -208,7 +162,6 @@ func _dist_point_to_seg(px: float, pz: float, ax: float, az: float, bx: float, b
 	return [dist, proj_x, proj_z, dx, dz]
 
 ## Rigorous road clearance and designated building plot verification
-## Pushes vertices away from road corridors or culls buildings encroaching on lanes/junctions
 func _apply_road_clearance(raw_poly: Array, roads: Array) -> Array:
 	if raw_poly.size() < 3:
 		return []
@@ -223,17 +176,15 @@ func _apply_road_clearance(raw_poly: Array, roads: Array) -> Array:
 	var cz: float = sum_z / float(pt_count)
 	
 	# 1. Marine Drive Queen's Necklace corridor clearance
-	# Road centerline at X ~ 0.0, half-width 9.0m, sidewalk to 12.0m.
 	if cz >= -1400.0 and cz <= 2200.0:
 		if absf(cx) < 8.0:
-			return [] # Centroid directly in the middle of Marine Drive
+			return [] # Centroid in middle of Marine Drive
 			
 	# 2. Check centroid against tile road segments and junction nodes
 	for r in roads:
 		var pts: Array = r.get("points", [])
 		var hw: float = float(r.get("width", 8.0)) * 0.5
 		if pts.size() >= 2:
-			# Junction node check on endpoints
 			var p_start = pts[0]
 			var p_end = pts[pts.size() - 1]
 			var d_start: float = sqrt((cx - float(p_start[0])) * (cx - float(p_start[0])) + (cz - float(p_start[2])) * (cz - float(p_start[2])))
@@ -290,11 +241,8 @@ func _apply_road_clearance(raw_poly: Array, roads: Array) -> Array:
 						dir_z = (pz - proj_z) / dist_to_proj
 					else:
 						var sl: float = sqrt(dx_seg * dx_seg + dz_seg * dz_seg)
-						if sl > 0.001:
-							dir_x = -dz_seg / sl
-							dir_z = dx_seg / sl
-						else:
-							dir_x = 1.0
+						dir_x = -dz_seg / sl if sl > 0.001 else 1.0
+						dir_z = dx_seg / sl if sl > 0.001 else 0.0
 							
 					var needed: float = safe_dist - d
 					var sx: float = dir_x * needed
@@ -339,7 +287,7 @@ func _calc_poly_area(pts: Array) -> float:
 		area += float(pts[i][0]) * float(pts[j][2]) - float(pts[j][0]) * float(pts[i][2])
 	return absf(area) * 0.5
 
-## Generates a visible 3D building from tile data with road clearance and architectural diversity
+## Generates a visible 3D building with 1 single draw call and distance LOD culling
 func generate_building_from_tile_data(b_data: Dictionary, roads_in_tile: Array = []) -> Node3D:
 	total_features_read += 1
 	
@@ -382,29 +330,25 @@ func generate_building_from_tile_data(b_data: Dictionary, roads_in_tile: Array =
 	# Authentic Mumbai Height Variation
 	if is_estimated or height == 14.0 or height == 22.0:
 		if b_type == "hotel":
-			height = 36.0 + float(pos_hash % 8) * 4.0 # 36m to 64m
+			height = 36.0 + float(pos_hash % 8) * 4.0
 		elif b_type in ["commercial", "office"]:
-			if area > 800.0 or center.z > 1400.0: # Nariman Point corporate skyscrapers
-				height = 55.0 + float(pos_hash % 12) * 6.5 # 55m to 125m
+			if area > 800.0 or center.z > 1400.0:
+				height = 55.0 + float(pos_hash % 12) * 6.5
 			else:
-				height = 28.0 + float(pos_hash % 6) * 3.5 # 28m to 45m
+				height = 28.0 + float(pos_hash % 6) * 3.5
 		elif b_type in ["school", "university", "civic", "courthouse", "heritage"]:
-			height = 16.0 + float(pos_hash % 4) * 2.5 # 16m to 23m
+			height = 16.0 + float(pos_hash % 4) * 2.5
 		elif b_type in ["retail", "shop", "kiosk"]:
-			height = 8.0 + float(pos_hash % 4) * 1.5 # 8m to 12m
-		else: # Apartments / Residential / Yes
+			height = 8.0 + float(pos_hash % 4) * 1.5
+		else:
 			if area < 140.0:
-				# Low-rise street shops and chawls
-				height = 9.0 + float(pos_hash % 3) * 2.0 # 9m to 13m
+				height = 9.0 + float(pos_hash % 3) * 2.0
 			elif area < 450.0:
-				# Mid-rise apartments
-				height = 18.0 + float(pos_hash % 5) * 3.0 # 18m to 30m
+				height = 18.0 + float(pos_hash % 5) * 3.0
 			elif area < 900.0:
-				# High-rise residential towers
-				height = 32.0 + float(pos_hash % 7) * 4.0 # 32m to 56m
+				height = 32.0 + float(pos_hash % 7) * 4.0
 			else:
-				# Massive skyscrapers (Nariman Point & Churchgate)
-				height = 58.0 + float(pos_hash % 10) * 7.0 # 58m to 120m
+				height = 58.0 + float(pos_hash % 10) * 7.0
 	height = maxf(height, 7.5)
 	
 	# Convert footprint points to local space relative to center
@@ -414,19 +358,19 @@ func generate_building_from_tile_data(b_data: Dictionary, roads_in_tile: Array =
 		local_pts.append(Vector3(float(p[0]) - center.x, 0.0, float(p[2]) - center.z))
 	local_pts.append(local_pts[0])
 	
-	# Create parent node
-	var building_node := Node3D.new()
-	building_node.name = "Bld_" + b_name.replace(" ", "_")
-	building_node.position = center
-	
-	# Extrude visible 3D mesh with parapets
-	var mesh := _extrude_building_mesh(local_pts, height)
+	# Extrude visible 3D mesh with parapets and integrated rooftop structures
+	var mesh := _extrude_building_mesh(local_pts, height, pos_hash)
 	if not mesh:
 		return null
 		
 	var mesh_inst := MeshInstance3D.new()
-	mesh_inst.name = "BuildingMesh"
+	mesh_inst.name = "Bld_" + b_name.replace(" ", "_")
+	mesh_inst.position = center
 	mesh_inst.mesh = mesh
+	
+	# Distance LOD culling for buildings (prevents distant GPU fillrate stalls)
+	mesh_inst.visibility_range_end = 450.0
+	mesh_inst.visibility_range_end_margin = 30.0
 	
 	# Architectural Style & Material Assignment
 	var chosen_mat: Material
@@ -444,8 +388,7 @@ func generate_building_from_tile_data(b_data: Dictionary, roads_in_tile: Array =
 			chosen_mat = _mat_heritage_basalt
 		elif b_type in ["retail", "shop", "kiosk"]:
 			chosen_mat = _mat_street_shop
-		else: # Residential / Apartments / Yes
-			# Marine Drive coastal promenade buildings
+		else:
 			if center.x >= 5.0 and center.x <= 130.0 and center.z >= -1400.0 and center.z <= 2200.0:
 				var deco_variant: int = pos_hash % 3
 				match deco_variant:
@@ -465,18 +408,10 @@ func generate_building_from_tile_data(b_data: Dictionary, roads_in_tile: Array =
 					_: chosen_mat = _mat_heritage_basalt
 					
 	mesh_inst.material_override = chosen_mat
-	building_node.add_child(mesh_inst)
 	
-	var aabb := mesh.get_aabb()
-	# Add Architectural Rooftop Penthouse Structures & Mechanical HVAC Units
-	_add_rooftop_structures(building_node, aabb, height, pos_hash)
-
-	# Add Ground-Floor Entrance Portal & Forecourt Garden for Street-Facing Buildings
-	if absf(center.x) <= 75.0:
-		_add_ground_entrance_and_garden(building_node, aabb, pos_hash)
-	
-	# Add Static Collision Box for buildings within 50m of roadways
-	if absf(center.x) <= 50.0:
+	# Optimized Static Collision: Only add collision for buildings within 35m of drivable road
+	if absf(center.x) <= 35.0:
+		var aabb := mesh.get_aabb()
 		if aabb.size.x > 1.0 and aabb.size.z > 1.0:
 			var static_body := StaticBody3D.new()
 			static_body.name = "Collision"
@@ -485,18 +420,18 @@ func generate_building_from_tile_data(b_data: Dictionary, roads_in_tile: Array =
 			
 			var col_shape := CollisionShape3D.new()
 			var box_shape := BoxShape3D.new()
-			box_shape.size = aabb.size
+			box_shape.size = Vector3(aabb.size.x, height, aabb.size.z)
 			col_shape.shape = box_shape
-			col_shape.position = aabb.get_center()
+			col_shape.position = Vector3(0, height * 0.5, 0)
 			static_body.add_child(col_shape)
-			building_node.add_child(static_body)
+			mesh_inst.add_child(static_body)
 			
 	meshes_created += 1
 	visible_buildings += 1
-	return building_node
+	return mesh_inst
 
-## Extrudes 2D local footprint into 3D walls, flat roof, and architectural parapet
-func _extrude_building_mesh(local_pts: PackedVector3Array, height: float) -> ArrayMesh:
+## Extrudes walls, roof, parapet, and integrated rooftop penthouse into 1 single ArrayMesh
+func _extrude_building_mesh(local_pts: PackedVector3Array, height: float, pos_hash: int) -> ArrayMesh:
 	var count := local_pts.size()
 	if count < 3:
 		return null
@@ -608,139 +543,60 @@ func _extrude_building_mesh(local_pts: PackedVector3Array, height: float) -> Arr
 		st.set_normal(Vector3.UP)
 		st.set_uv(Vector2(0.5, 0.5))
 		st.add_vertex(roof_center)
+
+	# 3. Integrated Rooftop Elevator Penthouse (for buildings height >= 16m)
+	if height >= 16.0:
+		var ph_w := 4.0
+		var ph_d := 4.0
+		var ph_h := 3.2
+		var ph_base_y := height
+		var ph_top_y := height + ph_h
+		
+		var cx := float((pos_hash % 3) - 1) * 1.5
+		var cz := float(((pos_hash / 3) % 3) - 1) * 1.5
+		
+		var c0 := Vector3(cx - ph_w*0.5, ph_base_y, cz - ph_d*0.5)
+		var c1 := Vector3(cx + ph_w*0.5, ph_base_y, cz - ph_d*0.5)
+		var c2 := Vector3(cx + ph_w*0.5, ph_base_y, cz + ph_d*0.5)
+		var c3 := Vector3(cx - ph_w*0.5, ph_base_y, cz + ph_d*0.5)
+		
+		var t0 := Vector3(c0.x, ph_top_y, c0.z)
+		var t1 := Vector3(c1.x, ph_top_y, c1.z)
+		var t2 := Vector3(c2.x, ph_top_y, c2.z)
+		var t3 := Vector3(c3.x, ph_top_y, c3.z)
+		
+		var ph_quads := [
+			[c0, t0, t1, c1, Vector3.FORWARD], # South
+			[c1, t1, t2, c2, Vector3.RIGHT],   # East
+			[c2, t2, t3, c3, Vector3.BACK],    # North
+			[c3, t3, t0, c0, Vector3.LEFT],    # West
+			[t0, t3, t2, t1, Vector3.UP]       # Penthouse Top Roof
+		]
+		
+		for q in ph_quads:
+			var n: Vector3 = q[4]
+			st.set_normal(n)
+			st.set_uv(Vector2(0, 0))
+			st.add_vertex(q[0])
+			st.set_normal(n)
+			st.set_uv(Vector2(0, 1))
+			st.add_vertex(q[1])
+			st.set_normal(n)
+			st.set_uv(Vector2(1, 1))
+			st.add_vertex(q[2])
+			
+			st.set_normal(n)
+			st.set_uv(Vector2(0, 0))
+			st.add_vertex(q[0])
+			st.set_normal(n)
+			st.set_uv(Vector2(1, 1))
+			st.add_vertex(q[2])
+			st.set_normal(n)
+			st.set_uv(Vector2(1, 0))
+			st.add_vertex(q[3])
 		
 	st.generate_normals()
 	return st.commit()
-
-## Adds rooftop mechanical penthouses, elevator machine rooms, HVAC chillers, and antennas
-func _add_rooftop_structures(parent: Node3D, aabb: AABB, height: float, pos_hash: int) -> void:
-	if aabb.size.x < 6.0 or aabb.size.z < 6.0 or height < 14.0:
-		return
-
-	# 1. Elevator Machine Room / Stair Penthouse Box
-	var penthouse_w := clampf(aabb.size.x * 0.35, 3.2, 9.0)
-	var penthouse_d := clampf(aabb.size.z * 0.35, 3.2, 9.0)
-	var penthouse_h := 3.2
-
-	var ph_box := BoxMesh.new()
-	ph_box.size = Vector3(penthouse_w, penthouse_h, penthouse_d)
-	ph_box.material = _mat_rooftop_concrete
-
-	var ph_inst := MeshInstance3D.new()
-	ph_inst.name = "RooftopPenthouse"
-	ph_inst.mesh = ph_box
-	var ph_offset_x := float((pos_hash % 3) - 1) * (aabb.size.x * 0.15)
-	var ph_offset_z := float(((pos_hash / 3) % 3) - 1) * (aabb.size.z * 0.15)
-	ph_inst.position = Vector3(ph_offset_x, height + (penthouse_h * 0.5), ph_offset_z)
-	parent.add_child(ph_inst)
-
-	# 2. HVAC Chiller Unit or Cylindrical Water Tank
-	var is_water_tank := (pos_hash % 2 == 0)
-	if is_water_tank:
-		var tank_mesh := CylinderMesh.new()
-		tank_mesh.top_radius = 1.1
-		tank_mesh.bottom_radius = 1.1
-		tank_mesh.height = 2.4
-		tank_mesh.material = _mat_rooftop_metal
-
-		var tank_inst := MeshInstance3D.new()
-		tank_inst.name = "WaterTank"
-		tank_inst.mesh = tank_mesh
-		tank_inst.position = Vector3(-ph_offset_x * 0.8, height + 1.2, -ph_offset_z * 0.8)
-		parent.add_child(tank_inst)
-	else:
-		var hvac_mesh := BoxMesh.new()
-		hvac_mesh.size = Vector3(2.4, 1.4, 1.8)
-		hvac_mesh.material = _mat_rooftop_metal
-
-		var hvac_inst := MeshInstance3D.new()
-		hvac_inst.name = "HVACChiller"
-		hvac_inst.mesh = hvac_mesh
-		hvac_inst.position = Vector3(-ph_offset_x * 0.8, height + 0.7, -ph_offset_z * 0.8)
-		parent.add_child(hvac_inst)
-
-	# 3. Tall Skyscraper Antenna Mast with Flashing Red Beacon (for heights > 55m)
-	if height >= 55.0:
-		var mast_mesh := CylinderMesh.new()
-		mast_mesh.top_radius = 0.05
-		mast_mesh.bottom_radius = 0.15
-		mast_mesh.height = 9.0
-		mast_mesh.material = _mat_rooftop_metal
-
-		var mast_inst := MeshInstance3D.new()
-		mast_inst.name = "AntennaMast"
-		mast_inst.mesh = mast_mesh
-		mast_inst.position = Vector3(ph_offset_x, height + penthouse_h + 4.5, ph_offset_z)
-		parent.add_child(mast_inst)
-
-		var beacon_mesh := SphereMesh.new()
-		beacon_mesh.radius = 0.22
-		beacon_mesh.height = 0.44
-		beacon_mesh.material = _mat_beacon_red
-
-		var beacon_inst := MeshInstance3D.new()
-		beacon_inst.name = "RedBeacon"
-		beacon_inst.mesh = beacon_mesh
-		beacon_inst.position = Vector3(ph_offset_x, height + penthouse_h + 9.1, ph_offset_z)
-		parent.add_child(beacon_inst)
-
-## Adds an illuminated ground-floor entrance canopy and landscaped front lawn with ornamental trees
-func _add_ground_entrance_and_garden(parent: Node3D, aabb: AABB, pos_hash: int) -> void:
-	if aabb.size.x < 6.0 or aabb.size.z < 6.0:
-		return
-
-	# 1. Ground Entrance Foyer Box (Lit glass entrance doors)
-	var foyer_w := clampf(aabb.size.x * 0.28, 3.0, 7.5)
-	var foyer_mesh := BoxMesh.new()
-	foyer_mesh.size = Vector3(foyer_w, 3.2, 1.5)
-	foyer_mesh.material = _mat_entrance_glass
-
-	var foyer_inst := MeshInstance3D.new()
-	foyer_inst.name = "EntranceFoyer"
-	foyer_inst.mesh = foyer_mesh
-	# Place at building front edge
-	foyer_inst.position = Vector3(0, 1.6, aabb.position.z - 0.7)
-	parent.add_child(foyer_inst)
-
-	# 2. Landscaped Front Green Lawn Patch
-	var lawn_mesh := PlaneMesh.new()
-	var lawn_w := clampf(aabb.size.x * 0.8, 4.0, 18.0)
-	var lawn_d := 3.5
-	lawn_mesh.size = Vector2(lawn_w, lawn_d)
-	lawn_mesh.material = _mat_garden_grass
-
-	var lawn_inst := MeshInstance3D.new()
-	lawn_inst.name = "FrontLawn"
-	lawn_inst.mesh = lawn_mesh
-	lawn_inst.position = Vector3(0, 0.04, aabb.position.z - 2.2)
-	parent.add_child(lawn_inst)
-
-	# 3. Ornamental Front Tree (1 tree in lawn corner)
-	var tree_node := Node3D.new()
-	tree_node.position = Vector3(lawn_w * 0.35, 0.04, aabb.position.z - 2.2)
-
-	var trunk_mesh := CylinderMesh.new()
-	trunk_mesh.top_radius = 0.14
-	trunk_mesh.bottom_radius = 0.20
-	trunk_mesh.height = 3.2
-	trunk_mesh.material = _mat_tree_trunk
-	var trunk_inst := MeshInstance3D.new()
-	trunk_inst.mesh = trunk_mesh
-	trunk_inst.position = Vector3(0, 1.6, 0)
-	tree_node.add_child(trunk_inst)
-
-	var foliage_mesh := SphereMesh.new()
-	foliage_mesh.radius = 1.6
-	foliage_mesh.height = 2.8
-	foliage_mesh.radial_segments = 8
-	foliage_mesh.rings = 5
-	foliage_mesh.material = _mat_tree_foliage
-	var foliage_inst := MeshInstance3D.new()
-	foliage_inst.mesh = foliage_mesh
-	foliage_inst.position = Vector3(0, 3.2, 0)
-	tree_node.add_child(foliage_inst)
-
-	parent.add_child(tree_node)
 
 ## Returns real-time debug telemetry statistics
 func get_debug_stats() -> Dictionary:
