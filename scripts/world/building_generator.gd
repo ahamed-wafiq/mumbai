@@ -161,6 +161,32 @@ func _dist_point_to_seg(px: float, pz: float, ax: float, az: float, bx: float, b
 	var dist: float = sqrt((px - proj_x) * (px - proj_x) + (pz - proj_z) * (pz - proj_z))
 	return [dist, proj_x, proj_z, dx, dz]
 
+const MARINE_DRIVE_CORRIDOR: Array[Vector2] = [
+	Vector2(-69.0, 2180.0), Vector2(-45.0, 1850.0), Vector2(-32.0, 1738.0),
+	Vector2(-15.0, 1500.0), Vector2(-5.4, 1295.0), Vector2(4.0, 1050.0),
+	Vector2(10.6, 852.0), Vector2(8.0, 630.0), Vector2(5.5, 409.0),
+	Vector2(3.0, 200.0), Vector2(1.0, 50.0), Vector2(0.0, 0.0),
+	Vector2(-15.0, -150.0), Vector2(-35.0, -350.0), Vector2(-57.3, -476.0),
+	Vector2(-120.0, -650.0), Vector2(-220.0, -800.0), Vector2(-325.7, -923.0),
+	Vector2(-600.0, -1120.0), Vector2(-1057.6, -1375.0)
+]
+
+const CROSS_STREET_VN: Array[Vector2] = [
+	Vector2(9.0, 409.0), Vector2(80.0, 408.0), Vector2(180.0, 407.0), Vector2(320.0, 405.0), Vector2(480.0, 405.0)
+]
+
+const CROSS_STREET_MC: Array[Vector2] = [
+	Vector2(-30.0, 1738.0), Vector2(100.0, 1730.0), Vector2(250.0, 1720.0), Vector2(450.0, 1715.0)
+]
+
+## Helper: tests whether 2D segment (p1-p2) intersects segment (q1-q2)
+func _segments_intersect_2d(p1: Vector2, p2: Vector2, q1: Vector2, q2: Vector2) -> bool:
+	var d1: float = (q2.x - q1.x) * (p1.y - q1.y) - (q2.y - q1.y) * (p1.x - q1.x)
+	var d2: float = (q2.x - q1.x) * (p2.y - q1.y) - (q2.y - q1.y) * (p2.x - q1.x)
+	var d3: float = (p2.x - p1.x) * (q1.y - p1.y) - (p2.y - p1.y) * (q1.x - p1.x)
+	var d4: float = (p2.x - p1.x) * (q2.y - p1.y) - (p2.y - p1.y) * (q2.x - p1.x)
+	return ((d1 > 0.0 and d2 < 0.0) or (d1 < 0.0 and d2 > 0.0)) and ((d3 > 0.0 and d4 < 0.0) or (d3 < 0.0 and d4 > 0.0))
+
 ## Rigorous road clearance and designated building plot verification
 func _apply_road_clearance(raw_poly: Array, roads: Array) -> Array:
 	if raw_poly.size() < 3:
@@ -175,12 +201,25 @@ func _apply_road_clearance(raw_poly: Array, roads: Array) -> Array:
 	var cx: float = sum_x / float(pt_count)
 	var cz: float = sum_z / float(pt_count)
 	
-	# 1. Marine Drive Queen's Necklace corridor clearance
-	if cz >= -1400.0 and cz <= 2200.0:
-		if absf(cx) < 8.0:
-			return [] # Centroid in middle of Marine Drive
+	# 1. Marine Drive Queen's Necklace corridor check
+	for i in range(MARINE_DRIVE_CORRIDOR.size() - 1):
+		var p0: Vector2 = MARINE_DRIVE_CORRIDOR[i]
+		var p1: Vector2 = MARINE_DRIVE_CORRIDOR[i + 1]
+		var res: Array = _dist_point_to_seg(cx, cz, p0.x, p0.y, p1.x, p1.y)
+		if float(res[0]) < 14.5:
+			return [] # Centroid inside Marine Drive roadway or promenade
 			
-	# 2. Check centroid against tile road segments and junction nodes
+	# 2. Cross-streets check (Veer Nariman & Madam Cama)
+	for i in range(CROSS_STREET_VN.size() - 1):
+		var res_vn: Array = _dist_point_to_seg(cx, cz, CROSS_STREET_VN[i].x, CROSS_STREET_VN[i].y, CROSS_STREET_VN[i+1].x, CROSS_STREET_VN[i+1].y)
+		if float(res_vn[0]) < 9.5:
+			return [] # Centroid in Veer Nariman Road
+	for i in range(CROSS_STREET_MC.size() - 1):
+		var res_mc: Array = _dist_point_to_seg(cx, cz, CROSS_STREET_MC[i].x, CROSS_STREET_MC[i].y, CROSS_STREET_MC[i+1].x, CROSS_STREET_MC[i+1].y)
+		if float(res_mc[0]) < 9.5:
+			return [] # Centroid in Madam Cama Road
+			
+	# 3. Check centroid against tile road segments and junction nodes
 	for r in roads:
 		var pts: Array = r.get("points", [])
 		var hw: float = float(r.get("width", 8.0)) * 0.5
@@ -189,92 +228,95 @@ func _apply_road_clearance(raw_poly: Array, roads: Array) -> Array:
 			var p_end = pts[pts.size() - 1]
 			var d_start: float = sqrt((cx - float(p_start[0])) * (cx - float(p_start[0])) + (cz - float(p_start[2])) * (cz - float(p_start[2])))
 			var d_end: float = sqrt((cx - float(p_end[0])) * (cx - float(p_end[0])) + (cz - float(p_end[2])) * (cz - float(p_end[2])))
-			if d_start < (hw + 1.5) or d_end < (hw + 1.5):
+			if d_start < (hw + 2.0) or d_end < (hw + 2.0):
 				return [] # Centroid inside road intersection
 				
 			for i in range(pts.size() - 1):
 				var res = _dist_point_to_seg(cx, cz, float(pts[i][0]), float(pts[i][2]), float(pts[i+1][0]), float(pts[i+1][2]))
-				if float(res[0]) < hw:
+				if float(res[0]) < (hw + 1.5):
 					return [] # Centroid on road asphalt
 					
-	# 3. Push infringing vertices outward past sidewalk buffer (hw + 2.5m)
-	var shifted_poly: Array = []
-	var severe_shifts: int = 0
+	# 4. Check all footprint vertices against road corridors
+	var max_infringe: float = 0.0
+	var push_dir_x: float = 0.0
+	var push_dir_z: float = 0.0
 	
 	for p in raw_poly:
 		var px: float = float(p[0])
-		var py: float = float(p[1])
 		var pz: float = float(p[2])
-		var max_push_x: float = 0.0
-		var max_push_z: float = 0.0
-		var infringed: bool = false
 		
-		# Marine Drive boundary push
-		if pz >= -1400.0 and pz <= 2200.0:
-			if cx >= 0.0 and px < 12.5:
-				max_push_x = 12.5 - px
-				infringed = true
-			elif cx < 0.0 and px > -14.0:
-				max_push_x = -14.0 - px
-				infringed = true
-				
-		# Cross-streets and tile roads boundary push
+		# Check Marine Drive
+		for i in range(MARINE_DRIVE_CORRIDOR.size() - 1):
+			var res_md: Array = _dist_point_to_seg(px, pz, MARINE_DRIVE_CORRIDOR[i].x, MARINE_DRIVE_CORRIDOR[i].y, MARINE_DRIVE_CORRIDOR[i+1].x, MARINE_DRIVE_CORRIDOR[i+1].y)
+			var d_md: float = float(res_md[0])
+			var safe_md: float = 14.5
+			if d_md < safe_md:
+				var needed_md: float = safe_md - d_md
+				if needed_md > max_infringe:
+					max_infringe = needed_md
+					var dir_len: float = sqrt((px - float(res_md[1])) * (px - float(res_md[1])) + (pz - float(res_md[2])) * (pz - float(res_md[2])))
+					if dir_len > 0.001:
+						push_dir_x = (px - float(res_md[1])) / dir_len
+						push_dir_z = (pz - float(res_md[2])) / dir_len
+						
+		# Check tile roads
 		for r in roads:
 			var pts: Array = r.get("points", [])
-			var hw: float = float(r.get("width", 8.0)) * 0.5
-			var safe_dist: float = hw + 2.5
+			var safe_dist: float = float(r.get("width", 8.0)) * 0.5 + 2.0
 			for i in range(pts.size() - 1):
 				var res = _dist_point_to_seg(px, pz, float(pts[i][0]), float(pts[i][2]), float(pts[i+1][0]), float(pts[i+1][2]))
 				var d: float = float(res[0])
 				if d < safe_dist:
-					infringed = true
-					var proj_x: float = float(res[1])
-					var proj_z: float = float(res[2])
-					var dx_seg: float = float(res[3])
-					var dz_seg: float = float(res[4])
-					
-					var dir_x: float = 0.0
-					var dir_z: float = 0.0
-					var dist_to_proj: float = sqrt((px - proj_x) * (px - proj_x) + (pz - proj_z) * (pz - proj_z))
-					if dist_to_proj > 0.001:
-						dir_x = (px - proj_x) / dist_to_proj
-						dir_z = (pz - proj_z) / dist_to_proj
-					else:
-						var sl: float = sqrt(dx_seg * dx_seg + dz_seg * dz_seg)
-						dir_x = -dz_seg / sl if sl > 0.001 else 1.0
-						dir_z = dx_seg / sl if sl > 0.001 else 0.0
-							
 					var needed: float = safe_dist - d
-					var sx: float = dir_x * needed
-					var sz: float = dir_z * needed
-					if (sx * sx + sz * sz) > (max_push_x * max_push_x + max_push_z * max_push_z):
-						max_push_x = sx
-						max_push_z = sz
-						
-		if infringed:
-			var push_mag: float = sqrt(max_push_x * max_push_x + max_push_z * max_push_z)
-			if push_mag > 7.0:
-				severe_shifts += 1
-			shifted_poly.append([px + max_push_x, py, pz + max_push_z])
-		else:
-			shifted_poly.append([px, py, pz])
-			
-	if severe_shifts > (pt_count / 2):
-		return [] # Building too deeply entrenched in roads, cull
+					if needed > max_infringe:
+						max_infringe = needed
+						var dir_len: float = sqrt((px - float(res[1])) * (px - float(res[1])) + (pz - float(res[2])) * (pz - float(res[2])))
+						if dir_len > 0.001:
+							push_dir_x = (px - float(res[1])) / dir_len
+							push_dir_z = (pz - float(res[2])) / dir_len
+							
+	# If deeply infringing (> 3.5m), cull immediately to avoid moving into other plots
+	if max_infringe > 3.5:
+		return []
 		
-	# 4. Final verification: Ensure no pushed vertex still sits in road asphalt
-	for p in shifted_poly:
+	# If minor infringement (<= 3.5m), rigidly translate ENTIRE building (never distort vertices)
+	var final_poly: Array = []
+	var shift_x: float = push_dir_x * (max_infringe + 0.5) if max_infringe > 0.0 else 0.0
+	var shift_z: float = push_dir_z * (max_infringe + 0.5) if max_infringe > 0.0 else 0.0
+	
+	for p in raw_poly:
+		final_poly.append([float(p[0]) + shift_x, float(p[1]), float(p[2]) + shift_z])
+		
+	# 5. Strict Re-Verification: Ensure zero shifted vertices sit within safe distance of any road
+	for p in final_poly:
 		var qx: float = float(p[0])
 		var qz: float = float(p[2])
+		for i in range(MARINE_DRIVE_CORRIDOR.size() - 1):
+			var res_md: Array = _dist_point_to_seg(qx, qz, MARINE_DRIVE_CORRIDOR[i].x, MARINE_DRIVE_CORRIDOR[i].y, MARINE_DRIVE_CORRIDOR[i+1].x, MARINE_DRIVE_CORRIDOR[i+1].y)
+			if float(res_md[0]) < 13.5:
+				return [] # Still in Marine Drive
 		for r in roads:
 			var pts: Array = r.get("points", [])
 			var hw: float = float(r.get("width", 8.0)) * 0.5
 			for i in range(pts.size() - 1):
 				var res = _dist_point_to_seg(qx, qz, float(pts[i][0]), float(pts[i][2]), float(pts[i+1][0]), float(pts[i+1][2]))
-				if float(res[0]) < hw:
-					return [] # Pushing still left vertex in road, cull building
+				if float(res[0]) < (hw + 0.5):
+					return [] # Still on road asphalt
 					
-	return shifted_poly
+	# 6. Edge Intersection Check: ensure no building wall intersects any road segment
+	for i in range(final_poly.size()):
+		var j: int = (i + 1) % final_poly.size()
+		var bp1 := Vector2(float(final_poly[i][0]), float(final_poly[i][2]))
+		var bp2 := Vector2(float(final_poly[j][0]), float(final_poly[j][2]))
+		for r in roads:
+			var pts: Array = r.get("points", [])
+			for k in range(pts.size() - 1):
+				var rp1 := Vector2(float(pts[k][0]), float(pts[k][2]))
+				var rp2 := Vector2(float(pts[k+1][0]), float(pts[k+1][2]))
+				if _segments_intersect_2d(bp1, bp2, rp1, rp2):
+					return [] # Building wall intersects road centerline, cull
+					
+	return final_poly
 
 ## Computes 2D polygon area using Shoelace formula
 func _calc_poly_area(pts: Array) -> float:

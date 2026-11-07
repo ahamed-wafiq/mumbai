@@ -5,13 +5,13 @@ render_mode cull_disabled, diffuse_burley, specular_schlick_ggx;
 // Realistic asphalt grain, worn tire track troughs, and integrated lane markings
 // Single-pass shader rendering asphalt, double yellow lines, and outer shoulder lines.
 
-uniform vec4 asphalt_color : source_color = vec4(0.12, 0.13, 0.15, 1.0);
-uniform vec4 tire_track_color : source_color = vec4(0.08, 0.09, 0.10, 1.0);
+uniform vec4 asphalt_color : source_color = vec4(0.04, 0.04, 0.045, 1.0);
+uniform vec4 tire_track_color : source_color = vec4(0.02, 0.02, 0.025, 1.0);
 uniform vec4 yellow_line_color : source_color = vec4(1.0, 0.76, 0.08, 1.0);
 uniform vec4 white_line_color : source_color = vec4(0.94, 0.95, 0.97, 1.0);
 
-uniform float wetness_sheen : hint_range(0.0, 1.0) = 0.50;
-uniform float road_roughness : hint_range(0.0, 1.0) = 0.65;
+uniform float wetness_sheen : hint_range(0.0, 1.0) = 0.35;
+uniform float road_roughness : hint_range(0.0, 1.0) = 0.75;
 uniform bool show_markings = true;
 
 varying vec3 v_world_pos;

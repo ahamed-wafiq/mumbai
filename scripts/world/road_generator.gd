@@ -22,17 +22,17 @@ func _init_materials() -> void:
 	if _asphalt_shader:
 		var sm := ShaderMaterial.new()
 		sm.shader = _asphalt_shader
-		sm.set_shader_parameter("asphalt_color", Color(0.12, 0.13, 0.15, 1.0))
-		sm.set_shader_parameter("tire_track_color", Color(0.08, 0.09, 0.10, 1.0))
+		sm.set_shader_parameter("asphalt_color", Color(0.04, 0.04, 0.045, 1.0))
+		sm.set_shader_parameter("tire_track_color", Color(0.02, 0.02, 0.025, 1.0))
 		sm.set_shader_parameter("yellow_line_color", Color(1.0, 0.76, 0.08, 1.0))
 		sm.set_shader_parameter("white_line_color", Color(0.94, 0.95, 0.97, 1.0))
-		sm.set_shader_parameter("wetness_sheen", 0.50)
-		sm.set_shader_parameter("road_roughness", 0.60)
+		sm.set_shader_parameter("wetness_sheen", 0.35)
+		sm.set_shader_parameter("road_roughness", 0.75)
 		_asphalt_mat = sm
 	else:
 		var m := StandardMaterial3D.new()
-		m.albedo_color = Color(0.13, 0.14, 0.16, 1.0)
-		m.roughness = 0.75
+		m.albedo_color = Color(0.04, 0.04, 0.045, 1.0)
+		m.roughness = 0.8
 		_asphalt_mat = m
 
 	# 2. Granite Curb & Paver Sidewalk

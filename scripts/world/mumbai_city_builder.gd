@@ -60,14 +60,14 @@ func _init_materials() -> void:
 	if _asphalt_shader:
 		var road_sm := ShaderMaterial.new()
 		road_sm.shader = _asphalt_shader
-		road_sm.set_shader_parameter("asphalt_color", Color(0.12, 0.13, 0.15, 1.0))
-		road_sm.set_shader_parameter("tire_track_color", Color(0.08, 0.09, 0.10, 1.0))
-		road_sm.set_shader_parameter("wetness_sheen", 0.55)
-		road_sm.set_shader_parameter("road_roughness", 0.65)
+		road_sm.set_shader_parameter("asphalt_color", Color(0.04, 0.04, 0.045, 1.0))
+		road_sm.set_shader_parameter("tire_track_color", Color(0.02, 0.02, 0.025, 1.0))
+		road_sm.set_shader_parameter("wetness_sheen", 0.35)
+		road_sm.set_shader_parameter("road_roughness", 0.75)
 		mat_asphalt = road_sm
 	else:
 		var default_asphalt := StandardMaterial3D.new()
-		default_asphalt.albedo_color = Color(0.12, 0.13, 0.15, 1.0)
+		default_asphalt.albedo_color = Color(0.04, 0.04, 0.045, 1.0)
 		default_asphalt.roughness = 0.8
 		default_asphalt.cull_mode = BaseMaterial3D.CULL_DISABLED
 		mat_asphalt = default_asphalt
@@ -393,29 +393,77 @@ func _create_real_footprint_building(b_name: String, world_pts: PackedVector3Arr
 	if count < 3:
 		return null
 		
-	# Road setback: rigidly shift landmark buildings out past the Marine Drive road and sidewalk
-	var min_x := 999999.0
-	var max_x := -999999.0
-	var initial_sum_x := 0.0
-	var initial_sum_z := 0.0
-	for i in range(count):
-		min_x = minf(min_x, world_pts[i].x)
-		max_x = maxf(max_x, world_pts[i].x)
-		initial_sum_x += world_pts[i].x
-		initial_sum_z += world_pts[i].z
-	var center_x := initial_sum_x / float(count)
-	var center_z := initial_sum_z / float(count)
+	# Road setback: ensure landmark buildings never overlap the Marine Drive curve or cross-streets
+	var md_spline: PackedVector3Array = _get_dense_marine_drive_spline()
+	var vn_pts: PackedVector3Array = PackedVector3Array([
+		Vector3(9.0, 0.06, 409.0), Vector3(80.0, 0.06, 408.0), Vector3(180.0, 0.06, 407.0), Vector3(320.0, 0.06, 405.0), Vector3(480.0, 0.06, 405.0)
+	])
+	var mc_pts: PackedVector3Array = PackedVector3Array([
+		Vector3(-30.0, 0.06, 1738.0), Vector3(100.0, 0.06, 1730.0), Vector3(250.0, 0.06, 1720.0), Vector3(450.0, 0.06, 1715.0)
+	])
 	
-	if center_z >= -1400.0 and center_z <= 2200.0:
-		var shift := 0.0
-		if center_x >= 0.0 and min_x < 13.8:
-			shift = 13.8 - min_x
-		elif center_x < 0.0 and max_x > -16.0:
-			shift = -16.0 - max_x
-			
-		if absf(shift) > 0.001:
-			for i in range(count):
-				world_pts[i].x += shift
+	var max_infringe: float = 0.0
+	var push_dir_x: float = 0.0
+	var push_dir_z: float = 0.0
+	
+	for i in range(count):
+		var px: float = world_pts[i].x
+		var pz: float = world_pts[i].z
+		
+		# Check Marine Drive (18m road + 4.5m sidewalk + 1.5m buffer -> safe dist 15.0m)
+		for j in range(md_spline.size() - 1):
+			var ax: float = md_spline[j].x
+			var az: float = md_spline[j].z
+			var bx: float = md_spline[j + 1].x
+			var bz: float = md_spline[j + 1].z
+			var dx: float = bx - ax
+			var dz: float = bz - az
+			var l2: float = dx * dx + dz * dz
+			var t: float = clampf(((px - ax) * dx + (pz - az) * dz) / maxf(l2, 0.0001), 0.0, 1.0)
+			var proj_x: float = ax + t * dx
+			var proj_z: float = az + t * dz
+			var dist: float = sqrt((px - proj_x) * (px - proj_x) + (pz - proj_z) * (pz - proj_z))
+			if dist < 15.0:
+				var needed: float = 15.0 - dist
+				if needed > max_infringe:
+					max_infringe = needed
+					var dlen: float = sqrt((px - proj_x) * (px - proj_x) + (pz - proj_z) * (pz - proj_z))
+					if dlen > 0.001:
+						push_dir_x = (px - proj_x) / dlen
+						push_dir_z = (pz - proj_z) / dlen
+						
+		# Check Madam Cama & Veer Nariman cross-streets (safe dist 9.5m)
+		for cr in [vn_pts, mc_pts]:
+			for j in range(cr.size() - 1):
+				var ax: float = cr[j].x
+				var az: float = cr[j].z
+				var bx: float = cr[j + 1].x
+				var bz: float = cr[j + 1].z
+				var dx: float = bx - ax
+				var dz: float = bz - az
+				var l2: float = dx * dx + dz * dz
+				var t: float = clampf(((px - ax) * dx + (pz - az) * dz) / maxf(l2, 0.0001), 0.0, 1.0)
+				var proj_x: float = ax + t * dx
+				var proj_z: float = az + t * dz
+				var dist: float = sqrt((px - proj_x) * (px - proj_x) + (pz - proj_z) * (pz - proj_z))
+				if dist < 9.5:
+					var needed: float = 9.5 - dist
+					if needed > max_infringe:
+						max_infringe = needed
+						var dlen: float = sqrt((px - proj_x) * (px - proj_x) + (pz - proj_z) * (pz - proj_z))
+						if dlen > 0.001:
+							push_dir_x = (px - proj_x) / dlen
+							push_dir_z = (pz - proj_z) / dlen
+							
+	if max_infringe > 6.0:
+		return null # Deeply blocking road, cull landmark
+		
+	if max_infringe > 0.0:
+		var shift_x: float = push_dir_x * (max_infringe + 1.0)
+		var shift_z: float = push_dir_z * (max_infringe + 1.0)
+		for i in range(count):
+			world_pts[i].x += shift_x
+			world_pts[i].z += shift_z
 		
 	# Compute centroid
 	var sum_x: float = 0.0
