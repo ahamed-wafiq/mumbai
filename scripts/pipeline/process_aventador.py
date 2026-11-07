@@ -1,16 +1,51 @@
 """
 Blender 5.2 Supercar Post-Processor: Authentic Lamborghini Aventador
-1. Automatically verifies / downloads authentic CAD model if missing into a .gdignored folder.
-2. Normalizes coordinate bounds (centered at X=0, Y=0, tires on Z=0 ground).
-3. Configures high-end PBR materials (Giallo Auge pearl paint, carbon fiber, LED emissions, tinted glass).
-4. Exports both GLB (lamborghini_car.glb without Draco) and OBJ (lamborghini_body.obj + .mtl) for Godot 4.
+1. Auto-launches inside Blender if invoked from standard Python (VS Code / terminal).
+2. Automatically verifies / downloads authentic CAD model if missing into a .gdignored folder.
+3. Normalizes coordinate bounds (centered at X=0, Y=0, tires on Z=0 ground).
+4. Configures high-end PBR materials (Giallo Auge pearl paint, carbon fiber, LED emissions, tinted glass).
+5. Exports both GLB (lamborghini_car.glb without Draco) and OBJ (lamborghini_body.obj + .mtl) for Godot 4.
 """
 
-import bpy
 import os
 import sys
+import subprocess
+import shutil
 import urllib.request
-from mathutils import Vector
+
+def find_blender():
+    """Finds the Blender executable on Windows, Linux, or macOS."""
+    if os.environ.get("BLENDER_PATH") and os.path.isfile(os.environ["BLENDER_PATH"]):
+        return os.environ["BLENDER_PATH"]
+    which_b = shutil.which("blender")
+    if which_b:
+        return which_b
+    candidates = [
+        r"C:\Program Files\Blender Foundation\Blender 5.2\blender.exe",
+        r"C:\Program Files\Blender Foundation\Blender 5.1\blender.exe",
+        r"C:\Program Files\Blender Foundation\Blender 5.0\blender.exe",
+        r"C:\Program Files\Blender Foundation\Blender 4.3\blender.exe",
+        r"C:\Program Files\Blender Foundation\Blender 4.2\blender.exe",
+        r"C:\Program Files\Blender Foundation\Blender 4.1\blender.exe",
+        r"C:\Program Files\Blender Foundation\Blender 4.0\blender.exe",
+    ]
+    for c in candidates:
+        if os.path.isfile(c):
+            return c
+    return None
+
+# If running outside Blender (e.g. from VS Code or standard python), re-launch inside Blender
+try:
+    import bpy
+    from mathutils import Vector
+except ImportError:
+    blender_exe = find_blender()
+    if not blender_exe:
+        print("ERROR: Blender executable not found. Please install Blender 4.x or 5.x or set BLENDER_PATH.")
+        sys.exit(1)
+    print(f"[Auto-Launcher] Launching script via Blender ({blender_exe})...")
+    res = subprocess.run([blender_exe, "--background", "--python", os.path.abspath(__file__)])
+    sys.exit(res.returncode)
 
 AVENTADOR_SOURCE_URL = "https://raw.githubusercontent.com/supercar3d/supercar_3D_asssets/main/basic/lamborghini/aventador/aventador.glb"
 
