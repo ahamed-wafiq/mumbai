@@ -18,9 +18,9 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 content_margin_left = 32.0
-content_margin_top = 32.0
+content_margin_top = 28.0
 content_margin_right = 32.0
-content_margin_bottom = 32.0
+content_margin_bottom = 28.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_PlayBtn"]
 bg_color = Color(1, 0.42, 0, 1)
@@ -112,20 +112,62 @@ text = "OPEN WORLD 3D DRIVING SIMULATOR"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="Layout"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
 [node name="Center" type="CenterContainer" parent="Layout"]
 layout_mode = 2
 
 [node name="Card" type="PanelContainer" parent="Layout/Center"]
-custom_minimum_size = Vector2(360, 240)
+custom_minimum_size = Vector2(400, 320)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_Card")
 
 [node name="VBox" type="VBoxContainer" parent="Layout/Center/Card"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 12
+
+[node name="GarageContainer" type="VBoxContainer" parent="Layout/Center/Card/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="GarageHeader" type="Label" parent="Layout/Center/Card/VBox/GarageContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.55, 0.2, 1)
+theme_override_font_sizes/font_size = 13
+text = "SELECT VEHICLE"
+horizontal_alignment = 1
+
+[node name="SelectorHBox" type="HBoxContainer" parent="Layout/Center/Card/VBox/GarageContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="PrevCarBtn" type="Button" parent="Layout/Center/Card/VBox/GarageContainer/SelectorHBox"]
+custom_minimum_size = Vector2(38, 36)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "◀"
+
+[node name="CarNameLabel" type="Label" parent="Layout/Center/Card/VBox/GarageContainer/SelectorHBox"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.7, 1)
+theme_override_font_sizes/font_size = 15
+text = "Lamborghini Aventador SVJ"
+horizontal_alignment = 1
+
+[node name="NextCarBtn" type="Button" parent="Layout/Center/Card/VBox/GarageContainer/SelectorHBox"]
+custom_minimum_size = Vector2(38, 36)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "▶"
+
+[node name="CarStatsLabel" type="Label" parent="Layout/Center/Card/VBox/GarageContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.78, 1)
+theme_override_font_sizes/font_size = 12
+text = "Top Speed: 350 KM/H • 6.5L V12"
+horizontal_alignment = 1
 
 [node name="PlayBtn" type="Button" parent="Layout/Center/Card/VBox"]
 layout_mode = 2
@@ -167,10 +209,9 @@ theme_override_constants/margin_bottom = 14
 layout_mode = 2
 theme_override_colors/font_color = Color(0.4, 0.44, 0.5, 1)
 theme_override_font_sizes/font_size = 12
-text = "v0.1.0 Prototype • Godot 4 & WebGL 2.0 Compatibility"
+text = "v0.1.0 Prototype • Press [T] while driving to switch cars • [C] toggle camera"
 horizontal_alignment = 1
 
 [node name="SettingsDialog" parent="." instance=ExtResource("2_settings")]
 visible = false
 layout_mode = 1
-

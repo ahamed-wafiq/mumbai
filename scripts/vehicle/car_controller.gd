@@ -8,6 +8,7 @@ extends CharacterBody3D
 
 signal speed_updated(speed_kmh: float, gear: String)
 signal debug_telemetry_updated(data: Dictionary)
+signal vehicle_switched(car_data: Dictionary)
 
 @export_group("Engine & Speed")
 @export var max_speed_kmh: float = 160.0         # Top forward speed in km/h
@@ -31,6 +32,7 @@ signal debug_telemetry_updated(data: Dictionary)
 @export var wheel_fr_node: NodePath = "Visuals/Wheels/WheelFR"
 @export var wheel_rl_node: NodePath = "Visuals/Wheels/WheelRL"
 @export var wheel_rr_node: NodePath = "Visuals/Wheels/WheelRR"
+@export var car_mesh_node: NodePath = "Visuals/Body/LamborghiniMesh"
 @export var brake_light_node: NodePath = "Visuals/BrakeLights"
 @export var third_person_cam_node: NodePath = "Cameras/ThirdPersonCamera"
 @export var first_person_cam_node: NodePath = "Cameras/FirstPersonCamera"
@@ -52,6 +54,7 @@ var _wheel_rr: Node3D
 var _brake_lights: Node3D
 var _cam_third: Camera3D
 var _cam_first: Camera3D
+var _car_mesh_instance: MeshInstance3D
 
 # Telemetry for debugging
 var debug_data: Dictionary = {}
@@ -73,7 +76,9 @@ func _ready() -> void:
 	_brake_lights = get_node_or_null(brake_light_node)
 	_cam_third = get_node_or_null(third_person_cam_node)
 	_cam_first = get_node_or_null(first_person_cam_node)
+	_car_mesh_instance = get_node_or_null(car_mesh_node)
 	
+	apply_car_config(GarageManager.get_selected_car())
 	_set_camera_mode(false)
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -81,6 +86,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		toggle_camera()
 	elif event.is_action_pressed("reset_vehicle") or (event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R):
 		reset_vehicle()
+	elif event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_T:
+		switch_to_next_car()
 
 func _physics_process(delta: float) -> void:
 	# 1. Read Inputs (Checking both InputMap actions and physical key fallbacks)
@@ -270,3 +277,24 @@ func _read_input(action_name: String, key_primary: Key, key_secondary: Key = KEY
 	if key_secondary != KEY_NONE and Input.is_key_pressed(key_secondary):
 		return 1.0
 	return 0.0
+
+## Dynamically applies vehicle model mesh, orientation, and physics tuning
+func apply_car_config(car_data: Dictionary) -> void:
+	if _car_mesh_instance and car_data.has("mesh_path"):
+		var mesh_path: String = car_data["mesh_path"]
+		if ResourceLoader.exists(mesh_path):
+			var mesh_res = load(mesh_path)
+			if mesh_res is Mesh:
+				_car_mesh_instance.mesh = mesh_res
+				_car_mesh_instance.rotation.y = car_data.get("rot_y", 0.0)
+	
+	max_speed_kmh = car_data.get("top_speed", 340.0)
+	acceleration = car_data.get("acceleration", 36.0)
+	braking_power = car_data.get("braking", 48.0)
+	lateral_grip = car_data.get("grip", 35.0)
+	vehicle_switched.emit(car_data)
+
+## Cycles to the next available supercar in real-time
+func switch_to_next_car() -> void:
+	var next_data := GarageManager.next_car()
+	apply_car_config(next_data)

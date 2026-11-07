@@ -32,6 +32,7 @@ func _ready() -> void:
 	if _car and _hud:
 		_car.speed_updated.connect(_hud.update_speed)
 		_car.debug_telemetry_updated.connect(_on_debug_telemetry_updated)
+		_car.vehicle_switched.connect(_hud.show_vehicle_toast)
 		
 	if _pause_menu:
 		_pause_menu.restart_requested.connect(_on_restart_requested)

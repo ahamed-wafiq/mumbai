@@ -107,3 +107,49 @@ func update_debug_telemetry(data: Dictionary) -> void:
 	]
 	
 	_debug_label.text = text
+
+## Shows an animated banner toast when switching supercars
+var _toast_panel: PanelContainer
+
+func show_vehicle_toast(car_data: Dictionary) -> void:
+	if not _toast_panel:
+		_toast_panel = PanelContainer.new()
+		_toast_panel.name = "VehicleToast"
+		_toast_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
+		_toast_panel.offset_top = 28.0
+		_toast_panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color(0.08, 0.10, 0.14, 0.95)
+		style.border_color = Color(1.0, 0.42, 0.0, 1.0)
+		style.set_border_width_all(2)
+		style.set_corner_radius_all(10)
+		style.content_margin_left = 24.0
+		style.content_margin_right = 24.0
+		style.content_margin_top = 10.0
+		style.content_margin_bottom = 10.0
+		_toast_panel.add_theme_stylebox_override("panel", style)
+		
+		var lbl := RichTextLabel.new()
+		lbl.name = "ToastText"
+		lbl.bbcode_enabled = true
+		lbl.fit_content = true
+		lbl.scroll_active = false
+		lbl.custom_minimum_size = Vector2(340, 48)
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_toast_panel.add_child(lbl)
+		add_child(_toast_panel)
+		
+	var lbl: RichTextLabel = _toast_panel.get_node("ToastText")
+	var car_name: String = car_data.get("name", "Supercar")
+	var tagline: String = car_data.get("tagline", "")
+	var top_spd: float = car_data.get("top_speed", 320.0)
+	
+	lbl.text = "[center][b][color=#FF6B00]🏎️ %s[/color][/b]\n[color=#A0AEC0]%s • Top Speed: %.0f KM/H[/color][/center]" % [car_name, tagline, top_spd]
+	_toast_panel.modulate.a = 1.0
+	_toast_panel.visible = true
+	
+	var tween := create_tween()
+	tween.tween_interval(2.5)
+	tween.tween_property(_toast_panel, "modulate:a", 0.0, 0.6)
+	tween.tween_callback(func(): _toast_panel.visible = false)
