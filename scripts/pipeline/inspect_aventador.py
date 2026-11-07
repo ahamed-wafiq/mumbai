@@ -26,3 +26,4 @@ print("--- WHEEL OBJECTS ---")
 for obj in bpy.data.objects:
     if any(k in obj.name.lower() for k in ['wheel', 'tire', 'brake', 'rim', 'hub']):
         print(f"{obj.name} | parent: {obj.parent.name if obj.parent else None} | loc: {obj.matrix_world.translation} | dim: {obj.dimensions}")
+
