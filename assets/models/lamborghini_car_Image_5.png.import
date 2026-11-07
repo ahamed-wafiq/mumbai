@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b61p83amoaikc"
-path="res://.godot/imported/lamborghini_car_Image_5.png-74648f3bab4ef830550e876d3386b111.ctex"
+path.s3tc="res://.godot/imported/lamborghini_car_Image_5.png-74648f3bab4ef830550e876d3386b111.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "775752e4cef35ed56f378100e03c751d"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/lamborghini_car_Image_5.png"
-dest_files=["res://.godot/imported/lamborghini_car_Image_5.png-74648f3bab4ef830550e876d3386b111.ctex"]
+dest_files=["res://.godot/imported/lamborghini_car_Image_5.png-74648f3bab4ef830550e876d3386b111.s3tc.ctex"]
 
 [params]
 

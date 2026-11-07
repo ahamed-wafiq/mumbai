@@ -1,10 +1,9 @@
 """
 Blender 5.2 Supercar Post-Processor: Authentic Lamborghini Aventador
-1. Automatically verifies / downloads authentic CAD model if missing.
-2. Resolves absolute project paths so it runs from any directory or inside Blender IDE.
-3. Normalizes coordinate bounds (centered at X=0, Y=0, tires on Z=0 ground).
-4. Configures high-end PBR materials (Giallo Auge pearl paint, carbon fiber, LED emissions, tinted glass).
-5. Exports both GLB (lamborghini_car.glb) and OBJ (lamborghini_body.obj + .mtl) for Godot 4.
+1. Automatically verifies / downloads authentic CAD model if missing into a .gdignored folder.
+2. Normalizes coordinate bounds (centered at X=0, Y=0, tires on Z=0 ground).
+3. Configures high-end PBR materials (Giallo Auge pearl paint, carbon fiber, LED emissions, tinted glass).
+4. Exports both GLB (lamborghini_car.glb without Draco) and OBJ (lamborghini_body.obj + .mtl) for Godot 4.
 """
 
 import bpy
@@ -19,23 +18,60 @@ def get_project_root():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     return os.path.abspath(os.path.join(script_dir, "..", ".."))
 
-def ensure_source_model(models_dir):
-    os.makedirs(models_dir, exist_ok=True)
-    source_path = os.path.join(models_dir, "aventador_real.glb")
+def ensure_source_model(project_root):
+    # Store raw downloaded source models outside Godot's import scanner
+    raw_dir = os.path.join(project_root, "data", "source", "supercars")
+    os.makedirs(raw_dir, exist_ok=True)
+    
+    # Write .gdignore to prevent Godot from trying to import raw Draco models
+    gdignore_path = os.path.join(raw_dir, ".gdignore")
+    if not os.path.exists(gdignore_path):
+        with open(gdignore_path, "w") as f:
+            f.write("# Godot: ignore raw source assets\n")
+            
+    source_path = os.path.join(raw_dir, "aventador_real.glb")
     if not os.path.exists(source_path) or os.path.getsize(source_path) < 1000000:
         print(f"Downloading authentic Lamborghini Aventador model from:\n{AVENTADOR_SOURCE_URL} ...")
         urllib.request.urlretrieve(AVENTADOR_SOURCE_URL, source_path)
         print(f"Downloaded: {source_path} ({os.path.getsize(source_path):,} bytes)")
     return source_path
 
+def clean_mtl_file(mtl_path):
+    """Strips legacy 'Ka' ambient light lines to silence Godot 4 PBR import warnings."""
+    if not os.path.exists(mtl_path):
+        return
+    with open(mtl_path, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    clean_lines = [l for l in lines if not l.strip().startswith("Ka ")]
+    with open(mtl_path, "w", encoding="utf-8") as f:
+        f.writelines(clean_lines)
+    print(f"Cleaned MTL file: {mtl_path}")
+
 def process_aventador():
     project_root = get_project_root()
+    source_glb = ensure_source_model(project_root)
+    
     models_dir = os.path.join(project_root, "assets", "models")
-    source_glb = ensure_source_model(models_dir)
+    os.makedirs(models_dir, exist_ok=True)
     
     out_glb = os.path.join(models_dir, "lamborghini_car.glb")
     out_obj = os.path.join(models_dir, "lamborghini_body.obj")
+    out_mtl = os.path.join(models_dir, "lamborghini_body.mtl")
     
+    # Remove any old raw Draco file from assets/models if it exists
+    old_raw = os.path.join(models_dir, "aventador_real.glb")
+    if os.path.exists(old_raw):
+        try:
+            os.remove(old_raw)
+        except:
+            pass
+    old_import = os.path.join(models_dir, "aventador_real.glb.import")
+    if os.path.exists(old_import):
+        try:
+            os.remove(old_import)
+        except:
+            pass
+            
     print(f"Loading model into Blender: {source_glb}")
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=source_glb)
@@ -171,7 +207,7 @@ def process_aventador():
     for obj in bpy.data.objects:
         obj.select_set(True)
         
-    print(f"Exporting GLB to: {out_glb}")
+    print(f"Exporting standard GLB (no Draco) to: {out_glb}")
     bpy.ops.export_scene.gltf(
         filepath=out_glb,
         use_selection=True,
@@ -187,6 +223,9 @@ def process_aventador():
         export_normals=True,
         export_uv=True
     )
+    
+    # Strip legacy Ka lines from the MTL file
+    clean_mtl_file(out_mtl)
     
     print("SUCCESS: Blender Lamborghini processing complete!")
     return True
