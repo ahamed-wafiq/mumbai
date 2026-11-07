@@ -288,6 +288,14 @@ def process_aventador():
     # Strip legacy Ka lines from the MTL file
     clean_mtl_file(out_mtl)
     
+    # Remove any loose image dumps so Godot's asset importer doesn't get overwhelmed
+    for f in os.listdir(models_dir):
+        if "_Image_" in f and (f.endswith(".png") or f.endswith(".jpg") or f.endswith(".import")):
+            try:
+                os.remove(os.path.join(models_dir, f))
+            except Exception:
+                pass
+    
     print("SUCCESS: Blender Lamborghini processing complete!")
     return True
 

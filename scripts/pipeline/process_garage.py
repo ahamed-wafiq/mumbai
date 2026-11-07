@@ -135,6 +135,15 @@ def process_car(src_name, out_base_name, primary_rgb, metallic=0.92, roughness=0
     bpy.ops.export_scene.gltf(filepath=out_glb, use_selection=True, export_format='GLB', export_apply=True)
     bpy.ops.wm.obj_export(filepath=out_obj, export_selected_objects=True, export_materials=True, export_normals=True, export_uv=True)
     clean_mtl(out_mtl)
+    
+    # Remove any loose image dumps so Godot's asset importer doesn't get overwhelmed
+    for f in os.listdir(out_dir):
+        if "_Image_" in f and (f.endswith(".png") or f.endswith(".jpg") or f.endswith(".import")):
+            try:
+                os.remove(os.path.join(out_dir, f))
+            except Exception:
+                pass
+                
     print(f"Exported {out_base_name}")
 
 def main():
