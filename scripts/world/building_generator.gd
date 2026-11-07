@@ -27,6 +27,15 @@ var _mat_commercial: Material
 var _mat_skyscraper_silver: Material
 var _mat_hotel_luxury: Material
 
+# Rooftop & Entrance Detail Materials
+var _mat_rooftop_concrete: StandardMaterial3D
+var _mat_rooftop_metal: StandardMaterial3D
+var _mat_entrance_glass: StandardMaterial3D
+var _mat_garden_grass: StandardMaterial3D
+var _mat_tree_trunk: StandardMaterial3D
+var _mat_tree_foliage: StandardMaterial3D
+var _mat_beacon_red: StandardMaterial3D
+
 # High-contrast debug materials for testing
 var _debug_mats: Array[StandardMaterial3D] = []
 
@@ -125,6 +134,43 @@ func _init_materials() -> void:
 		Color(0.10, 0.20, 0.22, 1.0),
 		3.8, 0.72, 0.62, 1.5, 0.88, 0.10
 	)
+	
+	# 9. Rooftop Mechanical & Architectural Detailing Materials
+	_mat_rooftop_concrete = StandardMaterial3D.new()
+	_mat_rooftop_concrete.albedo_color = Color(0.26, 0.28, 0.30, 1.0)
+	_mat_rooftop_concrete.roughness = 0.85
+
+	_mat_rooftop_metal = StandardMaterial3D.new()
+	_mat_rooftop_metal.albedo_color = Color(0.70, 0.73, 0.76, 1.0)
+	_mat_rooftop_metal.metallic = 0.85
+	_mat_rooftop_metal.roughness = 0.25
+
+	_mat_entrance_glass = StandardMaterial3D.new()
+	_mat_entrance_glass.albedo_color = Color(0.20, 0.26, 0.32, 0.85)
+	_mat_entrance_glass.metallic = 0.8
+	_mat_entrance_glass.roughness = 0.1
+	_mat_entrance_glass.emission_enabled = true
+	_mat_entrance_glass.emission = Color(1.0, 0.90, 0.72, 1.0)
+	_mat_entrance_glass.emission_energy_multiplier = 1.6
+
+	_mat_garden_grass = StandardMaterial3D.new()
+	_mat_garden_grass.albedo_color = Color(0.24, 0.44, 0.18, 1.0)
+	_mat_garden_grass.roughness = 0.85
+
+	_mat_tree_trunk = StandardMaterial3D.new()
+	_mat_tree_trunk.albedo_color = Color(0.32, 0.24, 0.18, 1.0)
+	_mat_tree_trunk.roughness = 0.9
+
+	_mat_tree_foliage = StandardMaterial3D.new()
+	_mat_tree_foliage.albedo_color = Color(0.18, 0.46, 0.16, 1.0)
+	_mat_tree_foliage.roughness = 0.7
+	_mat_tree_foliage.cull_mode = BaseMaterial3D.CULL_DISABLED
+
+	_mat_beacon_red = StandardMaterial3D.new()
+	_mat_beacon_red.albedo_color = Color(1.0, 0.15, 0.15, 1.0)
+	_mat_beacon_red.emission_enabled = true
+	_mat_beacon_red.emission = Color(1.0, 0.15, 0.15, 1.0)
+	_mat_beacon_red.emission_energy_multiplier = 4.0
 	
 	# Vibrant Debug Materials (High visibility)
 	var debug_colors := [
@@ -421,9 +467,16 @@ func generate_building_from_tile_data(b_data: Dictionary, roads_in_tile: Array =
 	mesh_inst.material_override = chosen_mat
 	building_node.add_child(mesh_inst)
 	
+	var aabb := mesh.get_aabb()
+	# Add Architectural Rooftop Penthouse Structures & Mechanical HVAC Units
+	_add_rooftop_structures(building_node, aabb, height, pos_hash)
+
+	# Add Ground-Floor Entrance Portal & Forecourt Garden for Street-Facing Buildings
+	if absf(center.x) <= 75.0:
+		_add_ground_entrance_and_garden(building_node, aabb, pos_hash)
+	
 	# Add Static Collision Box for buildings within 50m of roadways
 	if absf(center.x) <= 50.0:
-		var aabb := mesh.get_aabb()
 		if aabb.size.x > 1.0 and aabb.size.z > 1.0:
 			var static_body := StaticBody3D.new()
 			static_body.name = "Collision"
@@ -558,6 +611,136 @@ func _extrude_building_mesh(local_pts: PackedVector3Array, height: float) -> Arr
 		
 	st.generate_normals()
 	return st.commit()
+
+## Adds rooftop mechanical penthouses, elevator machine rooms, HVAC chillers, and antennas
+func _add_rooftop_structures(parent: Node3D, aabb: AABB, height: float, pos_hash: int) -> void:
+	if aabb.size.x < 6.0 or aabb.size.z < 6.0 or height < 14.0:
+		return
+
+	# 1. Elevator Machine Room / Stair Penthouse Box
+	var penthouse_w := clampf(aabb.size.x * 0.35, 3.2, 9.0)
+	var penthouse_d := clampf(aabb.size.z * 0.35, 3.2, 9.0)
+	var penthouse_h := 3.2
+
+	var ph_box := BoxMesh.new()
+	ph_box.size = Vector3(penthouse_w, penthouse_h, penthouse_d)
+	ph_box.material = _mat_rooftop_concrete
+
+	var ph_inst := MeshInstance3D.new()
+	ph_inst.name = "RooftopPenthouse"
+	ph_inst.mesh = ph_box
+	var ph_offset_x := float((pos_hash % 3) - 1) * (aabb.size.x * 0.15)
+	var ph_offset_z := float(((pos_hash / 3) % 3) - 1) * (aabb.size.z * 0.15)
+	ph_inst.position = Vector3(ph_offset_x, height + (penthouse_h * 0.5), ph_offset_z)
+	parent.add_child(ph_inst)
+
+	# 2. HVAC Chiller Unit or Cylindrical Water Tank
+	var is_water_tank := (pos_hash % 2 == 0)
+	if is_water_tank:
+		var tank_mesh := CylinderMesh.new()
+		tank_mesh.top_radius = 1.1
+		tank_mesh.bottom_radius = 1.1
+		tank_mesh.height = 2.4
+		tank_mesh.material = _mat_rooftop_metal
+
+		var tank_inst := MeshInstance3D.new()
+		tank_inst.name = "WaterTank"
+		tank_inst.mesh = tank_mesh
+		tank_inst.position = Vector3(-ph_offset_x * 0.8, height + 1.2, -ph_offset_z * 0.8)
+		parent.add_child(tank_inst)
+	else:
+		var hvac_mesh := BoxMesh.new()
+		hvac_mesh.size = Vector3(2.4, 1.4, 1.8)
+		hvac_mesh.material = _mat_rooftop_metal
+
+		var hvac_inst := MeshInstance3D.new()
+		hvac_inst.name = "HVACChiller"
+		hvac_inst.mesh = hvac_mesh
+		hvac_inst.position = Vector3(-ph_offset_x * 0.8, height + 0.7, -ph_offset_z * 0.8)
+		parent.add_child(hvac_inst)
+
+	# 3. Tall Skyscraper Antenna Mast with Flashing Red Beacon (for heights > 55m)
+	if height >= 55.0:
+		var mast_mesh := CylinderMesh.new()
+		mast_mesh.top_radius = 0.05
+		mast_mesh.bottom_radius = 0.15
+		mast_mesh.height = 9.0
+		mast_mesh.material = _mat_rooftop_metal
+
+		var mast_inst := MeshInstance3D.new()
+		mast_inst.name = "AntennaMast"
+		mast_inst.mesh = mast_mesh
+		mast_inst.position = Vector3(ph_offset_x, height + penthouse_h + 4.5, ph_offset_z)
+		parent.add_child(mast_inst)
+
+		var beacon_mesh := SphereMesh.new()
+		beacon_mesh.radius = 0.22
+		beacon_mesh.height = 0.44
+		beacon_mesh.material = _mat_beacon_red
+
+		var beacon_inst := MeshInstance3D.new()
+		beacon_inst.name = "RedBeacon"
+		beacon_inst.mesh = beacon_mesh
+		beacon_inst.position = Vector3(ph_offset_x, height + penthouse_h + 9.1, ph_offset_z)
+		parent.add_child(beacon_inst)
+
+## Adds an illuminated ground-floor entrance canopy and landscaped front lawn with ornamental trees
+func _add_ground_entrance_and_garden(parent: Node3D, aabb: AABB, pos_hash: int) -> void:
+	if aabb.size.x < 6.0 or aabb.size.z < 6.0:
+		return
+
+	# 1. Ground Entrance Foyer Box (Lit glass entrance doors)
+	var foyer_w := clampf(aabb.size.x * 0.28, 3.0, 7.5)
+	var foyer_mesh := BoxMesh.new()
+	foyer_mesh.size = Vector3(foyer_w, 3.2, 1.5)
+	foyer_mesh.material = _mat_entrance_glass
+
+	var foyer_inst := MeshInstance3D.new()
+	foyer_inst.name = "EntranceFoyer"
+	foyer_inst.mesh = foyer_mesh
+	# Place at building front edge
+	foyer_inst.position = Vector3(0, 1.6, aabb.position.z - 0.7)
+	parent.add_child(foyer_inst)
+
+	# 2. Landscaped Front Green Lawn Patch
+	var lawn_mesh := PlaneMesh.new()
+	var lawn_w := clampf(aabb.size.x * 0.8, 4.0, 18.0)
+	var lawn_d := 3.5
+	lawn_mesh.size = Vector2(lawn_w, lawn_d)
+	lawn_mesh.material = _mat_garden_grass
+
+	var lawn_inst := MeshInstance3D.new()
+	lawn_inst.name = "FrontLawn"
+	lawn_inst.mesh = lawn_mesh
+	lawn_inst.position = Vector3(0, 0.04, aabb.position.z - 2.2)
+	parent.add_child(lawn_inst)
+
+	# 3. Ornamental Front Tree (1 tree in lawn corner)
+	var tree_node := Node3D.new()
+	tree_node.position = Vector3(lawn_w * 0.35, 0.04, aabb.position.z - 2.2)
+
+	var trunk_mesh := CylinderMesh.new()
+	trunk_mesh.top_radius = 0.14
+	trunk_mesh.bottom_radius = 0.20
+	trunk_mesh.height = 3.2
+	trunk_mesh.material = _mat_tree_trunk
+	var trunk_inst := MeshInstance3D.new()
+	trunk_inst.mesh = trunk_mesh
+	trunk_inst.position = Vector3(0, 1.6, 0)
+	tree_node.add_child(trunk_inst)
+
+	var foliage_mesh := SphereMesh.new()
+	foliage_mesh.radius = 1.6
+	foliage_mesh.height = 2.8
+	foliage_mesh.radial_segments = 8
+	foliage_mesh.rings = 5
+	foliage_mesh.material = _mat_tree_foliage
+	var foliage_inst := MeshInstance3D.new()
+	foliage_inst.mesh = foliage_mesh
+	foliage_inst.position = Vector3(0, 3.2, 0)
+	tree_node.add_child(foliage_inst)
+
+	parent.add_child(tree_node)
 
 ## Returns real-time debug telemetry statistics
 func get_debug_stats() -> Dictionary:
