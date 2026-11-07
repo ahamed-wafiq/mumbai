@@ -1,3 +1,4 @@
+# pyright: reportMissingImports=false
 """
 Blender 5.2 Multi-Car Garage Pipeline
 1. Auto-launches inside Blender if invoked from standard Python (VS Code / terminal).
@@ -9,6 +10,7 @@ import os
 import sys
 import subprocess
 import shutil
+import importlib
 
 def find_blender():
     """Finds the Blender executable on Windows, Linux, or macOS."""
@@ -32,18 +34,23 @@ def find_blender():
     return None
 
 # If running outside Blender (e.g. from VS Code or standard python), re-launch inside Blender
-try:
-    import bpy
-    from mathutils import Vector, Matrix
-    import math
-except ImportError:
-    blender_exe = find_blender()
-    if not blender_exe:
-        print("ERROR: Blender executable not found. Please install Blender 4.x or 5.x or set BLENDER_PATH.")
-        sys.exit(1)
-    print(f"[Auto-Launcher] Launching script via Blender ({blender_exe})...")
-    res = subprocess.run([blender_exe, "--background", "--python", os.path.abspath(__file__)])
-    sys.exit(res.returncode)
+if "bpy" not in sys.modules:
+    try:
+        importlib.import_module("bpy")
+    except ImportError:
+        blender_exe = find_blender()
+        if not blender_exe:
+            print("ERROR: Blender executable not found. Please install Blender 4.x or 5.x or set BLENDER_PATH.")
+            sys.exit(1)
+        print(f"[Auto-Launcher] Launching script via Blender ({blender_exe})...")
+        res = subprocess.run([blender_exe, "--background", "--python", os.path.abspath(__file__)])
+        sys.exit(res.returncode)
+
+# Dynamically import Blender modules to eliminate IDE static linter missing-import errors
+bpy = sys.modules.get("bpy") or importlib.import_module("bpy")  # type: ignore
+_mathutils = sys.modules.get("mathutils") or importlib.import_module("mathutils")  # type: ignore
+Vector = getattr(_mathutils, "Vector")  # type: ignore
+Matrix = getattr(_mathutils, "Matrix")  # type: ignore
 
 def clean_mtl(mtl_path):
     if not os.path.exists(mtl_path):
