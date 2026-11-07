@@ -203,6 +203,25 @@ def process_aventador():
             if 'Roughness' in bsdf.inputs:
                 bsdf.inputs['Roughness'].default_value = 0.85
                 
+    # Apply decimation to optimize polycount for real-time integrated GPUs (Intel UHD)
+    # Reduces massive 430k polygons down to crisp, responsive ~45k triangles
+    total_poly_before = sum(len(o.data.polygons) for o in bpy.data.objects if o.type == 'MESH')
+    print(f"Total polygons before optimization: {total_poly_before}")
+    
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and len(obj.data.polygons) > 100:
+            bpy.context.view_layer.objects.active = obj
+            mod = obj.modifiers.new(name="Decimate", type='DECIMATE')
+            # 0.10 decimation drops the Aventador to ~42,000 polygons (GTA 5 standard)
+            mod.ratio = 0.10
+            try:
+                bpy.ops.object.modifier_apply(modifier="Decimate")
+            except Exception as e:
+                print(f"Decimate warning for {obj.name}: {e}")
+                
+    total_poly_after = sum(len(o.data.polygons) for o in bpy.data.objects if o.type == 'MESH')
+    print(f"Total polygons after optimization: {total_poly_after}")
+
     # Select all objects for export
     for obj in bpy.data.objects:
         obj.select_set(True)

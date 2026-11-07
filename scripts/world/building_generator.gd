@@ -241,18 +241,24 @@ func generate_building_from_tile_data(b_data: Dictionary) -> Node3D:
 	mesh_inst.material_override = chosen_mat
 	building_node.add_child(mesh_inst)
 	
-	# Add Static Collision for vehicle collisions
-	var static_body := StaticBody3D.new()
-	static_body.name = "Collision"
-	static_body.collision_layer = 1
-	static_body.collision_mask = 0
-	
-	var col_shape := CollisionShape3D.new()
-	var tri_shape := mesh.create_trimesh_shape()
-	if tri_shape:
-		col_shape.shape = tri_shape
-		static_body.add_child(col_shape)
-		building_node.add_child(static_body)
+	# Add Static Collision only for buildings close to the road (within 50m)
+	# Uses ultra-efficient BoxShape3D instead of heavy concave create_trimesh_shape()
+	# to prevent physics server memory exhaustion and crashes on integrated GPUs.
+	if absf(center.x) <= 50.0:
+		var aabb := mesh.get_aabb()
+		if aabb.size.x > 1.0 and aabb.size.z > 1.0:
+			var static_body := StaticBody3D.new()
+			static_body.name = "Collision"
+			static_body.collision_layer = 1
+			static_body.collision_mask = 0
+			
+			var col_shape := CollisionShape3D.new()
+			var box_shape := BoxShape3D.new()
+			box_shape.size = aabb.size
+			col_shape.shape = box_shape
+			col_shape.position = aabb.get_center()
+			static_body.add_child(col_shape)
+			building_node.add_child(static_body)
 	
 	meshes_created += 1
 	visible_buildings += 1

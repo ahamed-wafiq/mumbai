@@ -43,7 +43,7 @@ enable_shadows = false
 [node name="Body" type="Node3D" parent="Visuals"]
 
 [node name="LamborghiniMesh" type="MeshInstance3D" parent="Visuals/Body"]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 mesh = ExtResource("3_lambo_body")
 
 [node name="SpotLightL" type="SpotLight3D" parent="Visuals/Body"]

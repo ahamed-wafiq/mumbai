@@ -15,7 +15,7 @@ const CARS: Array[Dictionary] = [
 		"acceleration": 36.0,
 		"braking": 48.0,
 		"grip": 35.0,
-		"rot_y": PI, # Rotated 180° so it faces forward down the road
+		"rot_y": 0.0,
 		"badge_color": Color(1.0, 0.85, 0.1) # Yellow
 	},
 	{
@@ -74,3 +74,4 @@ static func next_car() -> Dictionary:
 static func prev_car() -> Dictionary:
 	selected_car_index = posmod(selected_car_index - 1, CARS.size())
 	return get_selected_car()
+

@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b3q8bc4sdp6wt"
-path="res://.godot/imported/ferrari_body_Image_21.png-1f1a343f75acdd083b3f4ee21cf8980c.ctex"
+path.s3tc="res://.godot/imported/ferrari_body_Image_21.png-1f1a343f75acdd083b3f4ee21cf8980c.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "c3b9d663965ca5650fd9a6403d508265"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/ferrari_body_Image_21.png"
-dest_files=["res://.godot/imported/ferrari_body_Image_21.png-1f1a343f75acdd083b3f4ee21cf8980c.ctex"]
+dest_files=["res://.godot/imported/ferrari_body_Image_21.png-1f1a343f75acdd083b3f4ee21cf8980c.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

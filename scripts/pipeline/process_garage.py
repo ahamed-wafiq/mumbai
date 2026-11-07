@@ -53,10 +53,22 @@ def process_car(src_name, out_base_name, primary_rgb, metallic=0.92, roughness=0
     center_y = (min_c.y + max_c.y) * 0.5
     bottom_z = min_c.z
     
+    # Shift top-level root objects so car sits on ground at (0, 0, 0)
     shift = Vector((-center_x, -center_y, -bottom_z))
     for obj in bpy.data.objects:
         if obj.parent is None:
             obj.location += shift
+            
+    # Optimize polycount with decimate modifier for high-polygon objects
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and len(obj.data.polygons) > 400:
+            bpy.context.view_layer.objects.active = obj
+            mod = obj.modifiers.new(name="Decimate", type='DECIMATE')
+            mod.ratio = 0.25 # Clean 4x reduction preserving curves & materials
+            try:
+                bpy.ops.object.modifier_apply(modifier="Decimate")
+            except Exception as e:
+                pass
             
     # Apply primary paint and PBR settings
     for mat in bpy.data.materials:
@@ -93,3 +105,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

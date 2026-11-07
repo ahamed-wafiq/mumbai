@@ -16,6 +16,8 @@ signal tile_unloaded(tile_coord: Vector2i)
 var _road_gen: RoadGenerator
 var _bld_gen: BuildingGenerator
 var _active_tiles: Dictionary = {} # Vector2i -> Node3D
+var _tile_building_counts: Dictionary = {} # Vector2i -> int
+var _empty_tiles: Dictionary = {} # Vector2i -> bool
 var _tile_manifest: Dictionary = {}
 var _ground_material: StandardMaterial3D
 
@@ -56,18 +58,22 @@ func is_tile_loaded(coord: Vector2i) -> bool:
 func load_tile(coord: Vector2i, parent_node: Node3D) -> Node3D:
 	if is_tile_loaded(coord):
 		return _active_tiles[coord]
+	if _empty_tiles.has(coord):
+		return null
 		
 	var tile_filename := "%stile_%d_%d.json" % [tiles_data_directory, coord.x, coord.y]
 	if not FileAccess.file_exists(tile_filename):
-		# No OSM data in this empty chunk, create empty placeholder container
+		_empty_tiles[coord] = true
 		return null
 		
 	var file := FileAccess.open(tile_filename, FileAccess.READ)
 	if not file:
+		_empty_tiles[coord] = true
 		return null
 		
 	var json_parser := JSON.new()
 	if json_parser.parse(file.get_as_text()) != OK:
+		_empty_tiles[coord] = true
 		return null
 		
 	var tile_data: Dictionary = json_parser.data
@@ -103,6 +109,7 @@ func load_tile(coord: Vector2i, parent_node: Node3D) -> Node3D:
 	total_tiles_loaded_count += 1
 	total_buildings_spawned_count += blds_in_tile
 	total_roads_spawned_count += roads_in_tile
+	_tile_building_counts[coord] = blds_in_tile
 	
 	print("[MapTileManager] Tile (%d, %d) loaded: %d buildings, %d roads (Total active buildings: %d)" % [
 		coord.x, coord.y, blds_in_tile, roads_in_tile, _bld_gen.visible_buildings if _bld_gen else total_buildings_spawned_count
@@ -119,6 +126,12 @@ func unload_tile(coord: Vector2i) -> void:
 		
 	var tile_node: Node3D = _active_tiles[coord]
 	_active_tiles.erase(coord)
+	
+	if _tile_building_counts.has(coord):
+		var count: int = _tile_building_counts[coord]
+		_tile_building_counts.erase(coord)
+		if _bld_gen:
+			_bld_gen.visible_buildings = maxi(0, _bld_gen.visible_buildings - count)
 	
 	if is_instance_valid(tile_node):
 		tile_node.queue_free()
