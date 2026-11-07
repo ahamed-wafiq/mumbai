@@ -29,22 +29,22 @@ sky_material = SubResource("ProceduralSky_Mumbai")
 background_mode = 2
 sky = SubResource("Sky_Mumbai")
 ambient_light_source = 3
-ambient_light_color = Color(0.92, 0.88, 0.82, 1)
-ambient_light_sky_contribution = 0.7
+ambient_light_color = Color(0.48, 0.48, 0.50, 1)
+ambient_light_sky_contribution = 0.5
 tonemap_mode = 3
-tonemap_exposure = 1.15
+tonemap_exposure = 0.90
 glow_enabled = true
-glow_intensity = 0.5
-glow_strength = 0.90
-glow_bloom = 0.12
+glow_intensity = 0.35
+glow_strength = 0.80
+glow_bloom = 0.02
 glow_blend_mode = 0
 fog_enabled = true
-fog_light_color = Color(0.85, 0.72, 0.62, 1)
+fog_light_color = Color(0.62, 0.55, 0.48, 1)
 fog_density = 0.00065
 fog_sky_affect = 0.35
 adjustment_enabled = true
-adjustment_contrast = 1.12
-adjustment_saturation = 1.18
+adjustment_contrast = 1.10
+adjustment_saturation = 1.12
 
 [sub_resource type="StandardMaterial3D" id="Mat_LandTerrain"]
 albedo_color = Color(0.22, 0.24, 0.26, 1)
@@ -83,8 +83,8 @@ environment = SubResource("Environment_Mumbai")
 
 [node name="SunLight" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.866025, 0.25, -0.433013, 0, 0.866025, 0.5, 0.5, -0.433013, 0.75, 0, 60, 0)
-light_color = Color(1, 0.92, 0.80, 1)
-light_energy = 1.45
+light_color = Color(0.98, 0.90, 0.82, 1)
+light_energy = 0.92
 shadow_enabled = true
 shadow_bias = 0.02
 shadow_blur = 1.2

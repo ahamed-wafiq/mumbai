@@ -286,7 +286,7 @@ func apply_car_config(car_data: Dictionary) -> void:
 			var mesh_res = load(mesh_path)
 			if mesh_res is Mesh:
 				_car_mesh_instance.mesh = mesh_res
-				_car_mesh_instance.rotation.y = car_data.get("rot_y", 0.0)
+				_car_mesh_instance.rotation.y = car_data.get("rot_y", PI)
 	
 	max_speed_kmh = car_data.get("top_speed", 340.0)
 	acceleration = car_data.get("acceleration", 36.0)

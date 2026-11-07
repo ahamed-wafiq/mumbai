@@ -15,7 +15,7 @@ const CARS: Array[Dictionary] = [
 		"acceleration": 36.0,
 		"braking": 48.0,
 		"grip": 35.0,
-		"rot_y": 0.0,
+		"rot_y": PI,
 		"badge_color": Color(1.0, 0.85, 0.1) # Yellow
 	},
 	{
@@ -28,7 +28,7 @@ const CARS: Array[Dictionary] = [
 		"acceleration": 38.0,
 		"braking": 46.0,
 		"grip": 34.0,
-		"rot_y": 0.0,
+		"rot_y": PI,
 		"badge_color": Color(0.95, 0.15, 0.15) # Red
 	},
 	{
@@ -41,7 +41,7 @@ const CARS: Array[Dictionary] = [
 		"acceleration": 34.0,
 		"braking": 50.0,
 		"grip": 38.0,
-		"rot_y": 0.0,
+		"rot_y": PI,
 		"badge_color": Color(0.1, 0.65, 1.0) # Blue
 	},
 	{
@@ -54,7 +54,7 @@ const CARS: Array[Dictionary] = [
 		"acceleration": 35.0,
 		"braking": 45.0,
 		"grip": 33.0,
-		"rot_y": 0.0,
+		"rot_y": PI,
 		"badge_color": Color(1.0, 0.45, 0.0) # Orange
 	}
 ]
