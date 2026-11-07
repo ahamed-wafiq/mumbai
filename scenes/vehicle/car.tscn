@@ -1,70 +1,15 @@
-[gd_scene load_steps=17 format=3 uid="uid://b0carproto01"]
+[gd_scene load_steps=6 format=3 uid="uid://b0carproto01"]
 
 [ext_resource type="Script" path="res://scripts/vehicle/car_controller.gd" id="1_controller"]
 [ext_resource type="Script" path="res://scripts/vehicle/vehicle_camera.gd" id="2_cam"]
 [ext_resource type="ArrayMesh" path="res://assets/models/lamborghini_body.obj" id="3_lambo_body"]
-[ext_resource type="ArrayMesh" path="res://assets/models/lamborghini_wheel.obj" id="4_lambo_wheel"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_base"]
 radius = 0.40
-height = 4.2
+height = 4.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_chassis"]
-size = Vector3(2.05, 0.65, 4.6)
-
-[sub_resource type="StandardMaterial3D" id="Mat_LamboYellow"]
-albedo_color = Color(0.98, 0.78, 0.05, 1)
-metallic = 0.92
-roughness = 0.08
-clearcoat_enabled = true
-clearcoat = 1.0
-clearcoat_roughness = 0.03
-
-[sub_resource type="StandardMaterial3D" id="Mat_CarbonFiber"]
-albedo_color = Color(0.09, 0.10, 0.11, 1)
-metallic = 0.45
-roughness = 0.32
-
-[sub_resource type="StandardMaterial3D" id="Mat_LamboGlass"]
-albedo_color = Color(0.03, 0.04, 0.06, 0.96)
-metallic = 0.98
-roughness = 0.03
-
-[sub_resource type="StandardMaterial3D" id="Mat_Headlights"]
-albedo_color = Color(1, 0.98, 0.94, 1)
-emission_enabled = true
-emission = Color(1, 0.98, 0.92, 1)
-emission_energy_multiplier = 5.0
-
-[sub_resource type="StandardMaterial3D" id="Mat_Taillights"]
-albedo_color = Color(0.95, 0.03, 0.03, 1)
-emission_enabled = true
-emission = Color(1, 0.02, 0.02, 1)
-emission_energy_multiplier = 6.0
-
-[sub_resource type="StandardMaterial3D" id="Mat_TitaniumExhaust"]
-albedo_color = Color(0.42, 0.45, 0.52, 1)
-metallic = 0.95
-roughness = 0.15
-
-[sub_resource type="StandardMaterial3D" id="Mat_Tire"]
-albedo_color = Color(0.10, 0.10, 0.11, 1)
-roughness = 0.85
-
-[sub_resource type="StandardMaterial3D" id="Mat_Rim"]
-albedo_color = Color(0.24, 0.25, 0.27, 1)
-metallic = 0.94
-roughness = 0.18
-
-[sub_resource type="StandardMaterial3D" id="Mat_BrakeDisc"]
-albedo_color = Color(0.35, 0.36, 0.38, 1)
-metallic = 0.85
-roughness = 0.25
-
-[sub_resource type="StandardMaterial3D" id="Mat_BrakeCaliper"]
-albedo_color = Color(0.98, 0.78, 0.05, 1)
-metallic = 0.75
-roughness = 0.2
+size = Vector3(1.95, 0.70, 4.3)
 
 [node name="Car" type="CharacterBody3D"]
 collision_layer = 2
@@ -72,17 +17,17 @@ collision_mask = 1
 floor_constant_speed = true
 floor_snap_length = 0.5
 script = ExtResource("1_controller")
-max_speed_kmh = 320.0
-acceleration = 32.0
-braking_power = 45.0
-lateral_grip = 32.0
+max_speed_kmh = 340.0
+acceleration = 36.0
+braking_power = 48.0
+lateral_grip = 35.0
 
 [node name="CollisionBase" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.38, 0)
 shape = SubResource("CapsuleShape3D_base")
 
 [node name="CollisionBody" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.60, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
 shape = SubResource("BoxShape3D_chassis")
 
 [node name="Visuals" type="Node3D" parent="."]
@@ -98,24 +43,18 @@ enable_shadows = false
 [node name="Body" type="Node3D" parent="Visuals"]
 
 [node name="LamborghiniMesh" type="MeshInstance3D" parent="Visuals/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0, 0)
 mesh = ExtResource("3_lambo_body")
-surface_material_override/0 = SubResource("Mat_LamboYellow")
-surface_material_override/1 = SubResource("Mat_LamboGlass")
-surface_material_override/2 = SubResource("Mat_CarbonFiber")
-surface_material_override/3 = SubResource("Mat_Headlights")
-surface_material_override/4 = SubResource("Mat_Taillights")
-surface_material_override/5 = SubResource("Mat_TitaniumExhaust")
 
 [node name="SpotLightL" type="SpotLight3D" parent="Visuals/Body"]
-transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, -0.65, 0.45, -2.2)
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, -0.65, 0.50, -2.0)
 light_color = Color(1, 0.98, 0.92, 1)
 light_energy = 4.0
 spot_range = 65.0
 spot_angle = 38.0
 
 [node name="SpotLightR" type="SpotLight3D" parent="Visuals/Body"]
-transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0.65, 0.45, -2.2)
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0.65, 0.50, -2.0)
 light_color = Color(1, 0.98, 0.92, 1)
 light_energy = 4.0
 spot_range = 65.0
@@ -125,7 +64,7 @@ spot_angle = 38.0
 visible = false
 
 [node name="BrakeGlow" type="OmniLight3D" parent="Visuals/BrakeLights"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 2.35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 1.85)
 light_color = Color(1, 0.05, 0.05, 1)
 light_energy = 5.0
 omni_range = 5.0
@@ -133,68 +72,38 @@ omni_range = 5.0
 [node name="Wheels" type="Node3D" parent="Visuals"]
 
 [node name="WheelFL" type="Node3D" parent="Visuals/Wheels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.98, 0.36, -1.35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.85, 0.34, -1.35)
 
 [node name="RollNode" type="Node3D" parent="Visuals/Wheels/WheelFL"]
 
-[node name="WheelMesh" type="MeshInstance3D" parent="Visuals/Wheels/WheelFL/RollNode"]
-mesh = ExtResource("4_lambo_wheel")
-surface_material_override/0 = SubResource("Mat_Tire")
-surface_material_override/1 = SubResource("Mat_Rim")
-surface_material_override/2 = SubResource("Mat_BrakeDisc")
-surface_material_override/3 = SubResource("Mat_BrakeCaliper")
-
 [node name="WheelFR" type="Node3D" parent="Visuals/Wheels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.98, 0.36, -1.35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 0.34, -1.35)
 
 [node name="RollNode" type="Node3D" parent="Visuals/Wheels/WheelFR"]
 
-[node name="WheelMesh" type="MeshInstance3D" parent="Visuals/Wheels/WheelFR/RollNode"]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = ExtResource("4_lambo_wheel")
-surface_material_override/0 = SubResource("Mat_Tire")
-surface_material_override/1 = SubResource("Mat_Rim")
-surface_material_override/2 = SubResource("Mat_BrakeDisc")
-surface_material_override/3 = SubResource("Mat_BrakeCaliper")
-
 [node name="WheelRL" type="Node3D" parent="Visuals/Wheels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.02, 0.36, 1.35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.88, 0.34, 1.35)
 
 [node name="RollNode" type="Node3D" parent="Visuals/Wheels/WheelRL"]
 
-[node name="WheelMesh" type="MeshInstance3D" parent="Visuals/Wheels/WheelRL/RollNode"]
-mesh = ExtResource("4_lambo_wheel")
-surface_material_override/0 = SubResource("Mat_Tire")
-surface_material_override/1 = SubResource("Mat_Rim")
-surface_material_override/2 = SubResource("Mat_BrakeDisc")
-surface_material_override/3 = SubResource("Mat_BrakeCaliper")
-
 [node name="WheelRR" type="Node3D" parent="Visuals/Wheels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.02, 0.36, 1.35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.88, 0.34, 1.35)
 
 [node name="RollNode" type="Node3D" parent="Visuals/Wheels/WheelRR"]
-
-[node name="WheelMesh" type="MeshInstance3D" parent="Visuals/Wheels/WheelRR/RollNode"]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = ExtResource("4_lambo_wheel")
-surface_material_override/0 = SubResource("Mat_Tire")
-surface_material_override/1 = SubResource("Mat_Rim")
-surface_material_override/2 = SubResource("Mat_BrakeDisc")
-surface_material_override/3 = SubResource("Mat_BrakeCaliper")
 
 [node name="Cameras" type="Node3D" parent="."]
 
 [node name="ThirdPersonCamera" type="Camera3D" parent="Cameras"]
-transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 2.1, 5.2)
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 1.6, 5.0)
 current = true
 fov = 72.0
 far = 4000.0
 script = ExtResource("2_cam")
 target_node = NodePath("../..")
-follow_distance = 5.2
-follow_height = 2.1
+follow_distance = 5.0
+follow_height = 1.6
 
 [node name="FirstPersonCamera" type="Camera3D" parent="Cameras"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.32, 0.95, 0.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.32, 0.85, 0.10)
 fov = 78.0
 far = 4000.0
